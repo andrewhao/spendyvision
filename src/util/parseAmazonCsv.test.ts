@@ -1,5 +1,5 @@
-// import { AmazonOrderItem } from "../types/AmazonOrderItem";
-import parseAmazonCsv from "./parseAmazonCsv";
+import parseAmazonCsv, { convertToPriceCents } from "./parseAmazonCsv";
+import { DateTime } from "luxon";
 
 describe("parseAmazonCsv", () => {
   it("parses a raw CSV array and returns an AmazonOrderItem", () => {
@@ -43,12 +43,12 @@ describe("parseAmazonCsv", () => {
         "Group Name"
       ],
       [
-        "01/01/18",
+        "02/01/18",
         "113-6290391-3682612",
         "Dang Gluten Free Toasted Coconut Chips, Original, 3.17oz Bags, 4 Count Bundle",
         "Grocery",
         "B01N164QIR",
-        "",
+        "52141514",
         "Amazon.com",
         "01/18/17",
         "new",
@@ -61,7 +61,7 @@ describe("parseAmazonCsv", () => {
         "",
         "",
         "charlie@example.com",
-        "01/04/18",
+        "02/04/18",
         "Charlie Ricky",
         "123 Anywhere St",
         "",
@@ -83,9 +83,28 @@ describe("parseAmazonCsv", () => {
     ];
     expect(parseAmazonCsv(input)).toEqual([
       {
+        price: "$12.00",
+        price_cents: 1200,
+        order_date: DateTime.local(2018, 2, 1).toJSDate(),
         title:
-          "Dang Gluten Free Toasted Coconut Chips, Original, 3.17oz Bags, 4 Count Bundle"
+          "Dang Gluten Free Toasted Coconut Chips, Original, 3.17oz Bags, 4 Count Bundle",
+        category: "Grocery",
+        unspsc_code: "52141514"
       }
     ]);
+  });
+
+  describe("#convertToPriceCents", () => {
+    it("converts string to number", () => {
+      expect(convertToPriceCents("$12.00")).toEqual(1200);
+    });
+
+    it("handles undefined as zero", () => {
+      expect(convertToPriceCents()).toEqual(0);
+    });
+
+    it("handles blank string as 0", () => {
+      expect(convertToPriceCents("")).toEqual(0);
+    });
   });
 });
