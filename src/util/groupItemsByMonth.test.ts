@@ -27,7 +27,12 @@ describe("groupItemsByMonth", () => {
     expect(group.groupKey).toEqual(
       DateTime.fromObject({ year: 2018, month: 1, day: 1 })
         .toLocal()
-        .toJSDate()
+        .toISO()
     );
+  });
+
+  it("returns empty array", () => {
+    const result = groupItemsByMonth([]);
+    expect(result).toEqual([]);
   });
 });

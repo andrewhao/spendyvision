@@ -94,6 +94,51 @@ describe("parseAmazonCsv", () => {
     ]);
   });
 
+  it("rejects the last row", () => {
+    const input = [
+      [
+        "Order Date",
+        "Order ID",
+        "Title",
+        "Category",
+        "ASIN/ISBN",
+        "UNSPSC Code",
+        "Website",
+        "Release Date",
+        "Condition",
+        "Seller",
+        "Seller Credentials",
+        "List Price Per Unit",
+        "Purchase Price Per Unit",
+        "Quantity",
+        "Payment Instrument Type",
+        "Purchase Order Number",
+        "PO Line Number",
+        "Ordering Customer Email",
+        "Shipment Date",
+        "Shipping Address Name",
+        "Shipping Address Street 1",
+        "Shipping Address Street 2",
+        "Shipping Address City",
+        "Shipping Address State",
+        "Shipping Address Zip",
+        "Order Status",
+        "Carrier Name & Tracking Number",
+        "Item Subtotal",
+        "Item Subtotal Tax",
+        "Item Total",
+        "Tax Exemption Applied",
+        "Tax Exemption Type",
+        "Exemption Opt-Out",
+        "Buyer Name",
+        "Currency",
+        "Group Name"
+      ],
+      [""]
+    ];
+    expect(parseAmazonCsv(input)).toEqual([]);
+  });
+
   describe("#convertToPriceCents", () => {
     it("converts string to number", () => {
       expect(convertToPriceCents("$12.00")).toEqual(1200);
