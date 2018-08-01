@@ -1,4 +1,5 @@
 import groupItemsByMonth from "./groupItemsByMonth";
+import { DateTime } from "luxon";
 
 describe("groupItemsByMonth", () => {
   it("creates an AmazonOrderItemGroup", () => {
@@ -21,5 +22,12 @@ describe("groupItemsByMonth", () => {
     const result = groupItemsByMonth(items);
 
     expect(result.length).toEqual(1);
+    const group = result[0];
+    expect(group.items).toEqual([item1, item2]);
+    expect(group.groupKey).toEqual(
+      DateTime.fromObject({ year: 2018, month: 1, day: 1 })
+        .toLocal()
+        .toJSDate()
+    );
   });
 });

@@ -1,10 +1,12 @@
 import "./App.css";
 import CsvFileUpload from "./CsvFileUpload";
 import { IAmazonOrderItem } from "./types/IAmazonOrderItem";
+import { IAmazonOrderItemGroup } from "./types/IAmazonOrderItemGroup";
 import OrderItem from "./components/OrderItem";
 import PurchaseSummary from "./components/PurchaseSummary";
 import parseAmazonCsv from "./util/parseAmazonCsv";
 import * as React from "react";
+import groupItemsByMonth from "./util/groupItemsByMonth";
 
 interface IAppState {
   amazonOrderItems: IAmazonOrderItem[];
@@ -31,10 +33,22 @@ class App extends React.Component<any, IAppState> {
   }
 
   private renderAmazonOrderItems(amazonOrderItems: IAmazonOrderItem[]) {
-    const items = amazonOrderItems.map((item, i) => (
-      <OrderItem key={i} {...item} />
-    ));
-    return <table className="amazon-order-items">{items}</table>;
+    return groupItemsByMonth(amazonOrderItems).map(
+      (month: IAmazonOrderItemGroup, monthKey) => {
+        const items = month.items.map((item, i) => (
+          <OrderItem key={i} {...item} />
+        ));
+
+        const monthGroupKey = month.groupKey.toString();
+
+        return (
+          <div className="amazon-order-item-group" key={monthKey}>
+            <h1>{monthGroupKey}</h1>
+            <table className="amazon-order-items">{items}</table>
+          </div>
+        );
+      }
+    );
   }
 
   private handleCsvUpload(results: any[], filename: string) {

@@ -1,15 +1,29 @@
 import { IAmazonOrderItem } from "../types/IAmazonOrderItem";
-
-interface IAmazonOrderItemGroup {
-  items: IAmazonOrderItem[];
-  groupKey: Date;
-}
+import { IAmazonOrderItemGroup } from "../types/IAmazonOrderItemGroup";
+import { DateTime } from "luxon";
+import * as R from "ramda";
 
 export default function groupItemsByMonth(
   items: IAmazonOrderItem[]
 ): IAmazonOrderItemGroup[] {
-  return {
-    items: items,
-    groupKey: new Date()
-  };
+  const doGrouping = R.groupBy((item: IAmazonOrderItem) => {
+    return DateTime.fromJSDate(item.order_date)
+      .startOf("month")
+      .toString();
+  });
+
+  const composeGroup = R.mapObjIndexed(
+    (value: IAmazonOrderItem[], key: string) => {
+      return {
+        items: value,
+        groupKey: DateTime.fromISO(key).toJSDate()
+      } as IAmazonOrderItemGroup;
+    }
+  );
+
+  return R.pipe(
+    doGrouping,
+    composeGroup,
+    R.values
+  )(items);
 }
