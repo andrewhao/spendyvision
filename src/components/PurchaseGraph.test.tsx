@@ -20,11 +20,11 @@ describe("PurchaseGraph", () => {
     const groups = [{ groupKey: "2018-01-01", items: [item] }];
     const attrs = { groups };
     const subject = enzyme.shallow(<PurchaseGraph {...attrs} />);
-    expect(subject.find("XYPlot").length).toEqual(1);
+    expect(subject.find("ResponsiveContainer").length).toEqual(1);
   });
 
-  it("renders null graph", () => {
+  it("does not render when no groups", () => {
     const subject = enzyme.shallow(<PurchaseGraph groups={[]} />);
-    expect(subject.find("XYPlot").length).toEqual(1);
+    expect(subject.find("ResponsiveContainer").length).toEqual(0);
   });
 });

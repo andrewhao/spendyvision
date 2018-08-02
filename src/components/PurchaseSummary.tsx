@@ -10,7 +10,12 @@ export default function PurchaseSummary({ items }: IProps) {
 }
 
 function aggregateData(items: IAmazonOrderItem[]) {
-  return items.reduce((accumulator, item) => {
-    return accumulator + item.price_cents;
-  }, 0);
+  return (
+    "$" +
+    items
+      .reduce((accumulator, item) => {
+        return accumulator + item.price_cents;
+      }, 0)
+      .toFixed(2)
+  );
 }

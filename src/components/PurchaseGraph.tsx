@@ -2,12 +2,15 @@ import * as React from "react";
 import { IAmazonOrderItemGroup } from "../types/IAmazonOrderItemGroup";
 import { IAmazonOrderItem } from "../types/IAmazonOrderItem";
 import {
-  XYPlot,
+  ResponsiveContainer,
+  BarChart,
   XAxis,
   YAxis,
-  HorizontalGridLines,
-  VerticalBarSeries
-} from "react-vis";
+  CartesianGrid,
+  Tooltip,
+  Bar
+} from "recharts";
+
 import { DateTime } from "luxon";
 
 interface IProps {
@@ -25,53 +28,36 @@ const groupMoney = (group: IAmazonOrderItemGroup): number => {
 };
 
 interface ISeriesData {
-  x: number;
+  x: string;
   y: number;
 }
 
-const ONE_MONTH = 30 * 24 * 60 * 60 * 1000;
-
 const seriesData = (groups: IAmazonOrderItemGroup[]): ISeriesData[] => {
   return groups.map(group => {
-    const x = new Date(group.groupKey).getTime();
+    const x = DateTime.fromISO(group.groupKey).toFormat("yyyy LLL");
     return {
-      x: x + ONE_MONTH,
-      x0: x,
+      x,
       y: groupMoney(group)
     } as ISeriesData;
   });
 };
 
-const startOfYear = DateTime.fromJSDate(new Date())
-  .startOf("year")
-  .toJSDate()
-  .getTime();
-const endOfYear = DateTime.fromJSDate(new Date())
-  .endOf("year")
-  .toJSDate()
-  .getTime();
-const xDomain = [startOfYear, endOfYear];
-const handleMouseOver = (d: any) => {
-  return `${DateTime.fromISO(d.x).toISODate()}: $${d.y.toFixed(2)}`;
-};
-
 export default function PurchaseGraph({ groups }: IProps) {
   const data = seriesData(groups);
-  const tickValues = groups.map(group => new Date(group.groupKey).getTime());
 
   return (
     <div className="purchase-graph">
-      <XYPlot width={800} height={500}>
-        <HorizontalGridLines />
-        <VerticalBarSeries
-          xDomain={xDomain}
-          xType={"time"}
-          data={data}
-          onValueMouseOver={handleMouseOver}
-        />
-        <XAxis tickValues={tickValues} />
-        <YAxis />
-      </XYPlot>
+      {groups.length > 0 && (
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="x" />
+            <YAxis dataKey="y" />
+            <Tooltip />
+            <Bar dataKey="y" fill="#82ca9d" />
+          </BarChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 }
