@@ -1,5 +1,4 @@
-import { IAmazonOrderItem } from "../types/IAmazonOrderItem";
-import { IAmazonOrderItemGroup } from "../types/IAmazonOrderItemGroup";
+import { IAmazonOrderItem, IAmazonOrderItemGroup } from "../types/data";
 import * as R from "ramda";
 
 export default function groupItemsByMonth(

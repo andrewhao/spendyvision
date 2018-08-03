@@ -1,6 +1,10 @@
 import * as React from "react";
-import { IAmazonOrderItemGroup } from "../types/IAmazonOrderItemGroup";
-import { IAmazonOrderItem } from "../types/IAmazonOrderItem";
+import { IAmazonOrderItemGroup } from "../types/data";
+import chroma from "chroma-js";
+import * as R from "ramda";
+
+import transformCategorizedMonthlySeriesData from "../util/transformCategorizedMonthlySeriesData";
+
 import {
   ResponsiveContainer,
   BarChart,
@@ -11,39 +15,32 @@ import {
   Bar
 } from "recharts";
 
-import { DateTime } from "luxon";
-
 interface IProps {
   groups: IAmazonOrderItemGroup[];
 }
 
-const groupMoney = (group: IAmazonOrderItemGroup): number => {
-  const totalCents = group.items.reduce(
-    (acc: number, item: IAmazonOrderItem): number => {
-      return acc + item.price_cents;
-    },
-    0
-  );
-  return totalCents / 100;
-};
-
-interface ISeriesData {
-  x: string;
-  y: number;
-}
-
-const seriesData = (groups: IAmazonOrderItemGroup[]): ISeriesData[] => {
-  return groups.map(group => {
-    const x = DateTime.fromISO(group.groupKey).toFormat("yyyy LLL");
-    return {
-      x,
-      y: groupMoney(group)
-    } as ISeriesData;
-  });
-};
-
 export default function PurchaseGraph({ groups }: IProps) {
-  const data = seriesData(groups);
+  const data = transformCategorizedMonthlySeriesData(groups);
+  const categories = R.pipe(
+    R.chain(
+      (group: IAmazonOrderItemGroup): string[] => {
+        return group.items.map(item => item.category_key || "n-a");
+      }
+    ),
+    R.uniq
+  )(groups);
+  const colorScale: string[] = chroma.scale("RdYlBu").colors(categories.length);
+  const zipped = R.zip(categories, colorScale);
+  const bars = zipped.map(([categoryKey, hexColor]) => {
+    return (
+      <Bar
+        key={categoryKey}
+        stackId="thisBar"
+        dataKey={categoryKey}
+        fill={hexColor}
+      />
+    );
+  });
 
   return (
     <div className="purchase-graph">
@@ -51,10 +48,10 @@ export default function PurchaseGraph({ groups }: IProps) {
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="x" />
+            <XAxis dataKey="month" />
             <YAxis dataKey="y" />
             <Tooltip />
-            <Bar dataKey="y" fill="#82ca9d" />
+            {bars}
           </BarChart>
         </ResponsiveContainer>
       )}

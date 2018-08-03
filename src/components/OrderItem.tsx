@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IAmazonOrderItem } from "../types/IAmazonOrderItem";
+import { IAmazonOrderItem } from "../types/data";
 import { DateTime } from "luxon";
 
 export default function OrderItem({

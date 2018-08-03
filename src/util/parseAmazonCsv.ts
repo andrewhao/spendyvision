@@ -1,6 +1,7 @@
-import { IAmazonOrderItem } from "../types/IAmazonOrderItem";
+import { IAmazonOrderItem } from "../types/data";
 import { DateTime } from "luxon";
 import * as R from "ramda";
+import { snakeCase } from "lodash";
 
 export default function parseAmazonCsv(csvArray: any[]): IAmazonOrderItem[] {
   const headers = csvArray[0];
@@ -25,6 +26,7 @@ export default function parseAmazonCsv(csvArray: any[]): IAmazonOrderItem[] {
           .toJSDate(),
         price_cents: convertToPriceCents(mapping["Item Total"]),
         category: mapping.Category,
+        category_key: snakeCase(mapping.Category),
         unspsc_code: mapping["UNSPSC Code"]
       } as IAmazonOrderItem;
     }

@@ -89,6 +89,7 @@ describe("parseAmazonCsv", () => {
         title:
           "Dang Gluten Free Toasted Coconut Chips, Original, 3.17oz Bags, 4 Count Bundle",
         category: "Grocery",
+        category_key: "grocery",
         unspsc_code: "52141514"
       }
     ]);

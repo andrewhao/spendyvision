@@ -1,8 +1,7 @@
 import "./App.css";
 import "../node_modules/react-vis/dist/style.css";
 import CsvFileUpload from "./CsvFileUpload";
-import { IAmazonOrderItem } from "./types/IAmazonOrderItem";
-import { IAmazonOrderItemGroup } from "./types/IAmazonOrderItemGroup";
+import { IAmazonOrderItem, IAmazonOrderItemGroup } from "./types/data";
 import OrderItem from "./components/OrderItem";
 import PurchaseSummary from "./components/PurchaseSummary";
 import parseAmazonCsv from "./util/parseAmazonCsv";
