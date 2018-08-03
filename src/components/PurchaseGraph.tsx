@@ -7,12 +7,14 @@ import transformCategorizedMonthlySeriesData from "../util/transformCategorizedM
 
 import {
   ResponsiveContainer,
-  BarChart,
+  ComposedChart,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Bar
+  Area,
+  Legend,
+  Brush
 } from "recharts";
 
 interface IProps {
@@ -24,20 +26,26 @@ export default function PurchaseGraph({ groups }: IProps) {
   const categories = R.pipe(
     R.chain(
       (group: IAmazonOrderItemGroup): string[] => {
-        return group.items.map(item => item.category_key || "n-a");
+        return group.items.map(item => item.category_key || "na");
       }
     ),
     R.uniq
   )(groups);
-  const colorScale: string[] = chroma.scale("RdYlBu").colors(categories.length);
+  const colorScale: string[] = chroma
+    .scale("Paired")
+    .mode("lrgb")
+    .colors(categories.length);
   const zipped = R.zip(categories, colorScale);
-  const bars = zipped.map(([categoryKey, hexColor]) => {
+
+  const lines = zipped.map(([categoryKey, hexColor]) => {
     return (
-      <Bar
+      <Area
         key={categoryKey}
-        stackId="thisBar"
         dataKey={categoryKey}
         fill={hexColor}
+        stroke={hexColor}
+        type="monotoneX"
+        stackId="this"
       />
     );
   });
@@ -45,14 +53,19 @@ export default function PurchaseGraph({ groups }: IProps) {
   return (
     <div className="purchase-graph">
       {groups.length > 0 && (
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={data}>
+        <ResponsiveContainer width="100%" height={700}>
+          <ComposedChart
+            margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
+            data={data}
+          >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="month" />
-            <YAxis dataKey="y" />
+            <YAxis />
             <Tooltip />
-            {bars}
-          </BarChart>
+            <Legend />
+            <Brush dataKey="name" height={30} stroke="#8884d8" />
+            {lines}
+          </ComposedChart>
         </ResponsiveContainer>
       )}
     </div>
