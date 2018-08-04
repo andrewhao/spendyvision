@@ -2,7 +2,7 @@ import "./App.css";
 import "../node_modules/react-vis/dist/style.css";
 import CsvFileUpload from "./CsvFileUpload";
 import { IAmazonOrderItem, IAmazonOrderItemGroup } from "./types/data";
-import OrderItem from "./components/OrderItem";
+import MonthlyOrderTable from "./components/MonthlyOrderTable";
 import PurchaseSummary from "./components/PurchaseSummary";
 import parseAmazonCsv from "./util/parseAmazonCsv";
 import * as React from "react";
@@ -44,20 +44,9 @@ class App extends React.Component<any, IAppState> {
   }
 
   private renderAmazonOrderItems(groups: IAmazonOrderItemGroup[]) {
-    return groups.map((month: IAmazonOrderItemGroup, monthKey) => {
-      const items = month.items.map((item, i) => (
-        <OrderItem key={i} {...item} />
-      ));
-
-      const monthGroupKey = month.groupKey;
-
-      return (
-        <div className="amazon-order-item-group" key={monthKey}>
-          <h1>{monthGroupKey}</h1>
-          <table className="amazon-order-items">{items}</table>
-        </div>
-      );
-    });
+    return groups.map((month: IAmazonOrderItemGroup, monthKey) => (
+      <MonthlyOrderTable month={month} key={monthKey} />
+    ));
   }
 
   private setAmazonOrderItems(amazonOrderItems: any[]): boolean {

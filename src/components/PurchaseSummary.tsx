@@ -14,7 +14,7 @@ function aggregateData(items: IAmazonOrderItem[]) {
     "$" +
     items
       .reduce((accumulator, item) => {
-        return accumulator + item.price_cents;
+        return accumulator + item.price_cents / 100;
       }, 0)
       .toFixed(2)
   );
