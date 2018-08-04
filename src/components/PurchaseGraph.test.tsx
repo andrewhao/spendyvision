@@ -15,7 +15,7 @@ describe("PurchaseGraph", () => {
         year: 2018,
         month: 1,
         day: 1
-      }).toJSDate()
+      }).toISO()
     };
     const groups = [{ groupKey: "2018-01-01", items: [item] }];
     const attrs = { groups };

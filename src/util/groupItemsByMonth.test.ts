@@ -3,8 +3,8 @@ import { DateTime } from "luxon";
 
 describe("groupItemsByMonth", () => {
   it("creates an AmazonOrderItemGroup", () => {
-    const date1 = new Date("2018-01-05");
-    const date2 = new Date("2018-01-06");
+    const date1 = new Date("2018-01-05").toISOString();
+    const date2 = new Date("2018-01-06").toISOString();
     const item1 = {
       title: "Flip flops",
       price: "$12.99",

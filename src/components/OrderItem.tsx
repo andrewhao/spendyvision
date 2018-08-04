@@ -9,7 +9,7 @@ export default function OrderItem({
   unspsc_code,
   category
 }: IAmazonOrderItem) {
-  const formattedOrderDate = DateTime.fromJSDate(order_date).toFormat("LLL d");
+  const formattedOrderDate = DateTime.fromISO(order_date).toFormat("LLL d");
   return (
     <tr className="order-item">
       <td className="order-item__title">

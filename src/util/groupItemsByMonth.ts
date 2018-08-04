@@ -6,7 +6,7 @@ export default function groupItemsByMonth(
   items: IAmazonOrderItem[]
 ): IAmazonOrderItemGroup[] {
   const doGrouping = R.groupBy((item: IAmazonOrderItem) => {
-    return DateTime.fromJSDate(item.order_date)
+    return DateTime.fromISO(item.order_date)
       .startOf("month")
       .toString();
   });

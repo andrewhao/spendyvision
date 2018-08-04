@@ -3,9 +3,9 @@ import { IAmazonOrderItem, IAmazonOrderItemGroup } from "../types/data";
 
 describe("transformCategorizedMonthlySeriesData", () => {
   it("groups items by category costs", () => {
-    const date1 = new Date("2018-01-05");
-    const date2 = new Date("2018-01-06");
-    const date3 = new Date("2018-01-07");
+    const date1 = new Date("2018-01-05").toISOString();
+    const date2 = new Date("2018-01-06").toISOString();
+    const date3 = new Date("2018-01-07").toISOString();
     const babyItem1 = {
       title: "Flip flops",
       price: "$12.99",

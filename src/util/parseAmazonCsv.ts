@@ -23,7 +23,7 @@ export default function parseAmazonCsv(csvArray: any[]): IAmazonOrderItem[] {
           zone: "local"
         })
           .startOf("day")
-          .toJSDate(),
+          .toISO(),
         price_cents: convertToPriceCents(mapping["Item Total"]),
         category: mapping.Category,
         category_key: snakeCase(mapping.Category),

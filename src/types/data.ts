@@ -2,7 +2,7 @@ export interface IAmazonOrderItem {
   title: string;
   price: string;
   price_cents: number;
-  order_date: Date;
+  order_date: string;
   unspsc_code?: string;
   category?: string;
   category_key?: string;

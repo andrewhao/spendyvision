@@ -85,7 +85,7 @@ describe("parseAmazonCsv", () => {
       {
         price: "$12.00",
         price_cents: 1200,
-        order_date: DateTime.local(2018, 2, 1).toJSDate(),
+        order_date: DateTime.local(2018, 2, 1).toISO(),
         title:
           "Dang Gluten Free Toasted Coconut Chips, Original, 3.17oz Bags, 4 Count Bundle",
         category: "Grocery",
