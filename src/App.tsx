@@ -1,6 +1,4 @@
 import "./App.css";
-import "../node_modules/react-vis/dist/style.css";
-import CsvFileUpload from "./CsvFileUpload";
 import { IAmazonOrderItem, IAmazonOrderItemGroup } from "./types/data";
 import MonthlyOrderTable from "./components/MonthlyOrderTable";
 import PurchaseSummary from "./components/PurchaseSummary";
@@ -8,17 +6,38 @@ import parseAmazonCsv from "./util/parseAmazonCsv";
 import * as React from "react";
 import groupItemsByMonth from "./util/groupItemsByMonth";
 import PurchaseGraph from "./components/PurchaseGraph";
+import LeftDrawer from "./components/LeftDrawer";
+import Header from "./components/Header";
+import { Grid, withStyles, createMuiTheme } from "@material-ui/core";
+import CssBaseline from "@material-ui/core/CssBaseline";
 
 const LOCAL_STORAGE_CACHE_KEY = "amazon_order_items";
 
 interface IAppState {
   amazonOrderItems: IAmazonOrderItem[];
+  isDrawerOpen: boolean;
 }
+
+const theme = createMuiTheme();
+
+const styles = {
+  toolbar: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    padding: "0 8px"
+  },
+  content: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.default,
+    padding: theme.spacing.unit * 3
+  }
+};
 
 class App extends React.Component<any, IAppState> {
   public constructor(props: any) {
     super(props);
-    this.state = { amazonOrderItems: [] };
+    this.state = { amazonOrderItems: [], isDrawerOpen: false };
     this.restoreAmazonOrderItems = this.restoreAmazonOrderItems.bind(this);
     this.handleCsvUpload = this.handleCsvUpload.bind(this);
     this.renderAmazonOrderItems = this.renderAmazonOrderItems.bind(this);
@@ -26,16 +45,39 @@ class App extends React.Component<any, IAppState> {
   }
   public render() {
     const groups = groupItemsByMonth(this.state.amazonOrderItems);
+    const handleDrawerClose = () => {
+      this.setState({ isDrawerOpen: false });
+    };
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">OMG, Amazon!</h1>
-          <CsvFileUpload handleCsvUpload={this.handleCsvUpload} />
-        </header>
-        <PurchaseGraph groups={groups} />
-        <PurchaseSummary items={this.state.amazonOrderItems} />
-        {this.renderAmazonOrderItems(groups)}
-      </div>
+      <React.Fragment>
+        <CssBaseline>
+          <div className="App">
+            <Header handleCsvUpload={this.handleCsvUpload} />
+            <LeftDrawer
+              handleDrawerClose={handleDrawerClose}
+              open={this.state.isDrawerOpen}
+            />
+            <Grid
+              container={true}
+              direction="row"
+              justify="center"
+              alignItems="center"
+              className={this.props.classes.content}
+            >
+              <Grid item={true} xs={12} style={{ marginTop: "100px" }}>
+                <PurchaseGraph groups={groups} />
+              </Grid>
+              <Grid item={true} xs={12}>
+                <PurchaseSummary items={this.state.amazonOrderItems} />
+              </Grid>
+              <Grid item={true} xs={12}>
+                {this.renderAmazonOrderItems(groups)}
+              </Grid>
+            </Grid>
+          </div>
+        </CssBaseline>
+      </React.Fragment>
     );
   }
 
@@ -67,10 +109,9 @@ class App extends React.Component<any, IAppState> {
 
   private handleCsvUpload(results: any[]) {
     const itemsJSON = parseAmazonCsv(results);
-    console.log(itemsJSON);
     this.setAmazonOrderItems(itemsJSON);
     this.setState({ amazonOrderItems: itemsJSON });
   }
 }
 
-export default App;
+export default withStyles(styles)(App);

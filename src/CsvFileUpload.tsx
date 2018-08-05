@@ -9,8 +9,12 @@ interface ICsvFileUploadProps {
 
 function CsvFileUpload(props: ICsvFileUploadProps) {
   return (
-    <div className="csv-file-upload">
-      <CSVReader label="Upload" onFileLoaded={props.handleCsvUpload} />
+    <div className="csv-file-upload" style={{ display: "inline-block" }}>
+      <CSVReader
+        label="Upload"
+        onFileLoaded={props.handleCsvUpload}
+        inputId="csv-file-upload__input"
+      />
     </div>
   );
 }
