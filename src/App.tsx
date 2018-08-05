@@ -1,26 +1,35 @@
 import "./App.css";
-import { IAmazonOrderItem, IAmazonOrderItemGroup } from "./types/data";
-import MonthlyOrderTable from "./components/MonthlyOrderTable";
-import PurchaseSummary from "./components/PurchaseSummary";
+import { IAmazonOrderItem } from "./types/data";
+import DetailedTransactionPage from "./pages/DetailedTransactionPage";
+import SummaryPage from "./pages/SummaryPage";
 import parseAmazonCsv from "./util/parseAmazonCsv";
 import * as React from "react";
 import groupItemsByMonth from "./util/groupItemsByMonth";
 import PurchaseGraph from "./components/PurchaseGraph";
-import LeftDrawer from "./components/LeftDrawer";
+import Navigation from "./components/Navigation";
 import Header from "./components/Header";
 import { Grid, withStyles, createMuiTheme } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import { ActivePanel } from "./types/view";
 
 const LOCAL_STORAGE_CACHE_KEY = "amazon_order_items";
 
 interface IAppState {
   amazonOrderItems: IAmazonOrderItem[];
   isDrawerOpen: boolean;
+  activePanel: ActivePanel;
 }
 
 const theme = createMuiTheme();
 
-const styles = {
+const styles: any = {
+  root: {
+    flexGrow: 1,
+    height: "100vh",
+    zIndex: 1,
+    position: "relative",
+    display: "flex"
+  },
   toolbar: {
     display: "flex",
     alignItems: "center",
@@ -37,11 +46,16 @@ const styles = {
 class App extends React.Component<any, IAppState> {
   public constructor(props: any) {
     super(props);
-    this.state = { amazonOrderItems: [], isDrawerOpen: false };
+    this.state = {
+      amazonOrderItems: [],
+      isDrawerOpen: false,
+      activePanel: "Summary"
+    };
     this.restoreAmazonOrderItems = this.restoreAmazonOrderItems.bind(this);
     this.handleCsvUpload = this.handleCsvUpload.bind(this);
-    this.renderAmazonOrderItems = this.renderAmazonOrderItems.bind(this);
     this.setAmazonOrderItems = this.setAmazonOrderItems.bind(this);
+    this.handleMenuClick = this.handleMenuClick.bind(this);
+    this.handleNavigationItemClick = this.handleNavigationItemClick.bind(this);
   }
   public render() {
     const groups = groupItemsByMonth(this.state.amazonOrderItems);
@@ -52,10 +66,16 @@ class App extends React.Component<any, IAppState> {
     return (
       <React.Fragment>
         <CssBaseline>
-          <div className="App">
-            <Header handleCsvUpload={this.handleCsvUpload} />
-            <LeftDrawer
+          <div className={this.props.classes.root}>
+            <Header
+              handleCsvUpload={this.handleCsvUpload}
+              handleMenuClick={this.handleMenuClick}
+              open={this.state.isDrawerOpen}
+            />
+            <Navigation
               handleDrawerClose={handleDrawerClose}
+              activePanel={this.state.activePanel}
+              handleItemClick={this.handleNavigationItemClick}
               open={this.state.isDrawerOpen}
             />
             <Grid
@@ -68,12 +88,12 @@ class App extends React.Component<any, IAppState> {
               <Grid item={true} xs={12} style={{ marginTop: "100px" }}>
                 <PurchaseGraph groups={groups} />
               </Grid>
-              <Grid item={true} xs={12}>
-                <PurchaseSummary items={this.state.amazonOrderItems} />
-              </Grid>
-              <Grid item={true} xs={12}>
-                {this.renderAmazonOrderItems(groups)}
-              </Grid>
+              {this.state.activePanel === "Summary" && (
+                <SummaryPage items={this.state.amazonOrderItems} />
+              )}
+              {this.state.activePanel === "DetailedTransaction" && (
+                <DetailedTransactionPage groups={groups} />
+              )}
             </Grid>
           </div>
         </CssBaseline>
@@ -85,10 +105,12 @@ class App extends React.Component<any, IAppState> {
     this.restoreAmazonOrderItems();
   }
 
-  private renderAmazonOrderItems(groups: IAmazonOrderItemGroup[]) {
-    return groups.map((month: IAmazonOrderItemGroup, monthKey) => (
-      <MonthlyOrderTable month={month} key={monthKey} />
-    ));
+  private handleMenuClick() {
+    this.setState({ isDrawerOpen: !this.state.isDrawerOpen });
+  }
+
+  private handleNavigationItemClick(panel: ActivePanel) {
+    this.setState({ activePanel: panel });
   }
 
   private setAmazonOrderItems(amazonOrderItems: any[]): boolean {
