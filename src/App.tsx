@@ -5,7 +5,6 @@ import SummaryPage from "./pages/SummaryPage";
 import parseAmazonCsv from "./util/parseAmazonCsv";
 import * as React from "react";
 import groupItemsByMonth from "./util/groupItemsByMonth";
-import PurchaseGraph from "./components/PurchaseGraph";
 import Navigation from "./components/Navigation";
 import Header from "./components/Header";
 import { Grid, withStyles, createMuiTheme } from "@material-ui/core";
@@ -85,11 +84,11 @@ class App extends React.Component<any, IAppState> {
               alignItems="center"
               className={this.props.classes.content}
             >
-              <Grid item={true} xs={12} style={{ marginTop: "100px" }}>
-                <PurchaseGraph groups={groups} />
-              </Grid>
               {this.state.activePanel === "Summary" && (
-                <SummaryPage items={this.state.amazonOrderItems} />
+                <SummaryPage
+                  groups={groups}
+                  items={this.state.amazonOrderItems}
+                />
               )}
               {this.state.activePanel === "DetailedTransaction" && (
                 <DetailedTransactionPage groups={groups} />
@@ -110,7 +109,9 @@ class App extends React.Component<any, IAppState> {
   }
 
   private handleNavigationItemClick(panel: ActivePanel) {
-    this.setState({ activePanel: panel });
+    return function handleBound(this: React.Component) {
+      this.setState({ activePanel: panel });
+    }.bind(this);
   }
 
   private setAmazonOrderItems(amazonOrderItems: any[]): boolean {
