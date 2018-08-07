@@ -12,7 +12,6 @@ interface ISummaryPageProps {
 export default function SummaryPage({ groups, items }: ISummaryPageProps) {
   return (
     <Grid item={true} xs={12}>
-      {" "}
       <PurchaseGraph groups={groups} />
       <PurchaseSummary items={items} />
     </Grid>

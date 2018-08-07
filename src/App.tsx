@@ -24,7 +24,6 @@ const theme = createMuiTheme();
 const styles: any = {
   root: {
     flexGrow: 1,
-    height: "100vh",
     zIndex: 1,
     position: "relative",
     display: "flex"
