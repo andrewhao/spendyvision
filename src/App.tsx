@@ -1,6 +1,7 @@
 import "./App.css";
 import { IAmazonOrderItem } from "./types/data";
 import DetailedTransactionPage from "./pages/DetailedTransactionPage";
+import ByCategoryPage from "./pages/ByCategoryPage";
 import SummaryPage from "./pages/SummaryPage";
 import parseAmazonCsv from "./util/parseAmazonCsv";
 import * as React from "react";
@@ -37,7 +38,8 @@ const styles: any = {
   content: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing.unit * 3,
+    marginTop: 100
   }
 };
 
@@ -91,6 +93,12 @@ class App extends React.Component<any, IAppState> {
               )}
               {this.state.activePanel === "DetailedTransaction" && (
                 <DetailedTransactionPage groups={groups} />
+              )}
+              {this.state.activePanel === "ByCategory" && (
+                <ByCategoryPage
+                  items={this.state.amazonOrderItems}
+                  monthlyItems={groups}
+                />
               )}
             </Grid>
           </div>

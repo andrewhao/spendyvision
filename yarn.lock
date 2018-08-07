@@ -2367,6 +2367,10 @@ diffie-hellman@^5.0.0:
     miller-rabin "^4.0.0"
     randombytes "^2.0.0"
 
+dinero.js@1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/dinero.js/-/dinero.js-1.4.0.tgz#53614ec343e3b2325fca10e658975697b1f3cfa6"
+
 discontinuous-range@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/discontinuous-range/-/discontinuous-range-1.0.0.tgz#e38331f0844bba49b9a9cb71c771585aab1bc65a"

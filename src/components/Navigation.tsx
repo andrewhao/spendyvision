@@ -13,6 +13,7 @@ import {
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import HomeIcon from "@material-ui/icons/Home";
 import ZoomInIcon from "@material-ui/icons/ZoomIn";
+import CategoryIcon from "@material-ui/icons/Category";
 import { ActivePanel } from "../types/view";
 
 const theme = createMuiTheme();
@@ -64,6 +65,8 @@ function Navigation({
   activePanel
 }: INavigationProps) {
   const summaryIconColor = activePanel === "Summary" ? "secondary" : "inherit";
+  const byCategoryIconColor =
+    activePanel === "ByCategory" ? "secondary" : "inherit";
   const detailedTransactionIconColor =
     activePanel === "DetailedTransaction" ? "secondary" : "inherit";
   return (
@@ -99,6 +102,12 @@ function Navigation({
               <ZoomInIcon color={detailedTransactionIconColor} />
             </ListItemIcon>
             <ListItemText primary="Details" />
+          </ListItem>
+          <ListItem button={true} onClick={handleItemClick("ByCategory")}>
+            <ListItemIcon>
+              <CategoryIcon color={byCategoryIconColor} />
+            </ListItemIcon>
+            <ListItemText primary="By Category" />
           </ListItem>
         </List>
       </Drawer>
