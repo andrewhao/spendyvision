@@ -17,3 +17,5 @@ export interface IMonthlyCategorizedSeries {
   month: string;
   y: number;
 }
+
+export type Category = string;
