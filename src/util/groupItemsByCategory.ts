@@ -1,9 +1,9 @@
-import { IAmazonOrderItem, IAmazonOrderItemGroup } from "../types/data";
+import { IAmazonOrderItem, ICategoryGroup } from "../types/data";
 import * as R from "ramda";
 
-export default function groupItemsByMonth(
+export default function groupItemsByCategory(
   items: IAmazonOrderItem[]
-): IAmazonOrderItemGroup[] {
+): ICategoryGroup[] {
   const doGrouping = R.groupBy(
     (item: IAmazonOrderItem): string => {
       return item.category || "N/A";
@@ -15,7 +15,7 @@ export default function groupItemsByMonth(
       return {
         items: value,
         groupKey: key
-      } as IAmazonOrderItemGroup;
+      } as ICategoryGroup;
     }
   );
 

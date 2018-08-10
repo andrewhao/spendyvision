@@ -8,11 +8,11 @@ import {
   TableCell,
   TableBody
 } from "@material-ui/core";
-import { Category } from "../types/data";
+import { CategoryKey } from "../types/data";
 
 interface ICategoryReportTableProps {
   allDates: DateTime[];
-  allCategories: Category[];
+  allCategories: CategoryKey[];
   monthlyCells(category: string): JSX.Element[];
 }
 

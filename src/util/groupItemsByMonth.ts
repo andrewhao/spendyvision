@@ -1,10 +1,10 @@
-import { IAmazonOrderItem, IAmazonOrderItemGroup } from "../types/data";
+import { IAmazonOrderItem, IMonthlyGroup } from "../types/data";
 import { DateTime } from "luxon";
 import * as R from "ramda";
 
 export default function groupItemsByMonth(
   items: IAmazonOrderItem[]
-): IAmazonOrderItemGroup[] {
+): IMonthlyGroup[] {
   const doGrouping = R.groupBy((item: IAmazonOrderItem) => {
     return DateTime.fromISO(item.order_date)
       .startOf("month")
@@ -16,7 +16,7 @@ export default function groupItemsByMonth(
       return {
         items: value,
         groupKey: DateTime.fromISO(key).toISO()
-      } as IAmazonOrderItemGroup;
+      } as IMonthlyGroup;
     }
   );
 

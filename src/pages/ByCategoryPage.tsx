@@ -3,7 +3,7 @@ import { Grid, TableCell } from "@material-ui/core";
 import {
   IAmazonOrderItem,
   IAmazonOrderItemGroup,
-  Category
+  CategoryKey
 } from "../types/data";
 import * as R from "ramda";
 import { DateTime } from "luxon";
@@ -24,14 +24,15 @@ export default function ByCategoryPage({
     R.map((item: IAmazonOrderItem) => item.category),
     R.uniq,
     R.reject(R.isNil)
-  )(items) as Category[];
+  )(items) as CategoryKey[];
+
   const allDates = R.pipe(
     R.map((item: IAmazonOrderItemGroup) => DateTime.fromISO(item.groupKey)),
     R.uniq,
     R.sort(R.ascend(R.identity))
   )(monthlyItems);
 
-  const monthlyCells = (category: Category) => {
+  const monthlyCells = (category: CategoryKey) => {
     return groupCategoryItemsByMonth(category, monthlyItems, allDates).map(
       ({ monthKey, monthValue }) => {
         const dateString = monthKey.toFormat("yyyy LLL");
