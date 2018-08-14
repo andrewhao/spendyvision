@@ -1,24 +1,37 @@
 import * as React from "react";
-import { Grid, TableCell } from "@material-ui/core";
+import { Grid, TableCell, withStyles } from "@material-ui/core";
 import {
   IAmazonOrderItem,
   IAmazonOrderItemGroup,
-  CategoryKey
+  CategoryKey,
+  IMonthlyGroup
 } from "../types/data";
 import * as R from "ramda";
 import { DateTime } from "luxon";
 import groupCategoryItemsByMonth from "../util/groupCategoryItemsByMonth";
 import Dinero from "dinero.js";
 import CategoryReportTable from "../components/CategoryReportTable";
+import groupItemsByMonth from "../util/groupItemsByMonth";
+import PurchaseGraph from "../components/PurchaseGraph";
+import chroma from "chroma-js";
+import { shuffle } from "lodash";
 
 interface IByCategoryPageProps {
+  classes: any;
   items: IAmazonOrderItem[];
-  monthlyItems: IAmazonOrderItemGroup[];
+  monthlyItems: IMonthlyGroup[];
 }
 
-export default function ByCategoryPage({
+const styles: any = {
+  root: {
+    overflowX: "auto"
+  }
+};
+
+function ByCategoryPage({
   items,
-  monthlyItems
+  monthlyItems,
+  classes
 }: IByCategoryPageProps) {
   const allCategories = R.pipe(
     R.map((item: IAmazonOrderItem) => item.category),
@@ -42,13 +55,67 @@ export default function ByCategoryPage({
     );
   };
 
+  const colorScale = shuffle(
+    chroma
+      .scale("Paired")
+      .mode("lrgb")
+      .colors(allCategories.length)
+  );
+
+  const categoryGraphs = allCategories.map(
+    (categoryKey: CategoryKey, i: number) => {
+      const categoryItems = R.filter(
+        (item: IAmazonOrderItem) => item.category === categoryKey
+      )(items) as IAmazonOrderItem[];
+
+      const interpolateEmptyMonthlyGroups = (
+        dates: DateTime[],
+        existingMonthlyGroups: IMonthlyGroup[]
+      ): IMonthlyGroup[] => {
+        return allDates
+          .map(monthDateTime => ({
+            groupKey: monthDateTime.toISO(),
+            items: []
+          }))
+          .map(monthly => {
+            return (
+              R.find(
+                R.propEq("groupKey", monthly.groupKey),
+                existingMonthlyGroups
+              ) || monthly
+            );
+          });
+      };
+      const groups = R.pipe(groupItemsByMonth)(categoryItems);
+      const groupsWithEmpties = interpolateEmptyMonthlyGroups(allDates, groups);
+
+      return (
+        <div key={i}>
+          <h3>{categoryKey}</h3>
+          <PurchaseGraph
+            groups={groupsWithEmpties}
+            height={250}
+            color={colorScale[i]}
+          />
+        </div>
+      );
+    }
+  );
+
   return (
-    <Grid item={true} xs={12}>
-      <CategoryReportTable
-        allDates={allDates}
-        allCategories={allCategories}
-        monthlyCells={monthlyCells}
-      />
-    </Grid>
+    <div className={classes.root}>
+      <Grid item={true} xs={12}>
+        <CategoryReportTable
+          allDates={allDates}
+          allCategories={allCategories}
+          monthlyCells={monthlyCells}
+        />
+      </Grid>
+      <Grid item={true} xs={12}>
+        {categoryGraphs}
+      </Grid>
+    </div>
   );
 }
+
+export default withStyles(styles)(ByCategoryPage);

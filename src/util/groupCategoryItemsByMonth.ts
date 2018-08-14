@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import * as R from "ramda";
-import { IAmazonOrderItemGroup, IAmazonOrderItem } from "../types/data";
+import { IMonthlyGroup, IAmazonOrderItem, CategoryKey } from "../types/data";
 import groupItemsByCategory from "./groupItemsByCategory";
 
 interface IMonthlyValueMapping {
@@ -9,8 +9,8 @@ interface IMonthlyValueMapping {
 }
 
 export default function groupCategoryItemsByMonth(
-  category: string,
-  monthlyItems: IAmazonOrderItemGroup[],
+  category: CategoryKey,
+  monthlyItems: IMonthlyGroup[],
   allDates: DateTime[]
 ): IMonthlyValueMapping[] {
   return R.pipe(
@@ -23,8 +23,8 @@ export default function groupCategoryItemsByMonth(
 
 const valueForMonth = (
   date: DateTime,
-  monthlyItems: IAmazonOrderItemGroup[],
-  category: string
+  monthlyItems: IMonthlyGroup[],
+  category: CategoryKey
 ): number => {
   const monthGroup = R.find(
     month => DateTime.fromISO(month.groupKey).equals(date),

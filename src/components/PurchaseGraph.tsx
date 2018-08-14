@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IAmazonOrderItemGroup } from "../types/data";
+import { IMonthlyGroup } from "../types/data";
 import chroma from "chroma-js";
 import * as R from "ramda";
 
@@ -13,19 +13,20 @@ import {
   CartesianGrid,
   Tooltip,
   Area,
-  Legend,
-  Brush
+  Legend
 } from "recharts";
 
 interface IProps {
-  groups: IAmazonOrderItemGroup[];
+  groups: IMonthlyGroup[];
+  height?: number;
+  color?: string;
 }
 
-export default function PurchaseGraph({ groups }: IProps) {
+export default function PurchaseGraph({ groups, height = 700, color }: IProps) {
   const data = transformCategorizedMonthlySeriesData(groups);
   const categories = R.pipe(
     R.chain(
-      (group: IAmazonOrderItemGroup): string[] => {
+      (group: IMonthlyGroup): string[] => {
         return group.items.map(item => item.category_key || "na");
       }
     ),
@@ -35,7 +36,11 @@ export default function PurchaseGraph({ groups }: IProps) {
     .scale("Paired")
     .mode("lrgb")
     .colors(categories.length);
-  const zipped = R.zip(categories, colorScale);
+  const defaultColorScale = R.times(R.always(color), categories.length);
+  const zipped = R.zip(
+    categories,
+    color === undefined ? colorScale : defaultColorScale
+  );
 
   const lines = zipped.map(([categoryKey, hexColor]) => {
     return (
@@ -53,7 +58,7 @@ export default function PurchaseGraph({ groups }: IProps) {
   return (
     <div className="purchase-graph">
       {groups.length > 0 && (
-        <ResponsiveContainer width="100%" height={700}>
+        <ResponsiveContainer width="100%" height={height}>
           <ComposedChart
             margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
             data={data}
@@ -63,7 +68,6 @@ export default function PurchaseGraph({ groups }: IProps) {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Brush dataKey="name" height={30} stroke="#8884d8" />
             {lines}
           </ComposedChart>
         </ResponsiveContainer>

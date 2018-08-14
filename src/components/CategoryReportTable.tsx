@@ -40,11 +40,13 @@ export default function CategoryReportTable({
   });
 
   return (
-    <Table>
-      <TableHead>
-        <TableRow>{headerCells}</TableRow>
-      </TableHead>
-      <TableBody>{categoryResults}</TableBody>
-    </Table>
+    <div className="category-report-table">
+      <Table>
+        <TableHead>
+          <TableRow>{headerCells}</TableRow>
+        </TableHead>
+        <TableBody>{categoryResults}</TableBody>
+      </Table>
+    </div>
   );
 }
