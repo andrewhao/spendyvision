@@ -96,6 +96,7 @@ function ByCategoryPage({
             groups={groupsWithEmpties}
             height={250}
             color={colorScale[i]}
+            yAxisMax={1000}
           />
         </div>
       );

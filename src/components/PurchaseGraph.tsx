@@ -13,6 +13,7 @@ import {
   CartesianGrid,
   Tooltip,
   Area,
+  Bar,
   Legend
 } from "recharts";
 
@@ -20,9 +21,17 @@ interface IProps {
   groups: IMonthlyGroup[];
   height?: number;
   color?: string;
+  style?: string;
+  yAxisMax?: any;
 }
 
-export default function PurchaseGraph({ groups, height = 700, color }: IProps) {
+export default function PurchaseGraph({
+  groups,
+  height = 700,
+  color,
+  style = "bar",
+  yAxisMax = "dataMax"
+}: IProps) {
   const data = transformCategorizedMonthlySeriesData(groups);
   const categories = R.pipe(
     R.chain(
@@ -43,13 +52,21 @@ export default function PurchaseGraph({ groups, height = 700, color }: IProps) {
   );
 
   const lines = zipped.map(([categoryKey, hexColor]) => {
-    return (
+    return style === "area" ? (
       <Area
         key={categoryKey}
         dataKey={categoryKey}
         fill={hexColor}
         stroke={hexColor}
         type="monotoneX"
+        stackId="this"
+      />
+    ) : (
+      <Bar
+        key={categoryKey}
+        dataKey={categoryKey}
+        fill={hexColor}
+        stroke={hexColor}
         stackId="this"
       />
     );
@@ -65,7 +82,7 @@ export default function PurchaseGraph({ groups, height = 700, color }: IProps) {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="month" />
-            <YAxis />
+            <YAxis domain={[0, yAxisMax]} />
             <Tooltip />
             <Legend />
             {lines}
