@@ -66,7 +66,7 @@ function Header({
           <MenuIcon />
         </IconButton>
         <Typography variant="title" color="inherit">
-          OMG, Amazon!
+          Spendyvision!
         </Typography>
         <label htmlFor="csv-file-upload__input">
           <Button color="inherit">Upload an Order Report</Button>
