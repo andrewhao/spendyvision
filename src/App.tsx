@@ -18,6 +18,7 @@ interface IAppState {
   amazonOrderItems: IAmazonOrderItem[];
   isDrawerOpen: boolean;
   activePanel: ActivePanel;
+  numMonthsToShow: number;
 }
 
 const theme = createMuiTheme();
@@ -49,13 +50,17 @@ class App extends React.Component<any, IAppState> {
     this.state = {
       amazonOrderItems: [],
       isDrawerOpen: false,
-      activePanel: "Summary"
+      activePanel: "Summary",
+      numMonthsToShow: 4
     };
     this.restoreAmazonOrderItems = this.restoreAmazonOrderItems.bind(this);
     this.handleCsvUpload = this.handleCsvUpload.bind(this);
     this.setAmazonOrderItems = this.setAmazonOrderItems.bind(this);
     this.handleMenuClick = this.handleMenuClick.bind(this);
     this.handleNavigationItemClick = this.handleNavigationItemClick.bind(this);
+    this.handleNumMonthsToShowChange = this.handleNumMonthsToShowChange.bind(
+      this
+    );
   }
   public render() {
     const groups = groupItemsByMonth(this.state.amazonOrderItems);
@@ -98,6 +103,8 @@ class App extends React.Component<any, IAppState> {
                 <ByCategoryPage
                   items={this.state.amazonOrderItems}
                   monthlyItems={groups}
+                  numMonthsToShow={this.state.numMonthsToShow}
+                  handleNumMonthsToShowChange={this.handleNumMonthsToShowChange}
                 />
               )}
             </Grid>
@@ -109,6 +116,10 @@ class App extends React.Component<any, IAppState> {
 
   public componentDidMount() {
     this.restoreAmazonOrderItems();
+  }
+
+  private handleNumMonthsToShowChange(event: any) {
+    this.setState({ numMonthsToShow: event.target.value });
   }
 
   private handleMenuClick() {

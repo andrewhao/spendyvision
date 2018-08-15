@@ -20,6 +20,8 @@ interface IByCategoryPageProps {
   classes: any;
   items: IAmazonOrderItem[];
   monthlyItems: IMonthlyGroup[];
+  numMonthsToShow: number;
+  handleNumMonthsToShowChange(evt: any): void;
 }
 
 const styles: any = {
@@ -31,7 +33,9 @@ const styles: any = {
 function ByCategoryPage({
   items,
   monthlyItems,
-  classes
+  classes,
+  numMonthsToShow,
+  handleNumMonthsToShowChange
 }: IByCategoryPageProps) {
   const allCategories = R.pipe(
     R.map((item: IAmazonOrderItem) => item.category),
@@ -39,11 +43,14 @@ function ByCategoryPage({
     R.reject(R.isNil)
   )(items) as CategoryKey[];
 
-  const allDates = R.pipe(
-    R.map((item: IAmazonOrderItemGroup) => DateTime.fromISO(item.groupKey)),
-    R.uniq,
-    R.sort(R.ascend(R.identity))
-  )(monthlyItems);
+  const allDates = R.takeLast(
+    numMonthsToShow,
+    R.pipe(
+      R.map((item: IAmazonOrderItemGroup) => DateTime.fromISO(item.groupKey)),
+      R.uniq,
+      R.sort(R.ascend(R.identity))
+    )(monthlyItems)
+  );
 
   const monthlyCells = (category: CategoryKey) => {
     return groupCategoryItemsByMonth(category, monthlyItems, allDates).map(
@@ -105,6 +112,13 @@ function ByCategoryPage({
 
   return (
     <div className={classes.root}>
+      <label htmlFor="show-the-last">Show the last months</label>
+      <input
+        type="number"
+        id="show-the-last"
+        value={numMonthsToShow}
+        onChange={handleNumMonthsToShowChange}
+      />
       <Grid item={true} xs={12}>
         <CategoryReportTable
           allDates={allDates}
