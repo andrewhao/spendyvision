@@ -39,3 +39,13 @@ export interface IMonthlyCategorizedSeries {
 
 export type CategoryKey = string;
 export type MonthKey = string;
+
+export type SpendingCost = number;
+
+export interface IMonthlySpending {
+  period: OneMonth | ThreeMonth;
+  cost: SpendingCost;
+}
+
+export type OneMonth = "OneMonth";
+export type ThreeMonth = "ThreeMonth";

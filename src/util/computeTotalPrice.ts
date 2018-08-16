@@ -1,6 +1,6 @@
 import { IAmazonItemCollectionKeyable, IAmazonOrderItem } from "../types/data";
 
-export default function groupMoney(
+export default function computeTotalPrice(
   group: IAmazonItemCollectionKeyable
 ): number {
   const totalCents = group.items.reduce(

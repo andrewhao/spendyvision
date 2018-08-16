@@ -4,10 +4,11 @@ import {
   ICategoryGroup
 } from "../types/data";
 import groupItemsByCategory from "./groupItemsByCategory";
-import groupMoney from "./groupMoney";
+import computeTotalPrice from "./computeTotalPrice";
 import { DateTime } from "luxon";
 import { snakeCase } from "lodash";
 
+// Given a set of MonthlyGroups (JAN: [<item>, <item>])
 export default function transformCategorizedMonthlySeriesData(
   groups: IMonthlyGroup[]
 ): IMonthlyCategorizedSeries[] {
@@ -15,14 +16,14 @@ export default function transformCategorizedMonthlySeriesData(
     const month = DateTime.fromISO(group.monthKey).toFormat("yyyy LLL");
     const categorizedItems = groupItemsByCategory(group.items).reduce(
       (acc: object, g: ICategoryGroup) => {
-        acc[snakeCase(g.groupKey)] = groupMoney(g);
+        acc[snakeCase(g.groupKey)] = computeTotalPrice(g);
         return acc;
       },
       {}
     );
     return {
       month,
-      y: groupMoney(group),
+      y: computeTotalPrice(group),
       ...categorizedItems
     } as IMonthlyCategorizedSeries;
   });
