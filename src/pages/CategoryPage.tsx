@@ -11,7 +11,7 @@ import PurchaseGraph from "../components/PurchaseGraph";
 import chroma from "chroma-js";
 import { shuffle } from "lodash";
 
-interface IByCategoryPageProps {
+interface ICategoryPageProps {
   classes: any;
   items: IAmazonOrderItem[];
   monthlyItems: IMonthlyGroup[];
@@ -25,13 +25,13 @@ const styles: any = {
   }
 };
 
-function ByCategoryPage({
+function CategoryPage({
   items,
   monthlyItems,
   classes,
   numMonthsToShow,
   handleNumMonthsToShowChange
-}: IByCategoryPageProps) {
+}: ICategoryPageProps) {
   const allCategories = R.pipe(
     R.map((item: IAmazonOrderItem) => item.category),
     R.uniq,
@@ -128,4 +128,4 @@ function ByCategoryPage({
   );
 }
 
-export default withStyles(styles)(ByCategoryPage);
+export default withStyles(styles)(CategoryPage);

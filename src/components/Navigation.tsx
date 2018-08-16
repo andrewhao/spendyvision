@@ -14,6 +14,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import HomeIcon from "@material-ui/icons/Home";
 import ZoomInIcon from "@material-ui/icons/ZoomIn";
 import CategoryIcon from "@material-ui/icons/Category";
+import TrendingUpIcon from "@material-ui/icons/TrendingUp";
 import { ActivePanel } from "../types/view";
 
 const theme = createMuiTheme();
@@ -64,11 +65,14 @@ function Navigation({
   handleItemClick,
   activePanel
 }: INavigationProps) {
-  const summaryIconColor = activePanel === "Summary" ? "secondary" : "inherit";
+  const summaryIconColor =
+    activePanel === ActivePanel.Summary ? "secondary" : "inherit";
   const byCategoryIconColor =
-    activePanel === "ByCategory" ? "secondary" : "inherit";
+    activePanel === ActivePanel.Category ? "secondary" : "inherit";
   const detailedTransactionIconColor =
-    activePanel === "DetailedTransaction" ? "secondary" : "inherit";
+    activePanel === ActivePanel.DetailedTransaction ? "secondary" : "inherit";
+  const monthlyReportIconColor =
+    activePanel === ActivePanel.MonthlyReport ? "secondary" : "inherit";
   return (
     <div className={classes.root}>
       <Drawer
@@ -88,7 +92,10 @@ function Navigation({
         </div>
         <Divider />
         <List>
-          <ListItem button={true} onClick={handleItemClick("Summary")}>
+          <ListItem
+            button={true}
+            onClick={handleItemClick(ActivePanel.Summary)}
+          >
             <ListItemIcon>
               <HomeIcon color={summaryIconColor} />
             </ListItemIcon>
@@ -96,14 +103,27 @@ function Navigation({
           </ListItem>
           <ListItem
             button={true}
-            onClick={handleItemClick("DetailedTransaction")}
+            onClick={handleItemClick(ActivePanel.MonthlyReport)}
+          >
+            <ListItemIcon>
+              <TrendingUpIcon color={monthlyReportIconColor} />
+            </ListItemIcon>
+            <ListItemText primary="Monthly Report" />
+          </ListItem>
+          <ListItem
+            button={true}
+            onClick={handleItemClick(ActivePanel.DetailedTransaction)}
           >
             <ListItemIcon>
               <ZoomInIcon color={detailedTransactionIconColor} />
             </ListItemIcon>
             <ListItemText primary="Details" />
           </ListItem>
-          <ListItem button={true} onClick={handleItemClick("ByCategory")}>
+
+          <ListItem
+            button={true}
+            onClick={handleItemClick(ActivePanel.Category)}
+          >
             <ListItemIcon>
               <CategoryIcon color={byCategoryIconColor} />
             </ListItemIcon>

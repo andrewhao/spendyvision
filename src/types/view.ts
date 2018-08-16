@@ -1,4 +1,6 @@
-export type ActivePanel = Summary | ByCategory | DetailedTransaction;
-export type Summary = "Summary";
-export type ByCategory = "ByCategory";
-export type DetailedTransaction = "DetailedTransaction";
+export enum ActivePanel {
+  Summary = "Summary",
+  Category = "Category",
+  DetailedTransaction = "DetailedTransaction",
+  MonthlyReport = "MonthlyReport"
+}

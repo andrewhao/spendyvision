@@ -1,8 +1,9 @@
 import "./App.css";
-import { IAmazonOrderItem } from "./types/data";
+import { IAmazonOrderItem, MonthKey } from "./types/data";
 import DetailedTransactionPage from "./pages/DetailedTransactionPage";
-import ByCategoryPage from "./pages/ByCategoryPage";
+import CategoryPage from "./pages/CategoryPage";
 import SummaryPage from "./pages/SummaryPage";
+import MonthlyReportPage from "./pages/MonthlyReportPage";
 import parseAmazonCsv from "./util/parseAmazonCsv";
 import * as React from "react";
 import groupItemsByMonth from "./util/groupItemsByMonth";
@@ -11,6 +12,7 @@ import Header from "./components/Header";
 import { Grid, withStyles, createMuiTheme } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ActivePanel } from "./types/view";
+import { DateTime } from "luxon";
 
 const LOCAL_STORAGE_CACHE_KEY = "amazon_order_items";
 
@@ -19,6 +21,7 @@ interface IAppState {
   isDrawerOpen: boolean;
   activePanel: ActivePanel;
   numMonthsToShow: number;
+  focusedMonthlyReportMonth: MonthKey;
 }
 
 const theme = createMuiTheme();
@@ -44,20 +47,28 @@ const styles: any = {
   }
 };
 
+const currentMonth = DateTime.local()
+  .startOf("month")
+  .toISO() as MonthKey;
+
 class App extends React.Component<any, IAppState> {
   public constructor(props: any) {
     super(props);
     this.state = {
       amazonOrderItems: [],
       isDrawerOpen: false,
-      activePanel: "Summary",
-      numMonthsToShow: 4
+      activePanel: ActivePanel.Summary,
+      numMonthsToShow: 4,
+      focusedMonthlyReportMonth: currentMonth
     };
     this.restoreAmazonOrderItems = this.restoreAmazonOrderItems.bind(this);
     this.handleCsvUpload = this.handleCsvUpload.bind(this);
     this.setAmazonOrderItems = this.setAmazonOrderItems.bind(this);
     this.handleMenuClick = this.handleMenuClick.bind(this);
     this.handleNavigationItemClick = this.handleNavigationItemClick.bind(this);
+    this.handleMonthlyReportMonthChange = this.handleMonthlyReportMonthChange.bind(
+      this
+    );
     this.handleNumMonthsToShowChange = this.handleNumMonthsToShowChange.bind(
       this
     );
@@ -90,17 +101,26 @@ class App extends React.Component<any, IAppState> {
               alignItems="center"
               className={this.props.classes.content}
             >
-              {this.state.activePanel === "Summary" && (
+              {this.state.activePanel === ActivePanel.Summary && (
                 <SummaryPage
                   groups={groups}
                   items={this.state.amazonOrderItems}
                 />
               )}
-              {this.state.activePanel === "DetailedTransaction" && (
+              {this.state.activePanel === ActivePanel.DetailedTransaction && (
                 <DetailedTransactionPage groups={groups} />
               )}
-              {this.state.activePanel === "ByCategory" && (
-                <ByCategoryPage
+              {this.state.activePanel === ActivePanel.MonthlyReport && (
+                <MonthlyReportPage
+                  groups={groups}
+                  focusedMonth={this.state.focusedMonthlyReportMonth}
+                  handleMonthlyReportMonthChange={
+                    this.handleMonthlyReportMonthChange
+                  }
+                />
+              )}
+              {this.state.activePanel === ActivePanel.Category && (
+                <CategoryPage
                   items={this.state.amazonOrderItems}
                   monthlyItems={groups}
                   numMonthsToShow={this.state.numMonthsToShow}
@@ -120,6 +140,10 @@ class App extends React.Component<any, IAppState> {
 
   private handleNumMonthsToShowChange(event: any) {
     this.setState({ numMonthsToShow: event.target.value });
+  }
+
+  private handleMonthlyReportMonthChange(event: any) {
+    this.setState({ focusedMonthlyReportMonth: event.target.value });
   }
 
   private handleMenuClick() {
