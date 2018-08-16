@@ -1,6 +1,8 @@
-import { IAmazonOrderItemGroup, IAmazonOrderItem } from "../types/data";
+import { IAmazonItemCollectionKeyable, IAmazonOrderItem } from "../types/data";
 
-export default function groupMoney(group: IAmazonOrderItemGroup): number {
+export default function groupMoney(
+  group: IAmazonItemCollectionKeyable
+): number {
   const totalCents = group.items.reduce(
     (acc: number, item: IAmazonOrderItem): number => {
       return acc + item.price_cents;

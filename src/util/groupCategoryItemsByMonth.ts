@@ -27,7 +27,7 @@ const valueForMonth = (
   category: CategoryKey
 ): number => {
   const monthGroup = R.find(
-    month => DateTime.fromISO(month.groupKey).equals(date),
+    month => DateTime.fromISO(month.monthKey).equals(date),
     monthlyItems
   );
   if (monthGroup === undefined) {

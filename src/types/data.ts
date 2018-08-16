@@ -8,7 +8,10 @@ export interface IAmazonOrderItem {
   category_key?: string;
 }
 
-// Generic container - deprecated
+export interface IAmazonItemCollectionKeyable {
+  items: IAmazonOrderItem[];
+}
+
 export interface IAmazonOrderItemGroup {
   items: IAmazonOrderItem[];
   groupKey: string;
@@ -16,7 +19,7 @@ export interface IAmazonOrderItemGroup {
 
 export interface IMonthlyGroup {
   items: IAmazonOrderItem[];
-  groupKey: MonthKey;
+  monthKey: MonthKey;
 }
 
 export interface ICategoryGroup {

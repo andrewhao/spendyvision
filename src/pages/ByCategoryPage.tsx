@@ -1,11 +1,6 @@
 import * as React from "react";
 import { Grid, TableCell, withStyles } from "@material-ui/core";
-import {
-  IAmazonOrderItem,
-  IAmazonOrderItemGroup,
-  CategoryKey,
-  IMonthlyGroup
-} from "../types/data";
+import { IAmazonOrderItem, CategoryKey, IMonthlyGroup } from "../types/data";
 import * as R from "ramda";
 import { DateTime } from "luxon";
 import groupCategoryItemsByMonth from "../util/groupCategoryItemsByMonth";
@@ -46,7 +41,7 @@ function ByCategoryPage({
   const allDates = R.takeLast(
     numMonthsToShow,
     R.pipe(
-      R.map((item: IAmazonOrderItemGroup) => DateTime.fromISO(item.groupKey)),
+      R.map((item: IMonthlyGroup) => DateTime.fromISO(item.monthKey)),
       R.uniq,
       R.sort(R.ascend(R.identity))
     )(monthlyItems)
@@ -81,13 +76,13 @@ function ByCategoryPage({
       ): IMonthlyGroup[] => {
         return allDates
           .map(monthDateTime => ({
-            groupKey: monthDateTime.toISO(),
+            monthKey: monthDateTime.toISO(),
             items: []
           }))
           .map(monthly => {
             return (
               R.find(
-                R.propEq("groupKey", monthly.groupKey),
+                R.propEq("monthKey", monthly.monthKey),
                 existingMonthlyGroups
               ) || monthly
             );

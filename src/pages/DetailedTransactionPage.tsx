@@ -1,10 +1,10 @@
 import * as React from "react";
 import { Grid } from "@material-ui/core";
-import { IAmazonOrderItemGroup } from "../types/data";
+import { IMonthlyGroup } from "../types/data";
 import MonthlyOrderTable from "../components/MonthlyOrderTable";
 
 interface IDetailedTransactionPageProps {
-  groups: IAmazonOrderItemGroup[];
+  groups: IMonthlyGroup[];
 }
 
 export default function DetailedTransactionPage({
@@ -17,8 +17,8 @@ export default function DetailedTransactionPage({
   );
 }
 
-function renderAmazonOrderItems(groups: IAmazonOrderItemGroup[]) {
-  return groups.map((month: IAmazonOrderItemGroup, monthKey) => (
+function renderAmazonOrderItems(groups: IMonthlyGroup[]) {
+  return groups.map((month: IMonthlyGroup, monthKey) => (
     <MonthlyOrderTable month={month} key={monthKey} />
   ));
 }

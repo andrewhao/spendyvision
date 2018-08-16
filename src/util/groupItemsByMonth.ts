@@ -15,7 +15,7 @@ export default function groupItemsByMonth(
     (value: IAmazonOrderItem[], key: string) => {
       return {
         items: value,
-        groupKey: DateTime.fromISO(key).toISO()
+        monthKey: DateTime.fromISO(key).toISO()
       } as IMonthlyGroup;
     }
   );

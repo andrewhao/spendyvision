@@ -24,7 +24,7 @@ describe("groupItemsByMonth", () => {
     expect(result.length).toEqual(1);
     const group = result[0];
     expect(group.items).toEqual([item1, item2]);
-    expect(group.groupKey).toEqual(
+    expect(group.monthKey).toEqual(
       DateTime.fromObject({ year: 2018, month: 1, day: 1 })
         .toLocal()
         .toISO()

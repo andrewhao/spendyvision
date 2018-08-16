@@ -1,5 +1,5 @@
 import transformCategorizedMonthlySeriesData from "./transformCategorizedMonthlySeriesData";
-import { IAmazonOrderItem, IAmazonOrderItemGroup } from "../types/data";
+import { IAmazonOrderItem, IMonthlyGroup } from "../types/data";
 
 describe("transformCategorizedMonthlySeriesData", () => {
   it("groups items by category costs", () => {
@@ -29,9 +29,9 @@ describe("transformCategorizedMonthlySeriesData", () => {
     } as IAmazonOrderItem;
 
     const monthGroup = {
-      groupKey: "january 2018",
+      monthKey: "january 2018",
       items: [babyItem1, foodItem2, babyItem2]
-    } as IAmazonOrderItemGroup;
+    } as IMonthlyGroup;
 
     const result = transformCategorizedMonthlySeriesData([monthGroup]);
     expect(Object.keys(result[0])).toEqual([

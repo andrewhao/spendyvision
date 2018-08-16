@@ -17,7 +17,7 @@ describe("PurchaseGraph", () => {
         day: 1
       }).toISO()
     };
-    const groups = [{ groupKey: "2018-01-01", items: [item] }];
+    const groups = [{ monthKey: "2018-01-01", items: [item] }];
     const attrs = { groups };
     const subject = enzyme.shallow(<PurchaseGraph {...attrs} />);
     expect(subject.find("ResponsiveContainer").length).toEqual(1);

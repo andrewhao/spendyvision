@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IAmazonOrderItemGroup } from "../types/data";
+import { IMonthlyGroup } from "../types/data";
 import OrderItem from "./OrderItem";
 import { DateTime } from "luxon";
 import {
@@ -15,14 +15,14 @@ import {
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 interface IProps {
-  month: IAmazonOrderItemGroup;
+  month: IMonthlyGroup;
   key: number;
 }
 
 export default function MonthlyOrderTable({ month, key }: IProps) {
   const items = month.items.map((item, i) => <OrderItem key={i} {...item} />);
 
-  const monthGroupKey = DateTime.fromISO(month.groupKey).toFormat("yyyy LLLL");
+  const monthGroupKey = DateTime.fromISO(month.monthKey).toFormat("yyyy LLLL");
 
   return (
     <div className="amazon-order-item-group" key={key}>
