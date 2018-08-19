@@ -35,7 +35,7 @@ const SpendingComputation = {
     const numMonths = rollingPeriodGroups.length;
 
     const totalSpending = rollingPeriodGroups.reduce((acc, monthlyGroup) => {
-      let items = R.when(
+      const items = R.when(
         () => R.not(R.equals(categoryFilter, Categories.AllCategory)),
         R.filter(R.propEq("category", categoryFilter))
       )(monthlyGroup.items) as IAmazonOrderItem[];
