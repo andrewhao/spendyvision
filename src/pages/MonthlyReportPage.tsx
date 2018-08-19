@@ -1,5 +1,11 @@
 import * as React from "react";
-import { IMonthlyGroup, MonthKey } from "../types/data";
+import {
+  IMonthlyGroup,
+  MonthKey,
+  CategoryKey,
+  IRollingAverageResult,
+  Price
+} from "../types/data";
 import { withStyles, createMuiTheme } from "@material-ui/core/styles";
 import {
   Grid,
@@ -11,9 +17,13 @@ import {
 import { DateTime } from "luxon";
 import * as R from "ramda";
 import CategoryReportTable from "../components/CategoryReportTable";
+import { rollingAverage } from "../util/SpendingComputation";
+import Dinero from "dinero.js";
+import groupItemsByCategory from "../util/groupItemsByCategory";
+import computeTotalPrice from "../util/computeTotalPrice";
 
 export interface IMonthlyReportPageProps {
-  groups: IMonthlyGroup[];
+  monthlyGroups: IMonthlyGroup[];
   classes: any;
   focusedMonth: MonthKey;
   handleMonthlyReportMonthChange(evt: any): void;
@@ -36,7 +46,7 @@ const styles: any = {
 };
 
 function MonthlyReportPage({
-  groups,
+  monthlyGroups,
   classes,
   handleMonthlyReportMonthChange,
   focusedMonth
@@ -48,17 +58,64 @@ function MonthlyReportPage({
         {DateTime.fromISO(monthKey).toFormat("yyyy LLL")}
       </MenuItem>
     ))
-  )(groups);
+  )(monthlyGroups);
 
-  const currentMonthGroup = R.findIndex(
+  const rollingAverageForCategory = (
+    category: CategoryKey
+  ): IRollingAverageResult => {
+    return rollingAverage(
+      monthlyGroups,
+      3,
+      DateTime.fromISO(focusedMonth),
+      category
+    );
+  };
+
+  const currentMonthGroupIndex = R.findIndex(
     R.propEq("monthKey", focusedMonth),
-    groups
+    monthlyGroups
   );
 
   const monthlyGroupsToShow = R.pipe(
-    R.slice(currentMonthGroup - 1, currentMonthGroup + 1),
-    R.tap(v => console.log(v))
-  )(groups) as IMonthlyGroup[];
+    R.slice(currentMonthGroupIndex - 1, currentMonthGroupIndex + 1)
+  )(monthlyGroups) as IMonthlyGroup[];
+
+  const monthSpendingByCategory = groupItemsByCategory(
+    monthlyGroups[currentMonthGroupIndex].items
+  );
+  const categorySpending = (categoryKey: CategoryKey): Price => {
+    const categoryGroup = monthSpendingByCategory.find(
+      group => group.groupKey === categoryKey
+    );
+    console.log("categoryGroup", categoryGroup);
+    if (categoryGroup === undefined) {
+      return 0;
+    }
+    return computeTotalPrice(categoryGroup);
+  };
+
+  const categoryAnnotation = (category: CategoryKey): JSX.Element => {
+    const rollingAverageSpending = rollingAverageForCategory(category).spending;
+    const thisMonth = DateTime.fromISO(focusedMonth).toFormat("LLLL");
+    const deltaSpending = categorySpending(category) - rollingAverageSpending;
+    const signifier = deltaSpending > 0 ? "over" : "under";
+    return (
+      <React.Fragment>
+        <div>
+          Your 3-month average for <span>{category}</span> was:{" "}
+          {Dinero({
+            amount: rollingAverageSpending
+          }).toFormat("$0,0.00")}
+          .
+        </div>
+        <div>
+          In {thisMonth}, you spent{" "}
+          {Dinero({ amount: deltaSpending }).toFormat("$0,0.00")} {signifier}{" "}
+          your typical amount
+        </div>
+      </React.Fragment>
+    );
+  };
 
   return (
     <div className="monthly-report-page">
@@ -79,7 +136,10 @@ function MonthlyReportPage({
       </Grid>
       <Grid item={true} xs={12}>
         <p>
-          <CategoryReportTable monthlyGroupsToShow={monthlyGroupsToShow} />
+          <CategoryReportTable
+            monthlyGroupsToShow={monthlyGroupsToShow}
+            categoryAnnotation={categoryAnnotation}
+          />
         </p>
       </Grid>
     </div>

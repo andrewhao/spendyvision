@@ -19,10 +19,12 @@ import Dinero from "dinero.js";
 
 interface ICategoryReportTableProps {
   monthlyGroupsToShow: IMonthlyGroup[];
+  categoryAnnotation?(category: CategoryKey): JSX.Element;
 }
 
 export default function CategoryReportTable({
-  monthlyGroupsToShow
+  monthlyGroupsToShow,
+  categoryAnnotation
 }: ICategoryReportTableProps) {
   const allCategories = R.pipe(
     R.chain((monthGroup: IMonthlyGroup) => monthGroup.items),
@@ -58,10 +60,17 @@ export default function CategoryReportTable({
 
   const categoryResults = allCategories.map((category: string, i: number) => {
     return (
-      <TableRow key={i}>
-        <TableCell>{category}</TableCell>
-        {cellsForMonth(category, monthlyGroupsToShow, allMonths)}
-      </TableRow>
+      <React.Fragment key={i}>
+        <TableRow>
+          <TableCell>{category}</TableCell>
+          {cellsForMonth(category, monthlyGroupsToShow, allMonths)}
+        </TableRow>
+        {categoryAnnotation && (
+          <TableRow>
+            <TableCell colSpan={3}>{categoryAnnotation(category)}</TableCell>
+          </TableRow>
+        )}
+      </React.Fragment>
     );
   });
 

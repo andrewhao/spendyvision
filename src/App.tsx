@@ -74,7 +74,7 @@ class App extends React.Component<any, IAppState> {
     );
   }
   public render() {
-    const groups = groupItemsByMonth(this.state.amazonOrderItems);
+    const monthlyGroups = groupItemsByMonth(this.state.amazonOrderItems);
     const handleDrawerClose = () => {
       this.setState({ isDrawerOpen: false });
     };
@@ -103,16 +103,16 @@ class App extends React.Component<any, IAppState> {
             >
               {this.state.activePanel === ActivePanel.Summary && (
                 <SummaryPage
-                  groups={groups}
+                  groups={monthlyGroups}
                   items={this.state.amazonOrderItems}
                 />
               )}
               {this.state.activePanel === ActivePanel.DetailedTransaction && (
-                <DetailedTransactionPage groups={groups} />
+                <DetailedTransactionPage groups={monthlyGroups} />
               )}
               {this.state.activePanel === ActivePanel.MonthlyReport && (
                 <MonthlyReportPage
-                  groups={groups}
+                  monthlyGroups={monthlyGroups}
                   focusedMonth={this.state.focusedMonthlyReportMonth}
                   handleMonthlyReportMonthChange={
                     this.handleMonthlyReportMonthChange
@@ -122,7 +122,7 @@ class App extends React.Component<any, IAppState> {
               {this.state.activePanel === ActivePanel.Category && (
                 <CategoryPage
                   items={this.state.amazonOrderItems}
-                  monthlyItems={groups}
+                  monthlyItems={monthlyGroups}
                   numMonthsToShow={this.state.numMonthsToShow}
                   handleNumMonthsToShowChange={this.handleNumMonthsToShowChange}
                 />
