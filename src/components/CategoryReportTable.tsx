@@ -1,26 +1,41 @@
-import * as R from "ramda";
-import * as React from "react";
-import { DateTime } from "luxon";
 import {
   Table,
-  TableHead,
-  TableRow,
+  TableBody,
   TableCell,
-  TableBody
+  TableHead,
+  TableRow
 } from "@material-ui/core";
-import { CategoryKey } from "../types/data";
+import { DateTime } from "luxon";
+import * as R from "ramda";
+import * as React from "react";
+import {
+  CategoryKey,
+  MonthKey,
+  IMonthlyGroup,
+  IAmazonOrderItem
+} from "../types/data";
+import groupCategoryItemsByMonth from "../util/groupCategoryItemsByMonth";
+import Dinero from "dinero.js";
 
 interface ICategoryReportTableProps {
-  allDates: DateTime[];
-  allCategories: CategoryKey[];
-  monthlyCells(category: string): JSX.Element[];
+  monthlyGroupsToShow: IMonthlyGroup[];
 }
 
 export default function CategoryReportTable({
-  allDates,
-  allCategories,
-  monthlyCells
+  monthlyGroupsToShow
 }: ICategoryReportTableProps) {
+  const allCategories = R.pipe(
+    R.chain((monthGroup: IMonthlyGroup) => monthGroup.items),
+    R.map((item: IAmazonOrderItem) => item.category),
+    R.uniq,
+    R.reject(R.isNil)
+  )(monthlyGroupsToShow) as CategoryKey[];
+
+  const allMonths = R.pipe(
+    R.map((month: IMonthlyGroup) => month.monthKey),
+    R.map((monthKey: MonthKey) => DateTime.fromISO(monthKey))
+  )(monthlyGroupsToShow);
+
   const headerCells = R.pipe(
     R.map((date: DateTime) => {
       return (
@@ -28,13 +43,27 @@ export default function CategoryReportTable({
       );
     }),
     R.prepend(<TableCell key="name">Name</TableCell>)
-  )(allDates);
+  )(allMonths);
+
+  const cellsForMonth = (
+    category: CategoryKey,
+    monthlyItems: IMonthlyGroup[],
+    allDates: DateTime[]
+  ) => {
+    return groupCategoryItemsByMonth(category, monthlyItems, allDates).map(
+      ({ monthKey, monthValue }) => {
+        const dateString = monthKey.toFormat("yyyy LLL");
+        const valueString = Dinero({ amount: monthValue }).toFormat("$0,0.00");
+        return <TableCell key={dateString}>{valueString}</TableCell>;
+      }
+    );
+  };
 
   const categoryResults = allCategories.map((category: string, i: number) => {
     return (
       <TableRow key={i}>
         <TableCell>{category}</TableCell>
-        {monthlyCells(category)}
+        {cellsForMonth(category, monthlyGroupsToShow, allMonths)}
       </TableRow>
     );
   });

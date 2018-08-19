@@ -1,24 +1,16 @@
 import * as React from "react";
-import {
-  IMonthlyGroup,
-  MonthKey,
-  CategoryKey,
-  IAmazonOrderItem
-} from "../types/data";
+import { IMonthlyGroup, MonthKey } from "../types/data";
 import { withStyles, createMuiTheme } from "@material-ui/core/styles";
 import {
   Grid,
   InputLabel,
   MenuItem,
   FormControl,
-  Select,
-  TableCell
+  Select
 } from "@material-ui/core";
 import { DateTime } from "luxon";
 import * as R from "ramda";
-import groupCategoryItemsByMonth from "../util/groupCategoryItemsByMonth";
 import CategoryReportTable from "../components/CategoryReportTable";
-import Dinero from "dinero.js";
 
 export interface IMonthlyReportPageProps {
   groups: IMonthlyGroup[];
@@ -63,32 +55,36 @@ function MonthlyReportPage({
     groups
   );
 
-  const focusedGroups = R.pipe(
+  const monthlyGroupsToShow = R.pipe(
     R.slice(currentMonthGroup - 1, currentMonthGroup + 1),
     R.tap(v => console.log(v))
   )(groups) as IMonthlyGroup[];
 
-  const allCategories = R.pipe(
-    R.chain((monthGroup: IMonthlyGroup) => monthGroup.items),
-    R.map((item: IAmazonOrderItem) => item.category),
-    R.uniq,
-    R.reject(R.isNil)
-  )(focusedGroups) as CategoryKey[];
+  // const allCategories = R.pipe(
+  //   R.chain((monthGroup: IMonthlyGroup) => monthGroup.items),
+  //   R.map((item: IAmazonOrderItem) => item.category),
+  //   R.uniq,
+  //   R.reject(R.isNil)
+  // )(monthlyGroupsToShow) as CategoryKey[];
 
-  const allMonths = R.pipe(
-    R.map((month: IMonthlyGroup) => month.monthKey),
-    R.map((monthKey: MonthKey) => DateTime.fromISO(monthKey))
-  )(focusedGroups);
+  // const allMonths = R.pipe(
+  //   R.map((month: IMonthlyGroup) => month.monthKey),
+  //   R.map((monthKey: MonthKey) => DateTime.fromISO(monthKey))
+  // )(monthlyGroupsToShow);
 
-  const monthlyCells = (category: CategoryKey) => {
-    return groupCategoryItemsByMonth(category, focusedGroups, allMonths).map(
-      ({ monthKey, monthValue }) => {
-        const dateString = monthKey.toFormat("yyyy LLL");
-        const valueString = Dinero({ amount: monthValue }).toFormat("$0,0.00");
-        return <TableCell key={dateString}>{valueString}</TableCell>;
-      }
-    );
-  };
+  // const monthlyCells = (
+  //   category: CategoryKey,
+  //   monthlyItems: IMonthlyGroup[],
+  //   allDates: DateTime[]
+  // ) => {
+  //   return groupCategoryItemsByMonth(category, monthlyItems, allDates).map(
+  //     ({ monthKey, monthValue }) => {
+  //       const dateString = monthKey.toFormat("yyyy LLL");
+  //       const valueString = Dinero({ amount: monthValue }).toFormat("$0,0.00");
+  //       return <TableCell key={dateString}>{valueString}</TableCell>;
+  //     }
+  //   );
+  // };
 
   return (
     <div className="monthly-report-page">
@@ -110,9 +106,10 @@ function MonthlyReportPage({
       <Grid item={true} xs={12}>
         <p>
           <CategoryReportTable
-            monthlyCells={monthlyCells}
-            allDates={allMonths}
-            allCategories={allCategories}
+            monthlyGroupsToShow={monthlyGroupsToShow}
+            // monthlyCells={monthlyCells}
+            // allDates={allMonths}
+            // allCategories={allCategories}
           />
         </p>
       </Grid>

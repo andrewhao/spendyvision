@@ -1,10 +1,8 @@
 import * as React from "react";
-import { Grid, TableCell, withStyles } from "@material-ui/core";
+import { Grid, withStyles } from "@material-ui/core";
 import { IAmazonOrderItem, CategoryKey, IMonthlyGroup } from "../types/data";
 import * as R from "ramda";
 import { DateTime } from "luxon";
-import groupCategoryItemsByMonth from "../util/groupCategoryItemsByMonth";
-import Dinero from "dinero.js";
 import CategoryReportTable from "../components/CategoryReportTable";
 import groupItemsByMonth from "../util/groupItemsByMonth";
 import PurchaseGraph from "../components/PurchaseGraph";
@@ -38,7 +36,7 @@ function CategoryPage({
     R.reject(R.isNil)
   )(items) as CategoryKey[];
 
-  const allDates = R.takeLast(
+  const filteredDates = R.takeLast(
     numMonthsToShow,
     R.pipe(
       R.map((item: IMonthlyGroup) => DateTime.fromISO(item.monthKey)),
@@ -46,16 +44,7 @@ function CategoryPage({
       R.sort(R.ascend(R.identity))
     )(monthlyItems)
   );
-
-  const monthlyCells = (category: CategoryKey) => {
-    return groupCategoryItemsByMonth(category, monthlyItems, allDates).map(
-      ({ monthKey, monthValue }) => {
-        const dateString = monthKey.toFormat("yyyy LLL");
-        const valueString = Dinero({ amount: monthValue }).toFormat("$0,0.00");
-        return <TableCell key={dateString}>{valueString}</TableCell>;
-      }
-    );
-  };
+  const filteredMonthlyGroups = R.takeLast(numMonthsToShow, monthlyItems);
 
   const colorScale = shuffle(
     chroma
@@ -74,7 +63,7 @@ function CategoryPage({
         dates: DateTime[],
         existingMonthlyGroups: IMonthlyGroup[]
       ): IMonthlyGroup[] => {
-        return allDates
+        return filteredDates
           .map(monthDateTime => ({
             monthKey: monthDateTime.toISO(),
             items: []
@@ -89,7 +78,10 @@ function CategoryPage({
           });
       };
       const groups = R.pipe(groupItemsByMonth)(categoryItems);
-      const groupsWithEmpties = interpolateEmptyMonthlyGroups(allDates, groups);
+      const groupsWithEmpties = interpolateEmptyMonthlyGroups(
+        filteredDates,
+        groups
+      );
 
       return (
         <div key={i}>
@@ -115,11 +107,7 @@ function CategoryPage({
         onChange={handleNumMonthsToShowChange}
       />
       <Grid item={true} xs={12}>
-        <CategoryReportTable
-          allDates={allDates}
-          allCategories={allCategories}
-          monthlyCells={monthlyCells}
-        />
+        <CategoryReportTable monthlyGroupsToShow={filteredMonthlyGroups} />
       </Grid>
       <Grid item={true} xs={12}>
         {categoryGraphs}
