@@ -60,32 +60,6 @@ function MonthlyReportPage({
     R.tap(v => console.log(v))
   )(groups) as IMonthlyGroup[];
 
-  // const allCategories = R.pipe(
-  //   R.chain((monthGroup: IMonthlyGroup) => monthGroup.items),
-  //   R.map((item: IAmazonOrderItem) => item.category),
-  //   R.uniq,
-  //   R.reject(R.isNil)
-  // )(monthlyGroupsToShow) as CategoryKey[];
-
-  // const allMonths = R.pipe(
-  //   R.map((month: IMonthlyGroup) => month.monthKey),
-  //   R.map((monthKey: MonthKey) => DateTime.fromISO(monthKey))
-  // )(monthlyGroupsToShow);
-
-  // const monthlyCells = (
-  //   category: CategoryKey,
-  //   monthlyItems: IMonthlyGroup[],
-  //   allDates: DateTime[]
-  // ) => {
-  //   return groupCategoryItemsByMonth(category, monthlyItems, allDates).map(
-  //     ({ monthKey, monthValue }) => {
-  //       const dateString = monthKey.toFormat("yyyy LLL");
-  //       const valueString = Dinero({ amount: monthValue }).toFormat("$0,0.00");
-  //       return <TableCell key={dateString}>{valueString}</TableCell>;
-  //     }
-  //   );
-  // };
-
   return (
     <div className="monthly-report-page">
       <h1>Monthly Report</h1>
@@ -105,12 +79,7 @@ function MonthlyReportPage({
       </Grid>
       <Grid item={true} xs={12}>
         <p>
-          <CategoryReportTable
-            monthlyGroupsToShow={monthlyGroupsToShow}
-            // monthlyCells={monthlyCells}
-            // allDates={allMonths}
-            // allCategories={allCategories}
-          />
+          <CategoryReportTable monthlyGroupsToShow={monthlyGroupsToShow} />
         </p>
       </Grid>
     </div>

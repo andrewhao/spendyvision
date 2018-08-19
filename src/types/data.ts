@@ -1,7 +1,7 @@
 export interface IAmazonOrderItem {
   title: string;
   price: string;
-  price_cents: number;
+  price_cents: Price;
   order_date: string;
   unspsc_code?: string;
   category?: string;
@@ -49,3 +49,13 @@ export interface IMonthlySpending {
 
 export type OneMonth = "OneMonth";
 export type ThreeMonth = "ThreeMonth";
+export type Price = number;
+
+export interface IRollingAverageResult {
+  numMonths: number;
+  spending: SpendingCost;
+}
+
+export enum Categories {
+  AllCategory = "AllCategory"
+}

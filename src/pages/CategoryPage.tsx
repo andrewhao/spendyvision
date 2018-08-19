@@ -32,8 +32,8 @@ function CategoryPage({
 }: ICategoryPageProps) {
   const allCategories = R.pipe(
     R.map((item: IAmazonOrderItem) => item.category),
-    R.uniq,
-    R.reject(R.isNil)
+    R.reject(R.isNil),
+    R.uniq
   )(items) as CategoryKey[];
 
   const filteredDates = R.takeLast(

@@ -9,5 +9,5 @@ export default function computeTotalPrice(
     },
     0
   );
-  return totalCents / 100;
+  return totalCents;
 }

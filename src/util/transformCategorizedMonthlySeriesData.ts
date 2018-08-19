@@ -23,7 +23,7 @@ export default function transformCategorizedMonthlySeriesData(
     );
     return {
       month,
-      y: computeTotalPrice(group),
+      y: computeTotalPrice(group) / 100,
       ...categorizedItems
     } as IMonthlyCategorizedSeries;
   });

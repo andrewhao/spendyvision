@@ -27,23 +27,20 @@ export default function CategoryReportTable({
   const allCategories = R.pipe(
     R.chain((monthGroup: IMonthlyGroup) => monthGroup.items),
     R.map((item: IAmazonOrderItem) => item.category),
-    R.uniq,
-    R.reject(R.isNil)
+    R.reject(R.isNil),
+    R.uniq
   )(monthlyGroupsToShow) as CategoryKey[];
 
   const allMonths = R.pipe(
     R.map((month: IMonthlyGroup) => month.monthKey),
     R.map((monthKey: MonthKey) => DateTime.fromISO(monthKey))
-  )(monthlyGroupsToShow);
+  )(monthlyGroupsToShow) as DateTime[];
 
-  const headerCells = R.pipe(
-    R.map((date: DateTime) => {
-      return (
-        <TableCell key={date.toString()}>{date.toFormat("yyyy LLL")}</TableCell>
-      );
-    }),
-    R.prepend(<TableCell key="name">Name</TableCell>)
-  )(allMonths);
+  const headerCells = R.map((date: DateTime) => {
+    return (
+      <TableCell key={date.toString()}>{date.toFormat("yyyy LLL")}</TableCell>
+    ) as JSX.Element;
+  }, allMonths);
 
   const cellsForMonth = (
     category: CategoryKey,
@@ -72,7 +69,10 @@ export default function CategoryReportTable({
     <div className="category-report-table">
       <Table>
         <TableHead>
-          <TableRow>{headerCells}</TableRow>
+          <TableRow>
+            <TableCell key="name">Name</TableCell>
+            {headerCells}
+          </TableRow>
         </TableHead>
         <TableBody>{categoryResults}</TableBody>
       </Table>
