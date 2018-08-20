@@ -12,9 +12,10 @@ import {
 } from "@material-ui/core";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import HomeIcon from "@material-ui/icons/Home";
-import ZoomInIcon from "@material-ui/icons/ZoomIn";
+import ViewHeadlineIcon from "@material-ui/icons/ViewHeadline";
 import CategoryIcon from "@material-ui/icons/Category";
-import TrendingUpIcon from "@material-ui/icons/TrendingUp";
+import DonutSmallIcon from "@material-ui/icons/DonutSmall";
+import TimelineIcon from "@material-ui/icons/Timeline";
 import { ActivePanel } from "../types/view";
 
 const theme = createMuiTheme();
@@ -73,6 +74,8 @@ function Navigation({
     activePanel === ActivePanel.DetailedTransaction ? "secondary" : "inherit";
   const monthlyReportIconColor =
     activePanel === ActivePanel.MonthlyReport ? "secondary" : "inherit";
+  const homeIconColor =
+    activePanel === ActivePanel.Home ? "secondary" : "inherit";
   return (
     <div className={classes.root}>
       <Drawer
@@ -92,12 +95,18 @@ function Navigation({
         </div>
         <Divider />
         <List>
+          <ListItem button={true} onClick={handleItemClick(ActivePanel.Home)}>
+            <ListItemIcon>
+              <HomeIcon color={homeIconColor} />
+            </ListItemIcon>
+            <ListItemText primary="Home" />
+          </ListItem>
           <ListItem
             button={true}
             onClick={handleItemClick(ActivePanel.Summary)}
           >
             <ListItemIcon>
-              <HomeIcon color={summaryIconColor} />
+              <TimelineIcon color={summaryIconColor} />
             </ListItemIcon>
             <ListItemText primary="Summary" />
           </ListItem>
@@ -106,7 +115,7 @@ function Navigation({
             onClick={handleItemClick(ActivePanel.MonthlyReport)}
           >
             <ListItemIcon>
-              <TrendingUpIcon color={monthlyReportIconColor} />
+              <DonutSmallIcon color={monthlyReportIconColor} />
             </ListItemIcon>
             <ListItemText primary="Monthly Report" />
           </ListItem>
@@ -115,7 +124,7 @@ function Navigation({
             onClick={handleItemClick(ActivePanel.DetailedTransaction)}
           >
             <ListItemIcon>
-              <ZoomInIcon color={detailedTransactionIconColor} />
+              <ViewHeadlineIcon color={detailedTransactionIconColor} />
             </ListItemIcon>
             <ListItemText primary="Details" />
           </ListItem>

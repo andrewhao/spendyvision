@@ -1,12 +1,5 @@
 import * as React from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  createMuiTheme
-} from "@material-ui/core";
-import CsvFileUpload from "../CsvFileUpload";
+import { AppBar, Toolbar, Typography, createMuiTheme } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
 import { withStyles } from "@material-ui/core/styles";
@@ -40,16 +33,10 @@ const styles = {
 interface IHeaderProps {
   open: boolean;
   classes: any;
-  handleCsvUpload(results: any[]): void;
   handleMenuClick(): void;
 }
 
-function Header({
-  handleCsvUpload,
-  handleMenuClick,
-  classes,
-  open
-}: IHeaderProps) {
+function Header({ handleMenuClick, classes, open }: IHeaderProps) {
   return (
     <AppBar
       position="absolute"
@@ -68,10 +55,6 @@ function Header({
         <Typography variant="title" color="inherit">
           Spendyvision!
         </Typography>
-        <label htmlFor="csv-file-upload__input">
-          <Button color="inherit">Upload an Order Report</Button>
-        </label>
-        <CsvFileUpload handleCsvUpload={handleCsvUpload} />
       </Toolbar>
     </AppBar>
   );

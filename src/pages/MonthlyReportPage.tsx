@@ -55,7 +55,7 @@ function MonthlyReportPage({
     R.map((monthlyGroup: IMonthlyGroup) => monthlyGroup.monthKey),
     R.map((monthKey: MonthKey) => (
       <MenuItem value={monthKey} key={monthKey}>
-        {DateTime.fromISO(monthKey).toFormat("yyyy LLL")}
+        {DateTime.fromISO(monthKey).toFormat("yyyy LLLL")}
       </MenuItem>
     ))
   )(monthlyGroups);
@@ -87,7 +87,7 @@ function MonthlyReportPage({
     const categoryGroup = monthSpendingByCategory.find(
       group => group.groupKey === categoryKey
     );
-    console.log("categoryGroup", categoryGroup);
+
     if (categoryGroup === undefined) {
       return 0;
     }

@@ -4,6 +4,7 @@ import DetailedTransactionPage from "./pages/DetailedTransactionPage";
 import CategoryPage from "./pages/CategoryPage";
 import SummaryPage from "./pages/SummaryPage";
 import MonthlyReportPage from "./pages/MonthlyReportPage";
+import HomePage from "./pages/HomePage";
 import parseAmazonCsv from "./util/parseAmazonCsv";
 import * as React from "react";
 import groupItemsByMonth from "./util/groupItemsByMonth";
@@ -57,7 +58,7 @@ class App extends React.Component<any, IAppState> {
     this.state = {
       amazonOrderItems: [],
       isDrawerOpen: false,
-      activePanel: ActivePanel.Summary,
+      activePanel: ActivePanel.Home,
       numMonthsToShow: 4,
       focusedMonthlyReportMonth: currentMonth
     };
@@ -84,7 +85,6 @@ class App extends React.Component<any, IAppState> {
         <CssBaseline>
           <div className={this.props.classes.root}>
             <Header
-              handleCsvUpload={this.handleCsvUpload}
               handleMenuClick={this.handleMenuClick}
               open={this.state.isDrawerOpen}
             />
@@ -101,6 +101,9 @@ class App extends React.Component<any, IAppState> {
               alignItems="center"
               className={this.props.classes.content}
             >
+              {this.state.activePanel === ActivePanel.Home && (
+                <HomePage handleCsvUpload={this.handleCsvUpload} />
+              )}
               {this.state.activePanel === ActivePanel.Summary && (
                 <SummaryPage
                   groups={monthlyGroups}

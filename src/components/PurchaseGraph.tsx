@@ -30,9 +30,10 @@ export default function PurchaseGraph({
   height = 700,
   color,
   style = "bar",
-  yAxisMax = "dataMax"
+  yAxisMax = "dataMax + 100"
 }: IProps) {
   const data = transformCategorizedMonthlySeriesData(groups);
+
   const categories = R.pipe(
     R.chain(
       (group: IMonthlyGroup): string[] => {
@@ -41,6 +42,7 @@ export default function PurchaseGraph({
     ),
     R.uniq
   )(groups);
+
   const colorScale: string[] = chroma
     .scale("Paired")
     .mode("lrgb")
@@ -82,7 +84,7 @@ export default function PurchaseGraph({
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="month" />
-            <YAxis domain={[0, yAxisMax]} />
+            <YAxis domain={[0, yAxisMax]} allowDecimals={false} />
             <Tooltip />
             <Legend />
             {lines}
