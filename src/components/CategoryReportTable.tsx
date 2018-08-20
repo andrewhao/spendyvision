@@ -19,19 +19,25 @@ import Dinero from "dinero.js";
 
 interface ICategoryReportTableProps {
   monthlyGroupsToShow: IMonthlyGroup[];
+  focusedCategory?: CategoryKey;
   categoryAnnotation?(category: CategoryKey): JSX.Element;
 }
 
 export default function CategoryReportTable({
   monthlyGroupsToShow,
-  categoryAnnotation
+  categoryAnnotation,
+  focusedCategory
 }: ICategoryReportTableProps) {
-  const allCategories = R.pipe(
+  const isFocusedCategory = (categoryKey: CategoryKey): boolean => {
+    return focusedCategory ? focusedCategory === categoryKey : true;
+  };
+
+  const allCategories = (R.pipe(
     R.chain((monthGroup: IMonthlyGroup) => monthGroup.items),
-    R.map((item: IAmazonOrderItem) => item.category),
-    R.reject(R.isNil),
-    R.uniq
-  )(monthlyGroupsToShow) as CategoryKey[];
+    R.map((item: IAmazonOrderItem): CategoryKey | undefined => item.category),
+    R.uniq,
+    R.reject(R.isNil)
+  )(monthlyGroupsToShow) as CategoryKey[]).filter(isFocusedCategory);
 
   const allMonths = R.pipe(
     R.map((month: IMonthlyGroup) => month.monthKey),

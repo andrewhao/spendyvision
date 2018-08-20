@@ -1,13 +1,12 @@
-import * as React from "react";
 import { Grid, withStyles } from "@material-ui/core";
-import { IAmazonOrderItem, CategoryKey, IMonthlyGroup } from "../types/data";
-import * as R from "ramda";
-import { DateTime } from "luxon";
-import CategoryReportTable from "../components/CategoryReportTable";
-import groupItemsByMonth from "../util/groupItemsByMonth";
-import PurchaseGraph from "../components/PurchaseGraph";
 import chroma from "chroma-js";
 import { shuffle } from "lodash";
+import { DateTime } from "luxon";
+import * as R from "ramda";
+import * as React from "react";
+import CategoryReportTable from "../components/CategoryReportTable";
+import PurchaseGraph from "../components/PurchaseGraph";
+import { CategoryKey, IAmazonOrderItem, IMonthlyGroup } from "../types/data";
 
 interface ICategoryPageProps {
   classes: any;
@@ -30,13 +29,17 @@ function CategoryPage({
   numMonthsToShow,
   handleNumMonthsToShowChange
 }: ICategoryPageProps) {
-  const allCategories = R.pipe(
-    R.map((item: IAmazonOrderItem) => item.category),
-    R.reject(R.isNil),
-    R.uniq
-  )(items) as CategoryKey[];
+  const focusedMonthlyGroups = R.takeLast(numMonthsToShow, monthlyItems);
 
-  const filteredDates = R.takeLast(
+  const allCategories = R.pipe(
+    R.chain(R.prop("items")),
+    R.map(R.prop("category")),
+    R.reject(R.isNil),
+    R.reject(R.isEmpty),
+    R.uniq
+  )(focusedMonthlyGroups) as CategoryKey[];
+
+  const focusedDates = R.takeLast(
     numMonthsToShow,
     R.pipe(
       R.map((item: IMonthlyGroup) => DateTime.fromISO(item.monthKey)),
@@ -44,7 +47,6 @@ function CategoryPage({
       R.sort(R.ascend(R.identity))
     )(monthlyItems)
   );
-  const filteredMonthlyGroups = R.takeLast(numMonthsToShow, monthlyItems);
 
   const colorScale = shuffle(
     chroma
@@ -52,36 +54,36 @@ function CategoryPage({
       .mode("lrgb")
       .colors(allCategories.length)
   );
+  const interpolateEmptyMonthlyGroups = (
+    dates: DateTime[],
+    existingMonthlyGroups: IMonthlyGroup[]
+  ): IMonthlyGroup[] => {
+    return dates
+      .map(monthDateTime => ({
+        monthKey: monthDateTime.toISO(),
+        items: []
+      }))
+      .map(monthly => {
+        return (
+          R.find(
+            R.propEq("monthKey", monthly.monthKey),
+            existingMonthlyGroups
+          ) || monthly
+        );
+      });
+  };
 
   const categoryGraphs = allCategories.map(
     (categoryKey: CategoryKey, i: number) => {
-      const categoryItems = R.filter(
-        (item: IAmazonOrderItem) => item.category === categoryKey
-      )(items) as IAmazonOrderItem[];
-
-      const interpolateEmptyMonthlyGroups = (
-        dates: DateTime[],
-        existingMonthlyGroups: IMonthlyGroup[]
-      ): IMonthlyGroup[] => {
-        return filteredDates
-          .map(monthDateTime => ({
-            monthKey: monthDateTime.toISO(),
-            items: []
-          }))
-          .map(monthly => {
-            return (
-              R.find(
-                R.propEq("monthKey", monthly.monthKey),
-                existingMonthlyGroups
-              ) || monthly
-            );
-          });
-      };
-      const groups = R.pipe(groupItemsByMonth)(categoryItems);
-      const groupsWithEmpties = interpolateEmptyMonthlyGroups(
-        filteredDates,
-        groups
-      );
+      const groupsWithEmpties = R.pipe(
+        interpolateEmptyMonthlyGroups,
+        R.map((monthlyGroup: IMonthlyGroup) => {
+          const categoryItems = monthlyGroup.items.filter(
+            R.propEq("category", categoryKey)
+          );
+          return Object.assign({}, monthlyGroup, { items: categoryItems });
+        })
+      )(focusedDates, focusedMonthlyGroups);
 
       return (
         <div key={i}>
@@ -91,6 +93,10 @@ function CategoryPage({
             height={250}
             color={colorScale[i]}
             yAxisMax={1000}
+          />
+          <CategoryReportTable
+            monthlyGroupsToShow={focusedMonthlyGroups}
+            focusedCategory={categoryKey}
           />
         </div>
       );
@@ -106,9 +112,6 @@ function CategoryPage({
         value={numMonthsToShow}
         onChange={handleNumMonthsToShowChange}
       />
-      <Grid item={true} xs={12}>
-        <CategoryReportTable monthlyGroupsToShow={filteredMonthlyGroups} />
-      </Grid>
       <Grid item={true} xs={12}>
         {categoryGraphs}
       </Grid>

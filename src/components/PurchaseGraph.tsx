@@ -35,11 +35,9 @@ export default function PurchaseGraph({
   const data = transformCategorizedMonthlySeriesData(groups);
 
   const categories = R.pipe(
-    R.chain(
-      (group: IMonthlyGroup): string[] => {
-        return group.items.map(item => item.category_key || "na");
-      }
-    ),
+    R.chain(R.prop("items")),
+    R.map(R.prop("category_key")),
+    R.reject(R.isNil),
     R.uniq
   )(groups);
 
