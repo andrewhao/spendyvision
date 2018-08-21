@@ -23,6 +23,7 @@ interface IProps {
   color?: string;
   style?: string;
   yAxisMax?: any;
+  showLegend?: boolean;
 }
 
 export default function PurchaseGraph({
@@ -30,7 +31,8 @@ export default function PurchaseGraph({
   height = 700,
   color,
   style = "bar",
-  yAxisMax = "dataMax + 100"
+  yAxisMax = "dataMax + 100",
+  showLegend = true
 }: IProps) {
   const data = transformCategorizedMonthlySeriesData(groups);
 
@@ -84,7 +86,7 @@ export default function PurchaseGraph({
             <XAxis dataKey="month" />
             <YAxis domain={[0, yAxisMax]} allowDecimals={false} />
             <Tooltip />
-            <Legend />
+            {showLegend && <Legend />}
             {lines}
           </ComposedChart>
         </ResponsiveContainer>

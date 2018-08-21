@@ -57,7 +57,7 @@ class App extends React.Component<any, IAppState> {
     super(props);
     this.state = {
       amazonOrderItems: [],
-      isDrawerOpen: false,
+      isDrawerOpen: true,
       activePanel: ActivePanel.Home,
       numMonthsToShow: 4,
       focusedMonthlyReportMonth: currentMonth

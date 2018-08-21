@@ -1,4 +1,12 @@
-import { Grid, withStyles } from "@material-ui/core";
+import {
+  FormControl,
+  Grid,
+  InputLabel,
+  Select,
+  MenuItem,
+  withStyles,
+  createMuiTheme
+} from "@material-ui/core";
 import chroma from "chroma-js";
 import { shuffle } from "lodash";
 import { DateTime } from "luxon";
@@ -6,7 +14,12 @@ import * as R from "ramda";
 import * as React from "react";
 import CategoryReportTable from "../components/CategoryReportTable";
 import PurchaseGraph from "../components/PurchaseGraph";
-import { CategoryKey, IAmazonOrderItem, IMonthlyGroup } from "../types/data";
+import {
+  CategoryKey,
+  MonthKey,
+  IAmazonOrderItem,
+  IMonthlyGroup
+} from "../types/data";
 
 interface ICategoryPageProps {
   classes: any;
@@ -16,9 +29,18 @@ interface ICategoryPageProps {
   handleNumMonthsToShowChange(evt: any): void;
 }
 
+const theme = createMuiTheme();
+
 const styles: any = {
   root: {
     overflowX: "auto"
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 200
+  },
+  selectEmpty: {
+    marginTop: theme.spacing.unit * 2
   }
 };
 
@@ -92,7 +114,8 @@ function CategoryPage({
             groups={groupsWithEmpties}
             height={250}
             color={colorScale[i]}
-            yAxisMax={1000}
+            yAxisMax={"dataMax"}
+            showLegend={false}
           />
           <CategoryReportTable
             monthlyGroupsToShow={focusedMonthlyGroups}
@@ -103,15 +126,44 @@ function CategoryPage({
     }
   );
 
+  const mostRecentMonthlyGroup = R.sort(
+    R.descend(R.prop("monthKey")),
+    monthlyItems
+  )[0] as IMonthlyGroup;
+  const mostRecentMonth = DateTime.fromISO(mostRecentMonthlyGroup.monthKey);
+
+  const menuItems = R.pipe(
+    R.map((monthlyGroup: IMonthlyGroup) => monthlyGroup.monthKey),
+    R.map((monthKey: MonthKey) => {
+      const thisMonth = DateTime.fromISO(monthKey);
+      const yearDelta =
+        (mostRecentMonth.get("year") - thisMonth.get("year")) * 12;
+      const numMonthsSinceNow =
+        yearDelta + mostRecentMonth.get("month") - thisMonth.get("month") + 1;
+      return (
+        <MenuItem value={numMonthsSinceNow} key={monthKey}>
+          {thisMonth.toFormat("yyyy LLLL")}
+        </MenuItem>
+      );
+    })
+  )(monthlyItems);
+
   return (
     <div className={classes.root}>
-      <label htmlFor="show-the-last">Show the last months</label>
-      <input
-        type="number"
-        id="show-the-last"
-        value={numMonthsToShow}
-        onChange={handleNumMonthsToShowChange}
-      />
+      <Grid item={true} xs={12}>
+        <form className={classes.root}>
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="month-control">Show Trends Since</InputLabel>
+            <Select
+              value={numMonthsToShow}
+              onChange={handleNumMonthsToShowChange}
+              inputProps={{ id: "month-control" }}
+            >
+              {menuItems}
+            </Select>
+          </FormControl>
+        </form>
+      </Grid>
       <Grid item={true} xs={12}>
         {categoryGraphs}
       </Grid>

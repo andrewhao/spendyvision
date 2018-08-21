@@ -136,7 +136,7 @@ function Navigation({
             <ListItemIcon>
               <CategoryIcon color={byCategoryIconColor} />
             </ListItemIcon>
-            <ListItemText primary="By Category" />
+            <ListItemText primary="Category Trends" />
           </ListItem>
         </List>
       </Drawer>
