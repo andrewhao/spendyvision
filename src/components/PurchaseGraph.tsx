@@ -1,6 +1,6 @@
 import * as React from "react";
-import { IMonthlyGroup } from "../types/data";
-import chroma from "chroma-js";
+import { IMonthlyGroup, CategoryKey } from "../types/data";
+import { colorScale } from "../util/ColorUtils";
 import * as R from "ramda";
 
 import transformCategorizedMonthlySeriesData from "../util/transformCategorizedMonthlySeriesData";
@@ -41,16 +41,13 @@ export default function PurchaseGraph({
     R.map(R.prop("category_key")),
     R.reject(R.isNil),
     R.uniq
-  )(groups);
+  )(groups) as CategoryKey[];
 
-  const colorScale: string[] = chroma
-    .scale("Paired")
-    .mode("lrgb")
-    .colors(categories.length);
+  const colors = colorScale(categories);
   const defaultColorScale = R.times(R.always(color), categories.length);
   const zipped = R.zip(
     categories,
-    color === undefined ? colorScale : defaultColorScale
+    color === undefined ? colors : defaultColorScale
   );
 
   const lines = zipped.map(([categoryKey, hexColor]) => {

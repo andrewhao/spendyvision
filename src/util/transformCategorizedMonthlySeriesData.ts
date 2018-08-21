@@ -1,13 +1,10 @@
-import {
-  IMonthlyCategorizedSeries,
-  IMonthlyGroup,
-  ICategoryGroup
-} from "../types/data";
-import groupItemsByCategory from "./groupItemsByCategory";
+import { IMonthlyCategorizedSeries, IMonthlyGroup } from "../types/data";
 import computeTotalPrice from "./computeTotalPrice";
+import computeCategoryCostSeries from "./computeCategoryCostSeries";
 import { DateTime } from "luxon";
-import { snakeCase } from "lodash";
 import Dinero from "dinero.js";
+import { snakeCase } from "lodash";
+import * as R from "ramda";
 
 // Given a set of MonthlyGroups (JAN: [<item>, <item>])
 export default function transformCategorizedMonthlySeriesData(
@@ -15,15 +12,14 @@ export default function transformCategorizedMonthlySeriesData(
 ): IMonthlyCategorizedSeries[] {
   return groups.map(group => {
     const month = DateTime.fromISO(group.monthKey).toFormat("yyyy LLL");
-    const categorizedItems = groupItemsByCategory(group.items).reduce(
-      (acc: object, g: ICategoryGroup) => {
-        acc[snakeCase(g.groupKey)] = Dinero({
-          amount: computeTotalPrice(g)
-        }).toRoundedUnit(2);
+    const categorizedItems = R.pipe(
+      R.toPairs,
+      R.reduce((acc: object, [k, v]) => {
+        acc[snakeCase(k)] = v;
         return acc;
-      },
-      {}
-    );
+      }, {})
+    )(computeCategoryCostSeries(group));
+
     return {
       month,
       y: Dinero({ amount: computeTotalPrice(group) }).toRoundedUnit(2),

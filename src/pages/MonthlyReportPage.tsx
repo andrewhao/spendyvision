@@ -21,6 +21,7 @@ import { rollingAverage } from "../util/SpendingComputation";
 import Dinero from "dinero.js";
 import groupItemsByCategory from "../util/groupItemsByCategory";
 import computeTotalPrice from "../util/computeTotalPrice";
+import MonthlyPieGraph from "../components/MonthlyPieGraph";
 
 export interface IMonthlyReportPageProps {
   monthlyGroups: IMonthlyGroup[];
@@ -76,13 +77,13 @@ function MonthlyReportPage({
     monthlyGroups
   );
 
+  const currentMonthGroup = monthlyGroups[currentMonthGroupIndex];
+
   const monthlyGroupsToShow = R.pipe(
     R.slice(currentMonthGroupIndex - 1, currentMonthGroupIndex + 1)
   )(monthlyGroups) as IMonthlyGroup[];
 
-  const monthSpendingByCategory = groupItemsByCategory(
-    monthlyGroups[currentMonthGroupIndex].items
-  );
+  const monthSpendingByCategory = groupItemsByCategory(currentMonthGroup.items);
   const categorySpending = (categoryKey: CategoryKey): Price => {
     const categoryGroup = monthSpendingByCategory.find(
       group => group.groupKey === categoryKey
@@ -135,12 +136,13 @@ function MonthlyReportPage({
         </form>
       </Grid>
       <Grid item={true} xs={12}>
-        <p>
-          <CategoryReportTable
-            monthlyGroupsToShow={monthlyGroupsToShow}
-            categoryAnnotation={categoryAnnotation}
-          />
-        </p>
+        <MonthlyPieGraph monthlyGroup={currentMonthGroup} />
+      </Grid>
+      <Grid item={true} xs={12}>
+        <CategoryReportTable
+          monthlyGroupsToShow={monthlyGroupsToShow}
+          categoryAnnotation={categoryAnnotation}
+        />
       </Grid>
     </div>
   );
