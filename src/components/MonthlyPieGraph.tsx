@@ -1,6 +1,13 @@
 import * as React from "react";
 import { IMonthlyGroup } from "../types/data";
-import { PieChart, Pie, ResponsiveContainer, Cell, Tooltip } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Legend,
+  ResponsiveContainer,
+  Cell,
+  Tooltip
+} from "recharts";
 import computeCategoryCostSeries from "../util/computeCategoryCostSeries";
 import * as R from "ramda";
 import { shuffle } from "lodash";
@@ -46,6 +53,7 @@ export default function MonthlyPieGraph({
             })}
           </Pie>
           <Tooltip />
+          <Legend />
         </PieChart>
       </ResponsiveContainer>
     </div>
