@@ -41,7 +41,7 @@ export default function MonthlyPieGraph({
             })}
           </Pie>
           <Tooltip />
-          <Legend />
+          <Legend layout="vertical" align="right" />
         </PieChart>
       </ResponsiveContainer>
     </div>

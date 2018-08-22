@@ -2,6 +2,8 @@ import * as React from "react";
 import { IMonthlyGroup, CategoryKey } from "../types/data";
 import { colorScale } from "../util/ColorUtils";
 import * as R from "ramda";
+import { DateTime } from "luxon";
+import Dinero from "dinero.js";
 
 import transformCategorizedMonthlySeriesData from "../util/transformCategorizedMonthlySeriesData";
 
@@ -14,8 +16,10 @@ import {
   Tooltip,
   Area,
   Bar,
-  Legend
+  Legend,
+  ReferenceLine
 } from "recharts";
+import { rollingAverage } from "../util/SpendingComputation";
 
 interface IProps {
   groups: IMonthlyGroup[];
@@ -71,6 +75,13 @@ export default function PurchaseGraph({
     );
   });
 
+  const averageSpending = rollingAverage(
+    groups,
+    groups.length - 1,
+    DateTime.fromISO(groups[groups.length - 1].monthKey)
+  );
+  const dineroAverageSpending = Dinero({ amount: averageSpending.spending });
+
   return (
     <div className="purchase-graph">
       {groups.length > 0 && (
@@ -83,6 +94,12 @@ export default function PurchaseGraph({
             <XAxis dataKey="month" />
             <YAxis domain={[0, yAxisMax]} allowDecimals={false} />
             <Tooltip />
+            <ReferenceLine
+              y={dineroAverageSpending.toRoundedUnit(2)}
+              stroke="green"
+              isFront={true}
+              // label={"Average: " + dineroAverageSpending.toFormat()}
+            />
             {showLegend && <Legend />}
             {lines}
           </ComposedChart>

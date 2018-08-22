@@ -4,8 +4,10 @@ import {
   MonthKey,
   CategoryKey,
   IRollingAverageResult,
+  ICategoryGroup,
   Price,
-  ColorMapping
+  ColorMapping,
+  ICategorizedCurrentVsAverageSeries
 } from "../types/data";
 import { withStyles, createMuiTheme } from "@material-ui/core/styles";
 import {
@@ -17,7 +19,7 @@ import {
 } from "@material-ui/core";
 import { DateTime } from "luxon";
 import * as R from "ramda";
-import CategoryReportTable from "../components/CategoryReportTable";
+import CategoryComparisonChart from "../components/CategoryComparisonChart";
 import { rollingAverage } from "../util/SpendingComputation";
 import Dinero from "dinero.js";
 import groupItemsByCategory from "../util/groupItemsByCategory";
@@ -36,6 +38,9 @@ const theme = createMuiTheme();
 
 const styles: any = {
   root: {
+    flexGrow: 1
+  },
+  form: {
     display: "flex",
     flexWrap: "wrap"
   },
@@ -82,10 +87,6 @@ function MonthlyReportPage({
 
   const currentMonthGroup = monthlyGroups[currentMonthGroupIndex];
 
-  const monthlyGroupsToShow = R.pipe(
-    R.slice(currentMonthGroupIndex - 1, currentMonthGroupIndex + 1)
-  )(monthlyGroups) as IMonthlyGroup[];
-
   const monthSpendingByCategory = groupItemsByCategory(currentMonthGroup.items);
   const categorySpending = (categoryKey: CategoryKey): Price => {
     const categoryGroup = monthSpendingByCategory.find(
@@ -98,34 +99,25 @@ function MonthlyReportPage({
     return computeTotalPrice(categoryGroup);
   };
 
-  const categoryAnnotation = (category: CategoryKey): JSX.Element => {
-    const rollingAverageSpending = rollingAverageForCategory(category).spending;
-    const thisMonth = DateTime.fromISO(focusedMonth).toFormat("LLLL");
-    const deltaSpending = categorySpending(category) - rollingAverageSpending;
-    const signifier = deltaSpending > 0 ? "over" : "under";
-    return (
-      <React.Fragment>
-        <div>
-          Your 3-month average for <span>{category}</span> was:{" "}
-          {Dinero({
-            amount: rollingAverageSpending
-          }).toFormat("$0,0.00")}
-          .
-        </div>
-        <div>
-          In {thisMonth}, you spent{" "}
-          {Dinero({ amount: deltaSpending }).toFormat("$0,0.00")} {signifier}{" "}
-          your typical amount
-        </div>
-      </React.Fragment>
-    );
-  };
+  const categoryComparisonData = monthSpendingByCategory.map(
+    ({ groupKey }: ICategoryGroup) => {
+      return {
+        category: groupKey,
+        currentSpending: Dinero({
+          amount: categorySpending(groupKey)
+        }).toRoundedUnit(2),
+        averageSpending: Dinero({
+          amount: rollingAverageForCategory(groupKey).spending
+        }).toRoundedUnit(2)
+      } as ICategorizedCurrentVsAverageSeries;
+    }
+  );
 
   return (
-    <div className="monthly-report-page">
+    <div className={classes.root}>
       <h1>Monthly Report</h1>
       <Grid item={true} xs={12}>
-        <form className={classes.root}>
+        <form className={classes.form}>
           <FormControl className={classes.formControl}>
             <InputLabel htmlFor="month-control">Month</InputLabel>
             <Select
@@ -145,10 +137,7 @@ function MonthlyReportPage({
         />
       </Grid>
       <Grid item={true} xs={12}>
-        <CategoryReportTable
-          monthlyGroupsToShow={monthlyGroupsToShow}
-          categoryAnnotation={categoryAnnotation}
-        />
+        <CategoryComparisonChart data={categoryComparisonData} />
       </Grid>
     </div>
   );

@@ -37,6 +37,12 @@ export interface IMonthlyCategorizedSeries {
   y: number;
 }
 
+export interface ICategorizedCurrentVsAverageSeries {
+  category: CategoryKey;
+  currentSpending: SpendingCost;
+  averageSpending: SpendingCost;
+}
+
 export type CategoryKey = string;
 export type MonthKey = string;
 
