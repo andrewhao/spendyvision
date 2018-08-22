@@ -1,8 +1,6 @@
-import { CategoryKey } from "../types/data";
+import { CategoryKey, ColorMapping } from "../types/data";
 import chroma from "chroma-js";
 import * as R from "ramda";
-
-// type ColorScaleMapping = [CategoryKey, string];
 
 export const colorScale = (categories: CategoryKey[]): string[] => {
   return chroma
@@ -11,8 +9,8 @@ export const colorScale = (categories: CategoryKey[]): string[] => {
     .colors(categories.length);
 };
 
-export const colorScaleMapping = (categories: CategoryKey[]) => {
-  return R.zip(categories, colorScale(categories));
+export const colorScaleMapping = (categories: CategoryKey[]): ColorMapping => {
+  return R.zipObj(categories, colorScale(categories));
 };
 
 export default { colorScaleMapping, colorScale };

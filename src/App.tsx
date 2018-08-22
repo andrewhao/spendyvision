@@ -1,5 +1,5 @@
 import "./App.css";
-import { IAmazonOrderItem, MonthKey } from "./types/data";
+import { IAmazonOrderItem, MonthKey, CategoryKey } from "./types/data";
 import DetailedTransactionPage from "./pages/DetailedTransactionPage";
 import CategoryPage from "./pages/CategoryPage";
 import SummaryPage from "./pages/SummaryPage";
@@ -14,6 +14,8 @@ import { Grid, withStyles, createMuiTheme } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ActivePanel } from "./types/view";
 import { DateTime } from "luxon";
+import * as R from "ramda";
+import { colorScaleMapping } from "./util/ColorUtils";
 
 const LOCAL_STORAGE_CACHE_KEY = "amazon_order_items";
 
@@ -76,6 +78,14 @@ class App extends React.Component<any, IAppState> {
   }
   public render() {
     const monthlyGroups = groupItemsByMonth(this.state.amazonOrderItems);
+    const allCategories = R.pipe(
+      R.map(R.prop("category")),
+      R.reject(R.isNil),
+      R.reject(R.isEmpty),
+      R.uniq
+    )(this.state.amazonOrderItems) as CategoryKey[];
+    const globalColorMapping = colorScaleMapping(allCategories);
+
     const handleDrawerClose = () => {
       this.setState({ isDrawerOpen: false });
     };
@@ -115,6 +125,7 @@ class App extends React.Component<any, IAppState> {
               )}
               {this.state.activePanel === ActivePanel.MonthlyReport && (
                 <MonthlyReportPage
+                  globalColorMapping={globalColorMapping}
                   monthlyGroups={monthlyGroups}
                   focusedMonth={this.state.focusedMonthlyReportMonth}
                   handleMonthlyReportMonthChange={

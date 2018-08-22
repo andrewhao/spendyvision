@@ -59,3 +59,4 @@ export interface IRollingAverageResult {
 export enum Categories {
   AllCategory = "AllCategory"
 }
+export type ColorMapping = object;

@@ -4,7 +4,8 @@ import {
   MonthKey,
   CategoryKey,
   IRollingAverageResult,
-  Price
+  Price,
+  ColorMapping
 } from "../types/data";
 import { withStyles, createMuiTheme } from "@material-ui/core/styles";
 import {
@@ -27,6 +28,7 @@ export interface IMonthlyReportPageProps {
   monthlyGroups: IMonthlyGroup[];
   classes: any;
   focusedMonth: MonthKey;
+  globalColorMapping: ColorMapping;
   handleMonthlyReportMonthChange(evt: any): void;
 }
 
@@ -47,6 +49,7 @@ const styles: any = {
 };
 
 function MonthlyReportPage({
+  globalColorMapping,
   monthlyGroups,
   classes,
   handleMonthlyReportMonthChange,
@@ -136,7 +139,10 @@ function MonthlyReportPage({
         </form>
       </Grid>
       <Grid item={true} xs={12}>
-        <MonthlyPieGraph monthlyGroup={currentMonthGroup} />
+        <MonthlyPieGraph
+          monthlyGroup={currentMonthGroup}
+          colorMapping={globalColorMapping}
+        />
       </Grid>
       <Grid item={true} xs={12}>
         <CategoryReportTable
