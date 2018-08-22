@@ -137,6 +137,7 @@ class App extends React.Component<any, IAppState> {
                 <CategoryPage
                   items={this.state.amazonOrderItems}
                   monthlyItems={monthlyGroups}
+                  globalColorMapping={globalColorMapping}
                   numMonthsToShow={this.state.numMonthsToShow}
                   handleNumMonthsToShowChange={this.handleNumMonthsToShowChange}
                 />

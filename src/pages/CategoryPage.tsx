@@ -7,8 +7,6 @@ import {
   withStyles,
   createMuiTheme
 } from "@material-ui/core";
-import chroma from "chroma-js";
-import { shuffle } from "lodash";
 import { DateTime } from "luxon";
 import * as R from "ramda";
 import * as React from "react";
@@ -18,7 +16,8 @@ import {
   CategoryKey,
   MonthKey,
   IAmazonOrderItem,
-  IMonthlyGroup
+  IMonthlyGroup,
+  ColorMapping
 } from "../types/data";
 
 interface ICategoryPageProps {
@@ -26,6 +25,7 @@ interface ICategoryPageProps {
   items: IAmazonOrderItem[];
   monthlyItems: IMonthlyGroup[];
   numMonthsToShow: number;
+  globalColorMapping: ColorMapping;
   handleNumMonthsToShowChange(evt: any): void;
 }
 
@@ -49,6 +49,7 @@ function CategoryPage({
   monthlyItems,
   classes,
   numMonthsToShow,
+  globalColorMapping,
   handleNumMonthsToShowChange
 }: ICategoryPageProps) {
   const focusedMonthlyGroups = R.takeLast(numMonthsToShow, monthlyItems);
@@ -70,12 +71,6 @@ function CategoryPage({
     )(monthlyItems)
   );
 
-  const colorScale = shuffle(
-    chroma
-      .scale("Paired")
-      .mode("lrgb")
-      .colors(allCategories.length)
-  );
   const interpolateEmptyMonthlyGroups = (
     dates: DateTime[],
     existingMonthlyGroups: IMonthlyGroup[]
@@ -113,7 +108,7 @@ function CategoryPage({
           <PurchaseGraph
             groups={groupsWithEmpties}
             height={250}
-            color={colorScale[i]}
+            color={globalColorMapping[categoryKey]}
             yAxisMax={"dataMax"}
             showLegend={false}
           />
