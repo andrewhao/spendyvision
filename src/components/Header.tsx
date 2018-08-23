@@ -14,7 +14,9 @@ const styles = {
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
-    })
+    }),
+    backgroundColor: "#61C9A8",
+    color: "#FFFFFF"
   },
   appBarShift: {
     marginLeft: drawerWidth,
@@ -40,7 +42,7 @@ function Header({ handleMenuClick, classes, open }: IHeaderProps) {
   return (
     <AppBar
       position="absolute"
-      color="default"
+      color="inherit"
       className={classNames(classes.appBar, open && classes.appBarShift)}
     >
       <Toolbar>

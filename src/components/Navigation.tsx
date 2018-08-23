@@ -112,7 +112,7 @@ function Navigation({
               <ListItemIcon>
                 <TimelineIcon color={summaryIconColor} />
               </ListItemIcon>
-              <ListItemText primary="Summary" />
+              <ListItemText primary="Big Picture Summary" />
             </ListItem>
           </Link>
           <Link to="/monthly">
@@ -126,17 +126,7 @@ function Navigation({
               <ListItemText primary="Monthly Report" />
             </ListItem>
           </Link>
-          <Link to="/transactions">
-            <ListItem
-              button={true}
-              onClick={handleItemClick(ActivePanel.DetailedTransaction)}
-            >
-              <ListItemIcon>
-                <ViewHeadlineIcon color={detailedTransactionIconColor} />
-              </ListItemIcon>
-              <ListItemText primary="Details" />
-            </ListItem>
-          </Link>
+
           <Link to="/categories">
             <ListItem
               button={true}
@@ -146,6 +136,17 @@ function Navigation({
                 <CategoryIcon color={byCategoryIconColor} />
               </ListItemIcon>
               <ListItemText primary="Category Trends" />
+            </ListItem>
+          </Link>
+          <Link to="/transactions">
+            <ListItem
+              button={true}
+              onClick={handleItemClick(ActivePanel.DetailedTransaction)}
+            >
+              <ListItemIcon>
+                <ViewHeadlineIcon color={detailedTransactionIconColor} />
+              </ListItemIcon>
+              <ListItemText primary="Detailed Transactions" />
             </ListItem>
           </Link>
         </List>
