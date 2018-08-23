@@ -1,6 +1,7 @@
 import * as React from "react";
 import classNames from "classnames";
 import { withStyles, createMuiTheme } from "@material-ui/core/styles";
+import { Link } from "react-router-dom";
 import {
   Drawer,
   List,
@@ -95,49 +96,58 @@ function Navigation({
         </div>
         <Divider />
         <List>
-          <ListItem button={true} onClick={handleItemClick(ActivePanel.Home)}>
-            <ListItemIcon>
-              <HomeIcon color={homeIconColor} />
-            </ListItemIcon>
-            <ListItemText primary="Home" />
-          </ListItem>
-          <ListItem
-            button={true}
-            onClick={handleItemClick(ActivePanel.Summary)}
-          >
-            <ListItemIcon>
-              <TimelineIcon color={summaryIconColor} />
-            </ListItemIcon>
-            <ListItemText primary="Summary" />
-          </ListItem>
-          <ListItem
-            button={true}
-            onClick={handleItemClick(ActivePanel.MonthlyReport)}
-          >
-            <ListItemIcon>
-              <DonutSmallIcon color={monthlyReportIconColor} />
-            </ListItemIcon>
-            <ListItemText primary="Monthly Report" />
-          </ListItem>
-          <ListItem
-            button={true}
-            onClick={handleItemClick(ActivePanel.DetailedTransaction)}
-          >
-            <ListItemIcon>
-              <ViewHeadlineIcon color={detailedTransactionIconColor} />
-            </ListItemIcon>
-            <ListItemText primary="Details" />
-          </ListItem>
-
-          <ListItem
-            button={true}
-            onClick={handleItemClick(ActivePanel.Category)}
-          >
-            <ListItemIcon>
-              <CategoryIcon color={byCategoryIconColor} />
-            </ListItemIcon>
-            <ListItemText primary="Category Trends" />
-          </ListItem>
+          <Link to="/">
+            <ListItem button={true}>
+              <ListItemIcon>
+                <HomeIcon color={homeIconColor} />
+              </ListItemIcon>
+              <ListItemText primary="Home" />
+            </ListItem>
+          </Link>
+          <Link to="/summary">
+            <ListItem
+              button={true}
+              onClick={handleItemClick(ActivePanel.Summary)}
+            >
+              <ListItemIcon>
+                <TimelineIcon color={summaryIconColor} />
+              </ListItemIcon>
+              <ListItemText primary="Summary" />
+            </ListItem>
+          </Link>
+          <Link to="/monthly">
+            <ListItem
+              button={true}
+              onClick={handleItemClick(ActivePanel.MonthlyReport)}
+            >
+              <ListItemIcon>
+                <DonutSmallIcon color={monthlyReportIconColor} />
+              </ListItemIcon>
+              <ListItemText primary="Monthly Report" />
+            </ListItem>
+          </Link>
+          <Link to="/transactions">
+            <ListItem
+              button={true}
+              onClick={handleItemClick(ActivePanel.DetailedTransaction)}
+            >
+              <ListItemIcon>
+                <ViewHeadlineIcon color={detailedTransactionIconColor} />
+              </ListItemIcon>
+              <ListItemText primary="Details" />
+            </ListItem>
+          </Link>
+          <Link to="/categories">
+            <ListItem
+              button={true}
+              onClick={handleItemClick(ActivePanel.Category)}
+            >
+              <ListItemIcon>
+                <CategoryIcon color={byCategoryIconColor} />
+              </ListItemIcon>
+              <ListItemText primary="Category Trends" />
+            </ListItem>
+          </Link>
         </List>
       </Drawer>
     </div>

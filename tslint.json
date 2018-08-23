@@ -7,6 +7,7 @@
     "no-console": false,
     "ordered-imports": false,
     "object-literal-sort-keys": false,
-    "no-debugger": false
+    "no-debugger": false,
+    "jsx-no-lambda": false
   }
 }

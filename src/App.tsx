@@ -1,4 +1,5 @@
 import "./App.css";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import { IAmazonOrderItem, MonthKey, CategoryKey } from "./types/data";
 import DetailedTransactionPage from "./pages/DetailedTransactionPage";
 import CategoryPage from "./pages/CategoryPage";
@@ -91,65 +92,85 @@ class App extends React.Component<any, IAppState> {
     };
 
     return (
-      <React.Fragment>
-        <CssBaseline>
-          <div className={this.props.classes.root}>
-            <Header
-              handleMenuClick={this.handleMenuClick}
-              open={this.state.isDrawerOpen}
-            />
-            <Navigation
-              handleDrawerClose={handleDrawerClose}
-              activePanel={this.state.activePanel}
-              handleItemClick={this.handleNavigationItemClick}
-              open={this.state.isDrawerOpen}
-            />
-            <Grid
-              container={true}
-              direction="row"
-              justify="center"
-              alignItems="center"
-              className={this.props.classes.content}
-            >
-              {this.state.activePanel === ActivePanel.Home && (
-                <HomePage handleCsvUpload={this.handleCsvUpload} />
-              )}
-              {this.state.activePanel === ActivePanel.Summary && (
-                <SummaryPage
-                  groups={monthlyGroups}
-                  items={this.state.amazonOrderItems}
+      <Router>
+        <React.Fragment>
+          <CssBaseline>
+            <div className={this.props.classes.root}>
+              <Header
+                handleMenuClick={this.handleMenuClick}
+                open={this.state.isDrawerOpen}
+              />
+              <Navigation
+                handleDrawerClose={handleDrawerClose}
+                activePanel={this.state.activePanel}
+                handleItemClick={this.handleNavigationItemClick}
+                open={this.state.isDrawerOpen}
+              />
+              <Grid
+                container={true}
+                direction="row"
+                justify="center"
+                alignItems="center"
+                className={this.props.classes.content}
+              >
+                <Route
+                  exact={true}
+                  path="/"
+                  render={() => (
+                    <HomePage handleCsvUpload={this.handleCsvUpload} />
+                  )}
                 />
-              )}
-              {this.state.activePanel === ActivePanel.DetailedTransaction && (
-                <DetailedTransactionPage groups={monthlyGroups} />
-              )}
-              {this.state.activePanel === ActivePanel.MonthlyReport && (
-                <MonthlyReportPage
-                  globalColorMapping={globalColorMapping}
-                  monthlyGroups={monthlyGroups}
-                  focusedMonth={this.state.focusedMonthlyReportMonth}
-                  handleMonthlyReportMonthChange={
-                    this.handleMonthlyReportMonthChange
-                  }
+                <Route
+                  path="/summary"
+                  render={() => (
+                    <SummaryPage
+                      groups={monthlyGroups}
+                      items={this.state.amazonOrderItems}
+                    />
+                  )}
                 />
-              )}
-              {this.state.activePanel === ActivePanel.Category && (
-                <CategoryPage
-                  items={this.state.amazonOrderItems}
-                  monthlyItems={monthlyGroups}
-                  globalColorMapping={globalColorMapping}
-                  numMonthsToShow={this.state.numMonthsToShow}
-                  handleNumMonthsToShowChange={this.handleNumMonthsToShowChange}
+                <Route
+                  path="/transactions"
+                  render={() => (
+                    <DetailedTransactionPage groups={monthlyGroups} />
+                  )}
                 />
-              )}
-            </Grid>
-          </div>
-        </CssBaseline>
-      </React.Fragment>
+                <Route
+                  path="/monthly"
+                  render={() => (
+                    <MonthlyReportPage
+                      globalColorMapping={globalColorMapping}
+                      monthlyGroups={monthlyGroups}
+                      focusedMonth={this.state.focusedMonthlyReportMonth}
+                      handleMonthlyReportMonthChange={
+                        this.handleMonthlyReportMonthChange
+                      }
+                    />
+                  )}
+                />
+                <Route
+                  path="/categories"
+                  render={() => (
+                    <CategoryPage
+                      items={this.state.amazonOrderItems}
+                      monthlyItems={monthlyGroups}
+                      globalColorMapping={globalColorMapping}
+                      numMonthsToShow={this.state.numMonthsToShow}
+                      handleNumMonthsToShowChange={
+                        this.handleNumMonthsToShowChange
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+            </div>
+          </CssBaseline>
+        </React.Fragment>
+      </Router>
     );
   }
 
-  public componentDidMount() {
+  public componentWillMount() {
     this.restoreAmazonOrderItems();
   }
 
