@@ -4,9 +4,9 @@ import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
 import { withStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
+import { drawerWidth } from "./Navigation";
 
 const theme = createMuiTheme();
-const drawerWidth = 240;
 
 const styles = {
   appBar: {

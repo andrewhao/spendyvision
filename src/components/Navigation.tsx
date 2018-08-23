@@ -20,7 +20,7 @@ import TimelineIcon from "@material-ui/icons/Timeline";
 import { ActivePanel } from "../types/view";
 
 const theme = createMuiTheme();
-const drawerWidth = 240;
+export const drawerWidth = 280;
 
 const styles: any = {
   toolbar: {

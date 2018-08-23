@@ -15,7 +15,8 @@ import {
   InputLabel,
   MenuItem,
   FormControl,
-  Select
+  Select,
+  Paper
 } from "@material-ui/core";
 import { DateTime } from "luxon";
 import * as R from "ramda";
@@ -39,6 +40,10 @@ const theme = createMuiTheme();
 const styles: any = {
   root: {
     flexGrow: 1
+  },
+  paper: {
+    padding: "1rem",
+    margin: "1rem 0"
   },
   form: {
     display: "flex",
@@ -131,13 +136,17 @@ function MonthlyReportPage({
         </form>
       </Grid>
       <Grid item={true} xs={12}>
-        <MonthlyPieGraph
-          monthlyGroup={currentMonthGroup}
-          colorMapping={globalColorMapping}
-        />
+        <Paper className={classes.paper} square={true} elevation={2}>
+          <MonthlyPieGraph
+            monthlyGroup={currentMonthGroup}
+            colorMapping={globalColorMapping}
+          />
+        </Paper>
       </Grid>
       <Grid item={true} xs={12}>
-        <CategoryComparisonChart data={categoryComparisonData} />
+        <Paper className={classes.paper} square={true} elevation={2}>
+          <CategoryComparisonChart data={categoryComparisonData} />
+        </Paper>
       </Grid>
     </div>
   );
