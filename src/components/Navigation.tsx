@@ -9,7 +9,8 @@ import {
   IconButton,
   ListItem,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  Tooltip
 } from "@material-ui/core";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import HomeIcon from "@material-ui/icons/Home";
@@ -68,15 +69,15 @@ function Navigation({
   activePanel
 }: INavigationProps) {
   const summaryIconColor =
-    activePanel === ActivePanel.Summary ? "secondary" : "inherit";
+    activePanel === ActivePanel.Summary ? "primary" : "inherit";
   const byCategoryIconColor =
-    activePanel === ActivePanel.Category ? "secondary" : "inherit";
+    activePanel === ActivePanel.Category ? "primary" : "inherit";
   const detailedTransactionIconColor =
-    activePanel === ActivePanel.DetailedTransaction ? "secondary" : "inherit";
+    activePanel === ActivePanel.DetailedTransaction ? "primary" : "inherit";
   const monthlyReportIconColor =
-    activePanel === ActivePanel.MonthlyReport ? "secondary" : "inherit";
+    activePanel === ActivePanel.MonthlyReport ? "primary" : "inherit";
   const homeIconColor =
-    activePanel === ActivePanel.Home ? "secondary" : "inherit";
+    activePanel === ActivePanel.Home ? "primary" : "inherit";
   return (
     <div className={classes.root}>
       <Drawer
@@ -97,57 +98,73 @@ function Navigation({
         <Divider />
         <List>
           <Link to="/">
-            <ListItem button={true}>
-              <ListItemIcon>
-                <HomeIcon color={homeIconColor} />
-              </ListItemIcon>
-              <ListItemText primary="Home" />
-            </ListItem>
+            <Tooltip title="Upload an order report" placement="right">
+              <ListItem button={true}>
+                <ListItemIcon>
+                  <HomeIcon color={homeIconColor} />
+                </ListItemIcon>
+                <ListItemText primary="Home" />
+              </ListItem>
+            </Tooltip>
           </Link>
           <Link to="/summary">
-            <ListItem
-              button={true}
-              onClick={handleItemClick(ActivePanel.Summary)}
+            <Tooltip
+              title="See a summary of your purchase history"
+              placement="right"
             >
-              <ListItemIcon>
-                <TimelineIcon color={summaryIconColor} />
-              </ListItemIcon>
-              <ListItemText primary="Big Picture Summary" />
-            </ListItem>
+              <ListItem
+                button={true}
+                onClick={handleItemClick(ActivePanel.Summary)}
+              >
+                <ListItemIcon>
+                  <TimelineIcon color={summaryIconColor} />
+                </ListItemIcon>
+                <ListItemText primary="Big Picture Summary" />
+              </ListItem>
+            </Tooltip>
           </Link>
           <Link to="/monthly">
-            <ListItem
-              button={true}
-              onClick={handleItemClick(ActivePanel.MonthlyReport)}
+            <Tooltip
+              title="See a monthly view of your spending"
+              placement="right"
             >
-              <ListItemIcon>
-                <DonutSmallIcon color={monthlyReportIconColor} />
-              </ListItemIcon>
-              <ListItemText primary="Monthly Report" />
-            </ListItem>
+              <ListItem
+                button={true}
+                onClick={handleItemClick(ActivePanel.MonthlyReport)}
+              >
+                <ListItemIcon>
+                  <DonutSmallIcon color={monthlyReportIconColor} />
+                </ListItemIcon>
+                <ListItemText primary="Monthly Report" />
+              </ListItem>
+            </Tooltip>
           </Link>
 
           <Link to="/categories">
-            <ListItem
-              button={true}
-              onClick={handleItemClick(ActivePanel.Category)}
-            >
-              <ListItemIcon>
-                <CategoryIcon color={byCategoryIconColor} />
-              </ListItemIcon>
-              <ListItemText primary="Category Trends" />
-            </ListItem>
+            <Tooltip title="See trends by purchase category" placement="right">
+              <ListItem
+                button={true}
+                onClick={handleItemClick(ActivePanel.Category)}
+              >
+                <ListItemIcon>
+                  <CategoryIcon color={byCategoryIconColor} />
+                </ListItemIcon>
+                <ListItemText primary="Category Trends" />
+              </ListItem>
+            </Tooltip>
           </Link>
           <Link to="/transactions">
-            <ListItem
-              button={true}
-              onClick={handleItemClick(ActivePanel.DetailedTransaction)}
-            >
-              <ListItemIcon>
-                <ViewHeadlineIcon color={detailedTransactionIconColor} />
-              </ListItemIcon>
-              <ListItemText primary="Detailed Transactions" />
-            </ListItem>
+            <Tooltip title="View all transactions" placement="right">
+              <ListItem
+                button={true}
+                onClick={handleItemClick(ActivePanel.DetailedTransaction)}
+              >
+                <ListItemIcon>
+                  <ViewHeadlineIcon color={detailedTransactionIconColor} />
+                </ListItemIcon>
+                <ListItemText primary="Detailed Transactions" />
+              </ListItem>
+            </Tooltip>
           </Link>
         </List>
       </Drawer>
