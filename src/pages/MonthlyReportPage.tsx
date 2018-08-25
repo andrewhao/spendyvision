@@ -26,6 +26,7 @@ import Dinero from "dinero.js";
 import groupItemsByCategory from "../util/groupItemsByCategory";
 import computeTotalPrice from "../util/computeTotalPrice";
 import MonthlyPieGraph from "../components/MonthlyPieGraph";
+import { Link } from "react-router-dom";
 
 export interface IMonthlyReportPageProps {
   monthlyGroups: IMonthlyGroup[];
@@ -40,6 +41,11 @@ const theme = createMuiTheme();
 const styles: any = {
   root: {
     flexGrow: 1
+  },
+  header: {
+    justifyContent: "space-between",
+    display: "flex",
+    alignItems: "center"
   },
   paper: {
     padding: "1rem",
@@ -121,7 +127,7 @@ function MonthlyReportPage({
   return (
     <div className={classes.root}>
       <h1>Monthly Report</h1>
-      <Grid item={true} xs={12}>
+      <Grid container={true} xs={12} className={classes.header}>
         <form className={classes.form}>
           <FormControl className={classes.formControl}>
             <InputLabel htmlFor="month-control">Month</InputLabel>
@@ -134,6 +140,10 @@ function MonthlyReportPage({
             </Select>
           </FormControl>
         </form>
+
+        <Link to={"/transactions/date/" + focusedMonth}>
+          View all transactions
+        </Link>
       </Grid>
       <Grid item={true} xs={12}>
         <Paper className={classes.paper} square={true} elevation={2}>

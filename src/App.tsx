@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { IAmazonOrderItem, MonthKey, CategoryKey } from "./types/data";
 import DetailedTransactionPage from "./pages/DetailedTransactionPage";
 import CategoryPage from "./pages/CategoryPage";
@@ -129,12 +129,26 @@ class App extends React.Component<any, IAppState> {
                     />
                   )}
                 />
-                <Route
-                  path="/transactions"
-                  render={() => (
-                    <DetailedTransactionPage groups={monthlyGroups} />
-                  )}
-                />
+                <Switch>
+                  <Route
+                    path="/transactions/date/:date"
+                    render={props => (
+                      <DetailedTransactionPage
+                        {...props}
+                        items={this.state.amazonOrderItems}
+                      />
+                    )}
+                  />
+                  <Route
+                    path="/transactions"
+                    render={props => (
+                      <DetailedTransactionPage
+                        {...props}
+                        items={this.state.amazonOrderItems}
+                      />
+                    )}
+                  />
+                </Switch>
                 <Route
                   path="/monthly"
                   render={() => (
