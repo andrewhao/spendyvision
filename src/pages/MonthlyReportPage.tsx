@@ -27,6 +27,7 @@ import groupItemsByCategory from "../util/groupItemsByCategory";
 import computeTotalPrice from "../util/computeTotalPrice";
 import MonthlyPieGraph from "../components/MonthlyPieGraph";
 import { Link } from "react-router-dom";
+import { isoDateToFriendlyDisplay } from "../util/DateUtils";
 
 export interface IMonthlyReportPageProps {
   monthlyGroups: IMonthlyGroup[];
@@ -73,6 +74,7 @@ function MonthlyReportPage({
 }: IMonthlyReportPageProps) {
   const menuItems = R.pipe(
     R.map((monthlyGroup: IMonthlyGroup) => monthlyGroup.monthKey),
+    R.sort(R.descend(R.identity)),
     R.map((monthKey: MonthKey) => (
       <MenuItem value={monthKey} key={monthKey}>
         {DateTime.fromISO(monthKey).toFormat("yyyy LLLL")}
@@ -142,11 +144,15 @@ function MonthlyReportPage({
         </form>
 
         <Link to={"/transactions/date/" + focusedMonth}>
-          View all transactions
+          View detailed transactions for{" "}
+          {isoDateToFriendlyDisplay(focusedMonth)}
         </Link>
       </Grid>
       <Grid item={true} xs={12}>
         <Paper className={classes.paper} square={true} elevation={2}>
+          <h2>Monthly Category Breakdown</h2>
+          <p>Your spending this month, by category:</p>
+
           <MonthlyPieGraph
             monthlyGroup={currentMonthGroup}
             colorMapping={globalColorMapping}
@@ -155,6 +161,10 @@ function MonthlyReportPage({
       </Grid>
       <Grid item={true} xs={12}>
         <Paper className={classes.paper} square={true} elevation={2}>
+          <h2>Category Comparison Spending</h2>
+          <p>
+            Your spending this month compared with your prior 3-month average
+          </p>
           <CategoryComparisonChart data={categoryComparisonData} />
         </Paper>
       </Grid>

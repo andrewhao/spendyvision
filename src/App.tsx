@@ -136,6 +136,7 @@ class App extends React.Component<any, IAppState> {
                       <DetailedTransactionPage
                         {...props}
                         items={this.state.amazonOrderItems}
+                        monthlyGroups={monthlyGroups}
                       />
                     )}
                   />
@@ -145,6 +146,7 @@ class App extends React.Component<any, IAppState> {
                       <DetailedTransactionPage
                         {...props}
                         items={this.state.amazonOrderItems}
+                        monthlyGroups={monthlyGroups}
                       />
                     )}
                   />
