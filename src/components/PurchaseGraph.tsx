@@ -3,7 +3,7 @@ import { IMonthlyGroup, CategoryKey } from "../types/data";
 import { colorScale } from "../util/ColorUtils";
 import * as R from "ramda";
 import { DateTime } from "luxon";
-import Dinero from "dinero.js";
+const Dinero = require("dinero.js");
 
 import transformCategorizedMonthlySeriesData from "../util/transformCategorizedMonthlySeriesData";
 
@@ -38,6 +38,9 @@ export default function PurchaseGraph({
   yAxisMax = "dataMax + 100",
   showLegend = true
 }: IProps) {
+  if (groups.length === 0) {
+    return <div />;
+  }
   const data = transformCategorizedMonthlySeriesData(groups);
 
   const categories = R.pipe(
