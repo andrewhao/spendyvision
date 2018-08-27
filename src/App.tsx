@@ -117,7 +117,10 @@ class App extends React.Component<any, IAppState> {
                   exact={true}
                   path="/"
                   render={() => (
-                    <HomePage handleCsvUpload={this.handleCsvUpload} />
+                    <HomePage
+                      handleCsvUpload={this.handleCsvUpload}
+                      items={this.state.amazonOrderItems}
+                    />
                   )}
                 />
                 <Route

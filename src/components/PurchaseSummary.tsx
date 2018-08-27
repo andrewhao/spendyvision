@@ -2,6 +2,7 @@ import * as React from "react";
 import { IAmazonOrderItem, IMonthlyGroup } from "../types/data";
 import Dinero from "dinero.js";
 import computeTotalPrice from "../util/computeTotalPrice";
+import { Typography } from "@material-ui/core";
 
 interface IProps {
   items: IAmazonOrderItem[];
@@ -19,7 +20,9 @@ export default function PurchaseSummary({ items, groups }: IProps) {
 
   return (
     <div className="purchase-summary">
-      <h2>Purchase Overview</h2>
+      <Typography variant="headline" gutterBottom={true}>
+        Purchase Overview
+      </Typography>
       <ul>
         <li>
           Over the past <strong>{numMonths} months</strong>, you have spent a

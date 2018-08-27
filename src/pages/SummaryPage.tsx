@@ -17,7 +17,7 @@ export default function SummaryPage({ groups, items }: ISummaryPageProps) {
         <PurchaseSummary items={items} groups={R.dropLast(1, groups)} />
       </Grid>
       <Grid item={true} xs={12}>
-        <PurchaseGraph groups={groups} />
+        <PurchaseGraph height={500} groups={groups} />
       </Grid>
     </React.Fragment>
   );

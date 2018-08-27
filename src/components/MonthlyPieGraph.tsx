@@ -28,7 +28,8 @@ export default function MonthlyPieGraph({
     R.map(([categoryKey, amount]) => ({
       name: categoryKey,
       value: amount
-    }))
+    })),
+    R.sort(R.descend(R.prop("value")))
   )(monthlyGroup);
 
   return (
