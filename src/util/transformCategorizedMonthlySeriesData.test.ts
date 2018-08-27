@@ -1,7 +1,7 @@
 import transformCategorizedMonthlySeriesData from "./transformCategorizedMonthlySeriesData";
 import { IAmazonOrderItem, IMonthlyGroup } from "../types/data";
 
-describe("transformCategorizedMonthlySeriesData", () => {
+xdescribe("transformCategorizedMonthlySeriesData", () => {
   it("groups items by category costs", () => {
     const date1 = new Date("2018-01-05").toISOString();
     const date2 = new Date("2018-01-06").toISOString();

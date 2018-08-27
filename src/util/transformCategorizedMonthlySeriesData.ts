@@ -2,7 +2,7 @@ import { IMonthlyCategorizedSeries, IMonthlyGroup } from "../types/data";
 import computeTotalPrice from "./computeTotalPrice";
 import computeCategoryCostSeries from "./computeCategoryCostSeries";
 import { DateTime } from "luxon";
-const Dinero = require("dinero.js");
+import Dinero from "dinero.js";
 import { snakeCase } from "lodash";
 import * as R from "ramda";
 

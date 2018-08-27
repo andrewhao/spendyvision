@@ -1,7 +1,6 @@
 import { ICategoryGroup, IAmazonItemCollectionKeyable } from "../types/data";
 import groupItemsByCategory from "./groupItemsByCategory";
-
-const Dinero = require("dinero.js");
+import Dinero from "dinero.js";
 import computeTotalPrice from "./computeTotalPrice";
 
 type CategoryCostSeries = object;

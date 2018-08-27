@@ -3,7 +3,7 @@ import { IMonthlyGroup, CategoryKey } from "../types/data";
 import { colorScale } from "../util/ColorUtils";
 import * as R from "ramda";
 import { DateTime } from "luxon";
-const Dinero = require("dinero.js");
+import Dinero from "dinero.js";
 
 import transformCategorizedMonthlySeriesData from "../util/transformCategorizedMonthlySeriesData";
 
