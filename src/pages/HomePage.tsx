@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Grid, Paper, withStyles, Typography } from "@material-ui/core";
+import { Grid, Paper, withStyles, Typography, Button } from "@material-ui/core";
 import CsvFileUpload from "../CsvFileUpload";
 import { IAmazonOrderItem } from "../types/data";
 import * as R from "ramda";
@@ -9,6 +9,7 @@ export interface IHomePageProps {
   classes: any;
   items: IAmazonOrderItem[];
   handleCsvUpload(results: any[]): void;
+  handleClearStorage(): void;
 }
 const styles: any = {
   paper: {
@@ -16,14 +17,19 @@ const styles: any = {
     marginBottom: "1rem"
   }
 };
-function HomePage({ handleCsvUpload, classes, items }: IHomePageProps) {
+function HomePage({
+  handleCsvUpload,
+  classes,
+  items,
+  handleClearStorage
+}: IHomePageProps) {
   const sortedItems = R.compose(
     R.sort(R.ascend(R.identity)),
     R.map(R.prop("order_date"))
   )(items) as string[];
 
   const loadedItemMsg = (its: string[]): JSX.Element => {
-    if (its === undefined || its === []) {
+    if (its === undefined || its.length === 0) {
       return <span />;
     }
 
@@ -38,8 +44,17 @@ function HomePage({ handleCsvUpload, classes, items }: IHomePageProps) {
         <p>
           We already have records of an existing loaded order report, from{" "}
           <strong>{earliestDate}</strong> to <strong>{latestDate}</strong>.
-          Click a report to view on the left, or you can proceed below to upload
-          a fresh order report.
+          Click a report to view on the left, upload a fresh order report, or
+          clear the history of this report from this browser.
+        </p>
+        <p>
+          <Button
+            onClick={handleClearStorage}
+            variant="contained"
+            color="secondary"
+          >
+            Clear Report History
+          </Button>
         </p>
       </Paper>
     );

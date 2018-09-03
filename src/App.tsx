@@ -67,6 +67,7 @@ class App extends React.Component<any, IAppState> {
     };
     this.restoreAmazonOrderItems = this.restoreAmazonOrderItems.bind(this);
     this.handleCsvUpload = this.handleCsvUpload.bind(this);
+    this.handleClearStorage = this.handleClearStorage.bind(this);
     this.setAmazonOrderItems = this.setAmazonOrderItems.bind(this);
     this.handleMenuClick = this.handleMenuClick.bind(this);
     this.handleNavigationItemClick = this.handleNavigationItemClick.bind(this);
@@ -119,6 +120,7 @@ class App extends React.Component<any, IAppState> {
                   render={() => (
                     <HomePage
                       handleCsvUpload={this.handleCsvUpload}
+                      handleClearStorage={this.handleClearStorage}
                       items={this.state.amazonOrderItems}
                     />
                   )}
@@ -231,6 +233,11 @@ class App extends React.Component<any, IAppState> {
     const itemsJSON = parseAmazonCsv(results);
     this.setAmazonOrderItems(itemsJSON);
     this.setState({ amazonOrderItems: itemsJSON });
+  }
+
+  private handleClearStorage(): void {
+    window.localStorage.removeItem(LOCAL_STORAGE_CACHE_KEY);
+    this.setState({ amazonOrderItems: [] });
   }
 }
 
