@@ -5,7 +5,8 @@ import {
   Select,
   MenuItem,
   withStyles,
-  createMuiTheme
+  createMuiTheme,
+  Typography
 } from "@material-ui/core";
 import { DateTime } from "luxon";
 import * as R from "ramda";
@@ -52,6 +53,9 @@ function CategoryPage({
   globalColorMapping,
   handleNumMonthsToShowChange
 }: ICategoryPageProps) {
+  if (items.length === 0) {
+    return <Typography>Please upload an order report first.</Typography>;
+  }
   const focusedMonthlyGroups = R.takeLast(numMonthsToShow, monthlyItems);
 
   const allCategories = R.pipe(

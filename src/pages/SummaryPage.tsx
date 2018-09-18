@@ -4,6 +4,7 @@ import PurchaseSummary from "../components/PurchaseSummary";
 import PurchaseGraph from "../components/PurchaseGraph";
 import { Grid } from "@material-ui/core";
 import { IAmazonOrderItem, IMonthlyGroup } from "../types/data";
+import { Typography } from "@material-ui/core";
 
 interface ISummaryPageProps {
   items: IAmazonOrderItem[];
@@ -11,6 +12,9 @@ interface ISummaryPageProps {
 }
 
 export default function SummaryPage({ groups, items }: ISummaryPageProps) {
+  if (items.length === 0) {
+    return <Typography>Please upload an order report first.</Typography>;
+  }
   return (
     <React.Fragment>
       <Grid item={true} xs={12}>
