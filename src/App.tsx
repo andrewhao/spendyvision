@@ -72,6 +72,7 @@ class App extends React.Component<any, IAppState> {
     this.setAmazonOrderItems = this.setAmazonOrderItems.bind(this);
     this.handleMenuClick = this.handleMenuClick.bind(this);
     this.handleNavigationItemClick = this.handleNavigationItemClick.bind(this);
+    this.deriveCurrentMonth = this.deriveCurrentMonth.bind(this);
     this.handleMonthlyReportMonthChange = this.handleMonthlyReportMonthChange.bind(
       this
     );
@@ -224,7 +225,10 @@ class App extends React.Component<any, IAppState> {
     const cachedItems = window.localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
     if (cachedItems !== null) {
       const itemsJSON = JSON.parse(cachedItems);
-      this.setState({ amazonOrderItems: itemsJSON });
+      this.setState({
+        amazonOrderItems: itemsJSON,
+        focusedMonthlyReportMonth: this.deriveCurrentMonth(itemsJSON)
+      });
       return true;
     }
     return false;
@@ -233,17 +237,26 @@ class App extends React.Component<any, IAppState> {
   private handleCsvUpload(results: any[]) {
     const itemsJSON = parseAmazonCsv(results);
     this.setAmazonOrderItems(itemsJSON);
-    const focusedDate = R.pipe(
-      R.sortBy(R.prop("order_date")),
-      R.head
-    )(itemsJSON);
-    console.log("focused date", focusedDate, DateTime.fromISO(focusedDate));
-    this.setState({ amazonOrderItems: itemsJSON });
+    this.setState({
+      amazonOrderItems: itemsJSON,
+      focusedMonthlyReportMonth: this.deriveCurrentMonth(itemsJSON)
+    });
   }
 
   private handleClearStorage(): void {
     window.localStorage.removeItem(LOCAL_STORAGE_CACHE_KEY);
     this.setState({ amazonOrderItems: [] });
+  }
+
+  private deriveCurrentMonth(itemsJSON: any): Nullable<MonthKey> {
+    const date = R.pipe(
+      R.map(R.prop("order_date")),
+      R.sortBy(R.identity),
+      R.last
+    )(itemsJSON);
+    return DateTime.fromISO(date)
+      .startOf("month")
+      .toString();
   }
 }
 
