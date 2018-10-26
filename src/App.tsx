@@ -17,6 +17,7 @@ import { ActivePanel } from "./types/view";
 import { DateTime } from "luxon";
 import * as R from "ramda";
 import { colorScaleMapping } from "./util/ColorUtils";
+import { Nullable } from "typescript-nullable";
 
 const LOCAL_STORAGE_CACHE_KEY = "amazon_order_items";
 
@@ -25,7 +26,7 @@ interface IAppState {
   isDrawerOpen: boolean;
   activePanel: ActivePanel;
   numMonthsToShow: number;
-  focusedMonthlyReportMonth: MonthKey;
+  focusedMonthlyReportMonth: Nullable<MonthKey>;
 }
 
 const theme = createMuiTheme();
@@ -51,9 +52,9 @@ const styles: any = {
   }
 };
 
-const currentMonth = DateTime.local()
-  .startOf("month")
-  .toISO() as MonthKey;
+// const currentMonth = DateTime.local()
+//   .startOf("month")
+//   .toISO() as MonthKey;
 
 class App extends React.Component<any, IAppState> {
   public constructor(props: any) {
@@ -63,7 +64,7 @@ class App extends React.Component<any, IAppState> {
       isDrawerOpen: true,
       activePanel: ActivePanel.Home,
       numMonthsToShow: 4,
-      focusedMonthlyReportMonth: currentMonth
+      focusedMonthlyReportMonth: null
     };
     this.restoreAmazonOrderItems = this.restoreAmazonOrderItems.bind(this);
     this.handleCsvUpload = this.handleCsvUpload.bind(this);
@@ -232,6 +233,11 @@ class App extends React.Component<any, IAppState> {
   private handleCsvUpload(results: any[]) {
     const itemsJSON = parseAmazonCsv(results);
     this.setAmazonOrderItems(itemsJSON);
+    const focusedDate = R.pipe(
+      R.sortBy(R.prop("order_date")),
+      R.head
+    )(itemsJSON);
+    console.log("focused date", focusedDate, DateTime.fromISO(focusedDate));
     this.setState({ amazonOrderItems: itemsJSON });
   }
 

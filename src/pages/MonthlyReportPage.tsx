@@ -16,6 +16,7 @@ import {
   MenuItem,
   FormControl,
   Select,
+  Typography,
   Paper
 } from "@material-ui/core";
 import { DateTime } from "luxon";
@@ -28,11 +29,12 @@ import computeTotalPrice from "../util/computeTotalPrice";
 import MonthlyPieGraph from "../components/MonthlyPieGraph";
 import { Link } from "react-router-dom";
 import { isoDateToFriendlyDisplay } from "../util/DateUtils";
+import { Nullable } from "typescript-nullable";
 
 export interface IMonthlyReportPageProps {
   monthlyGroups: IMonthlyGroup[];
   classes: any;
-  focusedMonth: MonthKey;
+  focusedMonth: Nullable<MonthKey>;
   globalColorMapping: ColorMapping;
   handleMonthlyReportMonthChange(evt: any): void;
 }
@@ -72,6 +74,9 @@ function MonthlyReportPage({
   handleMonthlyReportMonthChange,
   focusedMonth
 }: IMonthlyReportPageProps) {
+  if (Nullable.isNone(null)) {
+    return <Typography>Please upload an order report first.</Typography>;
+  }
   const menuItems = R.pipe(
     R.map((monthlyGroup: IMonthlyGroup) => monthlyGroup.monthKey),
     R.sort(R.descend(R.identity)),
@@ -88,7 +93,7 @@ function MonthlyReportPage({
     return rollingAverage(
       monthlyGroups,
       3,
-      DateTime.fromISO(focusedMonth),
+      DateTime.fromISO(Nullable.withDefault("", focusedMonth)),
       category
     );
   };
@@ -134,7 +139,7 @@ function MonthlyReportPage({
           <FormControl className={classes.formControl}>
             <InputLabel htmlFor="month-control">Month</InputLabel>
             <Select
-              value={focusedMonth}
+              value={Nullable.withDefault("", focusedMonth)}
               onChange={handleMonthlyReportMonthChange}
               inputProps={{ id: "month-control" }}
             >
@@ -145,7 +150,7 @@ function MonthlyReportPage({
 
         <Link to={"/transactions/date/" + focusedMonth}>
           View detailed transactions for{" "}
-          {isoDateToFriendlyDisplay(focusedMonth)}
+          {isoDateToFriendlyDisplay(Nullable.withDefault("", focusedMonth))}
         </Link>
       </Grid>
       <Grid item={true} xs={12}>
