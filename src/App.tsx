@@ -202,7 +202,9 @@ class App extends React.Component<any, IAppState> {
   }
 
   private handleMonthlyReportMonthChange(event: any) {
-    this.setState({ focusedMonthlyReportMonth: event.target.value });
+    this.setState({
+      focusedMonthlyReportMonth: event.target.value
+    });
   }
 
   private handleMenuClick() {

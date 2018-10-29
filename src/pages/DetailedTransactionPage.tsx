@@ -24,6 +24,7 @@ import {
 import OrderItem from "../components/OrderItem";
 import * as R from "ramda";
 import { DateTime } from "luxon";
+import { Nullable } from "typescript-nullable";
 
 interface IDetailedTransactionPageProps {
   items: IAmazonOrderItem[];
@@ -31,7 +32,7 @@ interface IDetailedTransactionPageProps {
   match: { params: { date: string; page?: number } };
 }
 interface IDetailedTransactionPageState {
-  filteredMonth: MonthKey | undefined;
+  filteredMonth: Nullable<MonthKey>;
   filteredCategory: CategoryKey | undefined;
   rowsPerPage: number;
   page: number;
@@ -60,19 +61,21 @@ export default class DetailedTransactionPage extends React.Component<
 
   public render() {
     const { items } = this.props;
-    const filteredMonthDate =
-      this.state.filteredMonth && DateTime.fromISO(this.state.filteredMonth);
+    const filteredMonthDate = Nullable.map(
+      fm => DateTime.fromISO(fm),
+      this.state.filteredMonth
+    );
 
     const filterMonth = (its: IAmazonOrderItem[]): IAmazonOrderItem[] => {
       return its.filter((item: IAmazonOrderItem) => {
-        if (filteredMonthDate === undefined || filteredMonthDate === "") {
+        if (Nullable.isNone(filteredMonthDate)) {
           return true;
         }
         return (
           DateTime.fromISO(item.order_date).get("month") ===
-            filteredMonthDate.get("month") &&
+            Nullable.map((d: DateTime) => d.get("month"), filteredMonthDate) &&
           DateTime.fromISO(item.order_date).get("year") ===
-            filteredMonthDate.get("year")
+            Nullable.map((d: DateTime) => d.get("year"), filteredMonthDate)
         );
       });
     };
@@ -122,6 +125,11 @@ export default class DetailedTransactionPage extends React.Component<
         </MenuItem>
       ))
     )(this.props.monthlyGroups);
+    menuItems.unshift(
+      <MenuItem value="" key="all">
+        All Months
+      </MenuItem>
+    );
 
     const handleMonthlyReportMonthChange = (event: any): void => {
       this.setState({ filteredMonth: event.target.value });
@@ -131,7 +139,7 @@ export default class DetailedTransactionPage extends React.Component<
       <FormControl>
         <InputLabel htmlFor="month-control">Month</InputLabel>
         <Select
-          value={this.state.filteredMonth}
+          value={Nullable.withDefault("", this.state.filteredMonth)}
           onChange={handleMonthlyReportMonthChange}
           inputProps={{ id: "month-control" }}
         >

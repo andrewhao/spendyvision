@@ -74,7 +74,7 @@ function MonthlyReportPage({
   handleMonthlyReportMonthChange,
   focusedMonth
 }: IMonthlyReportPageProps) {
-  if (Nullable.isNone(null)) {
+  if (Nullable.isNone(focusedMonth)) {
     return <Typography>Please upload an order report first.</Typography>;
   }
   const menuItems = R.pipe(
@@ -93,7 +93,9 @@ function MonthlyReportPage({
     return rollingAverage(
       monthlyGroups,
       3,
-      DateTime.fromISO(Nullable.withDefault("", focusedMonth)),
+      DateTime.fromISO(
+        Nullable.withDefault(new Date().toISOString(), focusedMonth)
+      ),
       category
     );
   };
@@ -139,7 +141,10 @@ function MonthlyReportPage({
           <FormControl className={classes.formControl}>
             <InputLabel htmlFor="month-control">Month</InputLabel>
             <Select
-              value={Nullable.withDefault("", focusedMonth)}
+              value={Nullable.withDefault(
+                new Date().toISOString(),
+                focusedMonth
+              )}
               onChange={handleMonthlyReportMonthChange}
               inputProps={{ id: "month-control" }}
             >
@@ -150,7 +155,9 @@ function MonthlyReportPage({
 
         <Link to={"/transactions/date/" + focusedMonth}>
           View detailed transactions for{" "}
-          {isoDateToFriendlyDisplay(Nullable.withDefault("", focusedMonth))}
+          {isoDateToFriendlyDisplay(
+            Nullable.withDefault(new Date().toISOString(), focusedMonth)
+          )}
         </Link>
       </Grid>
       <Grid item={true} xs={12}>
