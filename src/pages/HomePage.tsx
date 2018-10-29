@@ -39,13 +39,12 @@ function HomePage({
     return (
       <Paper className={classes.paper}>
         <Typography variant="headline" gutterBottom={true}>
-          You've already loaded some data.
+          Order History loaded from <strong>{earliestDate}</strong> to{" "}
+          <strong>{latestDate}</strong>.
         </Typography>
         <p>
-          We already have records of an existing loaded order report, from{" "}
-          <strong>{earliestDate}</strong> to <strong>{latestDate}</strong>.
-          Click a report to view on the left, upload a fresh order report, or
-          clear the history of this report from this browser.
+          This data is stored on this browser, never on our servers. If you'd
+          like to clear your data, click "Clear Report History"
         </p>
         <p>
           <Button

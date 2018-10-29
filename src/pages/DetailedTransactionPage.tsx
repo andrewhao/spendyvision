@@ -37,6 +37,7 @@ interface IDetailedTransactionPageState {
   rowsPerPage: number;
   page: number;
 }
+const ALL = "all";
 
 export default class DetailedTransactionPage extends React.Component<
   IDetailedTransactionPageProps,
@@ -126,7 +127,7 @@ export default class DetailedTransactionPage extends React.Component<
       ))
     )(this.props.monthlyGroups);
     menuItems.unshift(
-      <MenuItem value="" key="all">
+      <MenuItem value={ALL} key="all">
         All Months
       </MenuItem>
     );
@@ -139,7 +140,7 @@ export default class DetailedTransactionPage extends React.Component<
       <FormControl>
         <InputLabel htmlFor="month-control">Month</InputLabel>
         <Select
-          value={Nullable.withDefault("", this.state.filteredMonth)}
+          value={Nullable.withDefault(ALL, this.state.filteredMonth)}
           onChange={handleMonthlyReportMonthChange}
           inputProps={{ id: "month-control" }}
         >
