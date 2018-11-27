@@ -12,7 +12,8 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  Typography
 } from "@material-ui/core";
 
 import {
@@ -148,6 +149,9 @@ export default class DetailedTransactionPage extends React.Component<
         </Select>
       </FormControl>
     );
+    if (items.length === 0) {
+      return <Typography>Please upload an order report first.</Typography>;
+    }
 
     return (
       <Grid item={true} xs={12}>
