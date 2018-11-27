@@ -78,21 +78,22 @@ function HomePage({
             className="hero"
             style={{
               fontFamily: "Shrikhand",
-              fontSize: "5rem",
+              fontSize: "3rem",
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "space-between",
               alignItems: "center",
               fontWeight: "normal",
               marginBottom: 0,
-              marginTop: 0
+              marginTop: 0,
+              flexDirection: "column"
             }}
           >
-            <div className="hero__text">Spendyvision</div>
             <img
               className="hero__logo"
-              style={{ marginLeft: "3rem", height: "5rem" }}
+              style={{ height: "4rem" }}
               src={Glasses}
             />
+            <div className="hero__text">Spendyvision</div>
           </h1>
         </Grid>
         <Grid container={true}>
