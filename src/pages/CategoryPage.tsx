@@ -11,7 +11,6 @@ import {
 import { DateTime } from "luxon";
 import * as R from "ramda";
 import * as React from "react";
-import CategoryReportTable from "../components/CategoryReportTable";
 import PurchaseGraph from "../components/PurchaseGraph";
 import {
   CategoryKey,
@@ -34,7 +33,8 @@ const theme = createMuiTheme();
 
 const styles: any = {
   root: {
-    overflowX: "auto"
+    overflowX: "auto",
+    width: "100%",
   },
   formControl: {
     margin: theme.spacing.unit,
@@ -115,10 +115,6 @@ function CategoryPage({
             color={globalColorMapping[categoryKey]}
             yAxisMax={"dataMax"}
             showLegend={false}
-          />
-          <CategoryReportTable
-            monthlyGroupsToShow={focusedMonthlyGroups}
-            focusedCategory={categoryKey}
           />
         </div>
       );
