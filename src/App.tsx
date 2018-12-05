@@ -96,15 +96,11 @@ class App extends React.Component<any, IAppState> {
           <React.Fragment>
             <CssBaseline>
               <div className={this.props.classes.root}>
-                <Header
-                  handleMenuClick={this.handleMenuClick}
-                  open={this.state.isDrawerOpen}
-                />
+                <Header />
                 <Navigation
                   handleDrawerClose={handleDrawerClose}
                   activePanel={this.state.activePanel}
                   handleItemClick={this.handleNavigationItemClick}
-                  open={this.state.isDrawerOpen}
                 />
                 <Grid
                   container={true}

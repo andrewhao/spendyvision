@@ -1,10 +1,14 @@
 import { IAmazonOrderItem } from "./types/data";
-import { AppActionTypes } from "./types";
+import { AppActionTypes, IAppAction } from "./types";
 
-export function updateAmazonOrderItems(items: IAmazonOrderItem[]) {
+export function updateAmazonOrderItems(items: IAmazonOrderItem[]): IAppAction {
   return { type: AppActionTypes.UPDATE_ITEMS, items };
 }
 
-export function resetAmazonOrderItems() {
+export function resetAmazonOrderItems(): IAppAction {
   return { type: AppActionTypes.RESET_ITEMS };
+}
+
+export function toggleMenu(): IAppAction {
+  return { type: AppActionTypes.TOGGLE_MENU };
 }

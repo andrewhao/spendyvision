@@ -16,6 +16,8 @@ export default function rootReducer(
   switch (action.type) {
     case AppActionTypes.UPDATE_ITEMS:
       return Object.assign({}, state, { items: action.items });
+    case AppActionTypes.TOGGLE_MENU:
+      return Object.assign({}, state, { isDrawerOpen: !state.isDrawerOpen });
     default:
       return state;
   }

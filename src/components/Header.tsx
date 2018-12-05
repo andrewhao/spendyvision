@@ -5,6 +5,10 @@ import IconButton from "@material-ui/core/IconButton";
 import { withStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
 import { drawerWidth } from "./Navigation";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
+import { IAppState } from "src/types";
+import { toggleMenu } from "../actions";
 
 const theme = createMuiTheme();
 
@@ -62,4 +66,17 @@ function Header({ handleMenuClick, classes, open }: IHeaderProps) {
   );
 }
 
-export default withStyles(styles)(Header);
+function mapStateToProps(state: IAppState) {
+  return {
+    open: state.isDrawerOpen
+  };
+}
+
+function mapDispatchToProps(dispatch: Dispatch) {
+  return { handleMenuClick: () => dispatch(toggleMenu()) };
+}
+
+export default connect<{}, {}, IHeaderProps>(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(Header));
