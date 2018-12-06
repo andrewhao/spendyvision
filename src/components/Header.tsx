@@ -2,7 +2,7 @@ import * as React from "react";
 import { AppBar, Toolbar, Typography, createMuiTheme } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
-import { withStyles } from "@material-ui/core/styles";
+import { WithStyles, withStyles, createStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
 import { drawerWidth } from "./Navigation";
 import { connect } from "react-redux";
@@ -12,7 +12,7 @@ import { toggleMenu } from "../actions";
 
 const theme = createMuiTheme();
 
-const styles = {
+const styles = createStyles({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
@@ -34,15 +34,18 @@ const styles = {
     marginLeft: -12,
     marginRight: 20
   }
-};
+});
 
-interface IHeaderProps {
+interface IHeaderProps extends WithStyles<typeof styles> {
   open: boolean;
-  classes: any;
   handleMenuClick(): void;
 }
 
-function Header({ handleMenuClick, classes, open }: IHeaderProps) {
+export const Header: React.SFC<IHeaderProps> = ({
+  handleMenuClick,
+  classes,
+  open
+}) => {
   return (
     <AppBar
       position="absolute"
@@ -64,7 +67,7 @@ function Header({ handleMenuClick, classes, open }: IHeaderProps) {
       </Toolbar>
     </AppBar>
   );
-}
+};
 
 function mapStateToProps(state: IAppState) {
   return {
@@ -76,7 +79,7 @@ function mapDispatchToProps(dispatch: Dispatch) {
   return { handleMenuClick: () => dispatch(toggleMenu()) };
 }
 
-export default connect<{}, {}, IHeaderProps>(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(withStyles(styles)(Header));

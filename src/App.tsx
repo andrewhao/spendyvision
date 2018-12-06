@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { IAmazonOrderItem, MonthKey, CategoryKey } from "./types/data";
+import { MonthKey, CategoryKey } from "./types/data";
 import DetailedTransactionPage from "./pages/DetailedTransactionPage";
 import CategoryPage from "./pages/CategoryPage";
 import SummaryPage from "./pages/SummaryPage";
@@ -14,12 +14,13 @@ import Header from "./components/Header";
 import { Grid, withStyles, createMuiTheme } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ActivePanel } from "./types/view";
+import { IAppState } from "./types";
 import { DateTime } from "luxon";
 import * as R from "ramda";
 import { colorScaleMapping } from "./util/ColorUtils";
 import { Nullable } from "typescript-nullable";
 
-import { connect, Provider } from "react-redux";
+import { Provider } from "react-redux";
 import configureStore from "./store";
 
 const store = configureStore();
@@ -49,14 +50,11 @@ const styles: any = {
   }
 };
 
-// const currentMonth = DateTime.local()
-//   .startOf("month")
-//   .toISO() as MonthKey;
-
 class App extends React.Component<any, IAppState> {
   public constructor(props: any) {
     super(props);
     this.state = {
+      amazonOrderItems: [],
       isDrawerOpen: true,
       activePanel: ActivePanel.Home,
       numMonthsToShow: 4,
@@ -98,6 +96,7 @@ class App extends React.Component<any, IAppState> {
               <div className={this.props.classes.root}>
                 <Header />
                 <Navigation
+                  open={this.state.isDrawerOpen}
                   handleDrawerClose={handleDrawerClose}
                   activePanel={this.state.activePanel}
                   handleItemClick={this.handleNavigationItemClick}
