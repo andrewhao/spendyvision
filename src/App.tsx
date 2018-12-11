@@ -89,10 +89,6 @@ class App extends React.Component<IAppProps, IAppState> {
     )(this.state.amazonOrderItems) as CategoryKey[];
     const globalColorMapping = colorScaleMapping(allCategories);
 
-    const handleDrawerClose = () => {
-      this.setState({ isDrawerOpen: false });
-    };
-
     return (
       <Provider store={store}>
         <Router>
@@ -101,8 +97,6 @@ class App extends React.Component<IAppProps, IAppState> {
               <div className={this.props.classes.root}>
                 <Header />
                 <Navigation
-                  open={this.state.isDrawerOpen}
-                  handleDrawerClose={handleDrawerClose}
                   activePanel={this.state.activePanel}
                   handleItemClick={this.handleNavigationItemClick}
                 />

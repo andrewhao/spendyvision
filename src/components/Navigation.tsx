@@ -25,6 +25,11 @@ import DonutSmallIcon from "@material-ui/icons/DonutSmall";
 import TimelineIcon from "@material-ui/icons/Timeline";
 import { ActivePanel } from "../types/view";
 
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
+import { IAppState, IAppAction } from "src/rootTypes";
+import { toggleMenu } from "../actions";
+
 export const drawerWidth = 280;
 
 const styles = (theme: Theme) =>
@@ -62,7 +67,7 @@ const styles = (theme: Theme) =>
 interface INavigationProps extends WithStyles<typeof styles> {
   open: boolean;
   activePanel: ActivePanel;
-  handleDrawerClose(): void;
+  handleDrawerClose(): IAppAction;
   handleItemClick(activePanel: ActivePanel): any;
 }
 
@@ -177,4 +182,19 @@ const Navigation: React.SFC<INavigationProps> = ({
   );
 };
 
-export default withStyles(styles)(Navigation);
+function mapStateToProps(state: IAppState) {
+  return {
+    open: state.isDrawerOpen
+  };
+}
+
+function mapDispatchToProps(dispatch: Dispatch) {
+  return {
+    handleDrawerClose: () => dispatch(toggleMenu())
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(Navigation));
