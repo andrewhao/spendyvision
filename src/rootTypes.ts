@@ -17,5 +17,6 @@ export interface IAppAction {
 export const enum AppActionTypes {
   UPDATE_ITEMS = "@@app/UPDATE_ITEMS",
   RESET_ITEMS = "@@app/RESET_ITEMS",
-  TOGGLE_MENU = "@@app/TOGGLE_MENU"
+  TOGGLE_MENU = "@@app/TOGGLE_MENU",
+  UPDATE_FOCUSED_MONTH = "@@app/UPDATE_FOCUSED_MONTH"
 }

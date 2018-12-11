@@ -15,9 +15,18 @@ export default function rootReducer(
 ): IAppState {
   switch (action.type) {
     case AppActionTypes.UPDATE_ITEMS:
-      return Object.assign({}, state, { items: action.items });
+      return Object.assign({}, state, { amazonOrderItems: action.items });
     case AppActionTypes.TOGGLE_MENU:
       return Object.assign({}, state, { isDrawerOpen: !state.isDrawerOpen });
+    case AppActionTypes.UPDATE_FOCUSED_MONTH:
+      return Object.assign({}, state, {
+        focusedMonthlyReportMonth: action.month
+      });
+    case AppActionTypes.RESET_ITEMS:
+      return Object.assign({}, state, {
+        amazonOrderItems: []
+      });
+
     default:
       return state;
   }
