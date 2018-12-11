@@ -33,7 +33,7 @@ import { Nullable } from "typescript-nullable";
 
 export interface IMonthlyReportPageProps {
   monthlyGroups: IMonthlyGroup[];
-  classes: any;
+  classes?: any;
   focusedMonth: Nullable<MonthKey>;
   globalColorMapping: ColorMapping;
   handleMonthlyReportMonthChange(evt: any): void;

@@ -21,7 +21,7 @@ import {
 } from "../types/data";
 
 interface ICategoryPageProps {
-  classes: any;
+  classes?: any;
   items: IAmazonOrderItem[];
   monthlyItems: IMonthlyGroup[];
   numMonthsToShow: number;
@@ -34,7 +34,7 @@ const theme = createMuiTheme();
 const styles: any = {
   root: {
     overflowX: "auto",
-    width: "100%",
+    width: "100%"
   },
   formControl: {
     margin: theme.spacing.unit,

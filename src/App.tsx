@@ -11,7 +11,8 @@ import * as React from "react";
 import groupItemsByMonth from "./util/groupItemsByMonth";
 import Navigation from "./components/Navigation";
 import Header from "./components/Header";
-import { Grid, withStyles, createMuiTheme } from "@material-ui/core";
+import { Grid, createMuiTheme } from "@material-ui/core";
+import { withStyles, WithStyles, createStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ActivePanel } from "./types/view";
 import { IAppState } from "./types";
@@ -29,7 +30,7 @@ const LOCAL_STORAGE_CACHE_KEY = "amazon_order_items";
 
 const theme = createMuiTheme();
 
-const styles: any = {
+const styles = createStyles({
   root: {
     flexGrow: 1,
     zIndex: 1,
@@ -48,10 +49,14 @@ const styles: any = {
     padding: theme.spacing.unit * 3,
     marginTop: 100
   }
-};
+});
 
-class App extends React.Component<any, IAppState> {
-  public constructor(props: any) {
+interface IAppProps extends WithStyles<typeof styles> {
+  classes: any;
+}
+
+class App extends React.Component<IAppProps, IAppState> {
+  public constructor(props: IAppProps) {
     super(props);
     this.state = {
       amazonOrderItems: [],

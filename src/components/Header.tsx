@@ -2,7 +2,7 @@ import * as React from "react";
 import { AppBar, Toolbar, Typography, createMuiTheme } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
-import { WithStyles, withStyles, createStyles } from "@material-ui/core/styles";
+import { withStyles, createStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
 import { drawerWidth } from "./Navigation";
 import { connect } from "react-redux";
@@ -36,8 +36,9 @@ const styles = createStyles({
   }
 });
 
-interface IHeaderProps extends WithStyles<typeof styles> {
+interface IHeaderProps {
   open: boolean;
+  classes: WithStyles<typeof styles>;
   handleMenuClick(): void;
 }
 

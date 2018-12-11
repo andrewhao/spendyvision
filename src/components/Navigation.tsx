@@ -1,6 +1,12 @@
 import * as React from "react";
 import classNames from "classnames";
-import { withStyles, createMuiTheme } from "@material-ui/core/styles";
+import {
+  withStyles,
+  createMuiTheme,
+  WithStyles,
+  Theme,
+  createStyles
+} from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import {
   Drawer,
@@ -20,41 +26,41 @@ import DonutSmallIcon from "@material-ui/icons/DonutSmall";
 import TimelineIcon from "@material-ui/icons/Timeline";
 import { ActivePanel } from "../types/view";
 
-const theme = createMuiTheme();
 export const drawerWidth = 280;
 
-const styles: any = {
-  toolbar: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    padding: "0 8px",
-    ...theme.mixins.toolbar
-  },
-  drawerPaper: {
-    position: "relative",
-    whiteSpace: "nowrap",
-    width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  },
-  drawerPaperClose: {
-    overflowX: "hidden",
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    }),
-    width: theme.spacing.unit * 7,
-    [theme.breakpoints.up("sm")]: {
-      width: theme.spacing.unit * 9
+const styles = (theme: Theme) =>
+  createStyles({
+    toolbar: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "flex-end",
+      padding: "0 8px",
+      ...theme.mixins.toolbar
+    },
+    drawerPaper: {
+      position: "relative",
+      whiteSpace: "nowrap",
+      width: drawerWidth,
+      transition: theme.transitions.create("width", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen
+      })
+    },
+    drawerPaperClose: {
+      overflowX: "hidden",
+      transition: theme.transitions.create("width", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen
+      }),
+      width: theme.spacing.unit * 7,
+      [theme.breakpoints.up("sm")]: {
+        width: theme.spacing.unit * 9
+      }
     }
-  }
-};
+  });
 
-interface INavigationProps {
-  classes: any;
+interface INavigationProps extends WithStyles<typeof styles> {
+  classes?: any;
   open: boolean;
   activePanel: ActivePanel;
   handleDrawerClose(): void;
