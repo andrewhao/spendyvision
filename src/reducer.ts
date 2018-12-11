@@ -1,8 +1,11 @@
-import { AppActionTypes, IAppAction, IAppState } from "./rootTypes";
+import { AppActionTypes, IAppAction, IAppStore } from "./rootTypes";
 import { ActivePanel } from "./types/view";
+import groupItemsByMonth from "./util/groupItemsByMonth";
+import deriveCurrentMonth from "./util/deriveCurrentMonth";
 
-const initialState: IAppState = {
+const initialState: IAppStore = {
   amazonOrderItems: [],
+  monthlyGroups: [],
   isDrawerOpen: true,
   activePanel: ActivePanel.Home,
   numMonthsToShow: 4,
@@ -10,12 +13,16 @@ const initialState: IAppState = {
 };
 
 export default function rootReducer(
-  state: IAppState = initialState,
+  state: IAppStore = initialState,
   action: IAppAction
-): IAppState {
+): IAppStore {
   switch (action.type) {
     case AppActionTypes.UPDATE_ITEMS:
-      return Object.assign({}, state, { amazonOrderItems: action.items });
+      return Object.assign({}, state, {
+        focusedMonthlyReportMonth: deriveCurrentMonth(action.items),
+        amazonOrderItems: action.items,
+        monthlyGroups: groupItemsByMonth(action.items)
+      });
     case AppActionTypes.TOGGLE_MENU:
       return Object.assign({}, state, { isDrawerOpen: !state.isDrawerOpen });
     case AppActionTypes.UPDATE_FOCUSED_MONTH:

@@ -1,13 +1,14 @@
-import { IAmazonOrderItem, MonthKey } from "./types/data";
+import { IAmazonOrderItem, MonthKey, IMonthlyGroup } from "./types/data";
 import { ActivePanel } from "./types/view";
 import { Nullable } from "typescript-nullable";
 
-export interface IAppState {
+export interface IAppStore {
   amazonOrderItems: IAmazonOrderItem[];
   isDrawerOpen: boolean;
   activePanel: ActivePanel;
   numMonthsToShow: number;
   focusedMonthlyReportMonth: Nullable<MonthKey>;
+  monthlyGroups: IMonthlyGroup[];
 }
 export interface IAppAction {
   type: AppActionTypes;

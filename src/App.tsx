@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { MonthKey, CategoryKey } from "./types/data";
+import { CategoryKey } from "./types/data";
 import DetailedTransactionPage from "./pages/DetailedTransactionPage";
 import CategoryPage from "./pages/CategoryPage";
 import SummaryPage from "./pages/SummaryPage";
@@ -8,20 +8,17 @@ import MonthlyReportPage from "./pages/MonthlyReportPage";
 import HomePage from "./pages/HomePage";
 import parseAmazonCsv from "./util/parseAmazonCsv";
 import * as React from "react";
-import groupItemsByMonth from "./util/groupItemsByMonth";
 import Navigation from "./components/Navigation";
 import Header from "./components/Header";
 import { Grid, createMuiTheme } from "@material-ui/core";
 import { withStyles, WithStyles, createStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ActivePanel } from "./types/view";
-import { IAmazonOrderItem } from "./types/data";
-import { DateTime } from "luxon";
+import { IAmazonOrderItem, IMonthlyGroup } from "./types/data";
 import * as R from "ramda";
 import { colorScaleMapping } from "./util/ColorUtils";
-import { Nullable } from "typescript-nullable";
 
-import { IAppState, IAppAction } from "./rootTypes";
+import { IAppStore, IAppAction } from "./rootTypes";
 
 import { Provider, connect } from "react-redux";
 import { Dispatch } from "redux";
@@ -57,8 +54,8 @@ const styles = createStyles({
 });
 
 interface IAppProps extends WithStyles<typeof styles> {
-  classes: any;
   items: IAmazonOrderItem[];
+  monthlyGroups: IMonthlyGroup[];
   handleUpdateAmazonOrderItem: (items: IAmazonOrderItem[]) => IAppAction;
   handleClearAmazonOrderItems: () => IAppAction;
 }
@@ -75,19 +72,18 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
     this.handleClearStorage = this.handleClearStorage.bind(this);
     this.setAmazonOrderItems = this.setAmazonOrderItems.bind(this);
     this.handleNavigationItemClick = this.handleNavigationItemClick.bind(this);
-    this.deriveCurrentMonth = this.deriveCurrentMonth.bind(this);
     this.handleNumMonthsToShowChange = this.handleNumMonthsToShowChange.bind(
       this
     );
   }
   public render() {
-    const monthlyGroups = groupItemsByMonth(this.props.items);
     const allCategories = R.pipe(
       R.map(R.prop("category")),
       R.reject(R.isNil),
       R.reject(R.isEmpty),
       R.uniq
     )(this.props.items) as CategoryKey[];
+
     const globalColorMapping = colorScaleMapping(allCategories);
 
     return (
@@ -122,7 +118,7 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
                   path="/summary"
                   render={() => (
                     <SummaryPage
-                      groups={monthlyGroups}
+                      groups={this.props.monthlyGroups}
                       items={this.props.items}
                     />
                   )}
@@ -134,7 +130,7 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
                       <DetailedTransactionPage
                         {...props}
                         items={this.props.items}
-                        monthlyGroups={monthlyGroups}
+                        monthlyGroups={this.props.monthlyGroups}
                       />
                     )}
                   />
@@ -144,7 +140,7 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
                       <DetailedTransactionPage
                         {...props}
                         items={this.props.items}
-                        monthlyGroups={monthlyGroups}
+                        monthlyGroups={this.props.monthlyGroups}
                       />
                     )}
                   />
@@ -154,7 +150,7 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
                   render={() => (
                     <MonthlyReportPage
                       globalColorMapping={globalColorMapping}
-                      monthlyGroups={monthlyGroups}
+                      monthlyGroups={this.props.monthlyGroups}
                     />
                   )}
                 />
@@ -163,7 +159,7 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
                   render={() => (
                     <CategoryPage
                       items={this.props.items}
-                      monthlyItems={monthlyGroups}
+                      monthlyItems={this.props.monthlyGroups}
                       globalColorMapping={globalColorMapping}
                       numMonthsToShow={this.state.numMonthsToShow}
                       handleNumMonthsToShowChange={
@@ -221,21 +217,10 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
     window.localStorage.removeItem(LOCAL_STORAGE_CACHE_KEY);
     this.props.handleClearAmazonOrderItems();
   }
-
-  private deriveCurrentMonth(itemsJSON: any): Nullable<MonthKey> {
-    const date = R.pipe(
-      R.map(R.prop("order_date")),
-      R.sortBy(R.identity),
-      R.last
-    )(itemsJSON);
-    return DateTime.fromISO(date)
-      .startOf("month")
-      .toString();
-  }
 }
 
-function mapStateToProps(state: IAppState) {
-  return { items: state.amazonOrderItems };
+function mapStateToProps(state: IAppStore) {
+  return { items: state.amazonOrderItems, monthlyGroups: state.monthlyGroups };
 }
 
 function mapDispatchToProps(dispatch: Dispatch) {

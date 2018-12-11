@@ -27,7 +27,7 @@ import { ActivePanel } from "../types/view";
 
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-import { IAppState, IAppAction } from "src/rootTypes";
+import { IAppStore, IAppAction } from "src/rootTypes";
 import { toggleMenu } from "../actions";
 
 export const drawerWidth = 280;
@@ -182,7 +182,7 @@ const Navigation: React.SFC<INavigationProps> = ({
   );
 };
 
-function mapStateToProps(state: IAppState) {
+function mapStateToProps(state: IAppStore) {
   return {
     open: state.isDrawerOpen
   };

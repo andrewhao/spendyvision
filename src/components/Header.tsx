@@ -12,7 +12,7 @@ import classNames from "classnames";
 import { drawerWidth } from "./Navigation";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-import { IAppState } from "src/rootTypes";
+import { IAppStore } from "src/rootTypes";
 import { toggleMenu } from "../actions";
 
 const styles = (theme: Theme) =>
@@ -73,7 +73,7 @@ export const Header: React.SFC<IHeaderProps> = ({
   );
 };
 
-function mapStateToProps(state: IAppState) {
+function mapStateToProps(state: IAppStore) {
   return {
     open: state.isDrawerOpen
   };

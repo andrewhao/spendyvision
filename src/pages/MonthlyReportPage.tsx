@@ -31,7 +31,7 @@ import { Link } from "react-router-dom";
 import { isoDateToFriendlyDisplay } from "../util/DateUtils";
 import { Nullable } from "typescript-nullable";
 
-import { IAppState, IAppAction } from "../rootTypes";
+import { IAppStore, IAppAction } from "../rootTypes";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import { changeFocusedMonth } from "../actions";
@@ -189,14 +189,14 @@ function MonthlyReportPage({
   );
 }
 
-function mapStateToProps(state: IAppState) {
+function mapStateToProps(state: IAppStore) {
   return { focusedMonth: state.focusedMonthlyReportMonth };
 }
 
 function mapDispatchToProps(dispatch: Dispatch) {
   return {
-    handleMonthlyReportMonthChange: (newMonth: Nullable<MonthKey>) =>
-      dispatch(changeFocusedMonth(newMonth))
+    handleMonthlyReportMonthChange: (e: any) =>
+      dispatch(changeFocusedMonth(e.target.value))
   };
 }
 
