@@ -3,6 +3,8 @@ import {
   Grid,
   Paper,
   withStyles,
+  createStyles,
+  WithStyles,
   Typography,
   Button,
   ExpansionPanel,
@@ -16,24 +18,23 @@ import { isoDateToFriendlyDisplay } from "../util/DateUtils";
 import Glasses from "../images/glasses.svg";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
-export interface IHomePageProps {
-  classes: any;
+export interface IHomePageProps extends WithStyles<typeof styles> {
   items: IAmazonOrderItem[];
   handleCsvUpload(results: any[]): void;
   handleClearStorage(): void;
 }
-const styles: any = {
+const styles = createStyles({
   paper: {
     padding: "1rem",
     marginBottom: "1rem"
   }
-};
-function HomePage({
+});
+const HomePage: React.SFC<IHomePageProps> = ({
   handleCsvUpload,
   classes,
   items,
   handleClearStorage
-}: IHomePageProps) {
+}) => {
   const sortedItems = R.compose(
     R.sort(R.ascend(R.identity)),
     R.map(R.prop("order_date"))
@@ -176,5 +177,5 @@ function HomePage({
       </Grid>
     </div>
   );
-}
+};
 export default withStyles(styles)(HomePage);

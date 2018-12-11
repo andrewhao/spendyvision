@@ -1,6 +1,11 @@
 import * as React from "react";
 import classNames from "classnames";
-import { withStyles, createMuiTheme } from "@material-ui/core/styles";
+import {
+  withStyles,
+  WithStyles,
+  Theme,
+  createStyles
+} from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import {
   Drawer,
@@ -20,54 +25,59 @@ import DonutSmallIcon from "@material-ui/icons/DonutSmall";
 import TimelineIcon from "@material-ui/icons/Timeline";
 import { ActivePanel } from "../types/view";
 
-const theme = createMuiTheme();
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
+import { IAppStore, IAppAction } from "src/rootTypes";
+import { toggleMenu } from "../actions";
+
 export const drawerWidth = 280;
 
-const styles: any = {
-  toolbar: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    padding: "0 8px",
-    ...theme.mixins.toolbar
-  },
-  drawerPaper: {
-    position: "relative",
-    whiteSpace: "nowrap",
-    width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  },
-  drawerPaperClose: {
-    overflowX: "hidden",
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    }),
-    width: theme.spacing.unit * 7,
-    [theme.breakpoints.up("sm")]: {
-      width: theme.spacing.unit * 9
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    toolbar: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "flex-end",
+      padding: "0 8px",
+      ...theme.mixins.toolbar
+    },
+    drawerPaper: {
+      position: "relative",
+      whiteSpace: "nowrap",
+      width: drawerWidth,
+      transition: theme.transitions.create("width", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen
+      })
+    },
+    drawerPaperClose: {
+      overflowX: "hidden",
+      transition: theme.transitions.create("width", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen
+      }),
+      width: theme.spacing.unit * 7,
+      [theme.breakpoints.up("sm")]: {
+        width: theme.spacing.unit * 9
+      }
     }
-  }
-};
+  });
 
-interface INavigationProps {
-  classes: any;
+interface INavigationProps extends WithStyles<typeof styles> {
   open: boolean;
   activePanel: ActivePanel;
-  handleDrawerClose(): void;
+  handleDrawerClose(): IAppAction;
   handleItemClick(activePanel: ActivePanel): any;
 }
 
-function Navigation({
+const Navigation: React.SFC<INavigationProps> = ({
   classes,
   open,
   handleDrawerClose,
   handleItemClick,
   activePanel
-}: INavigationProps) {
+}: INavigationProps) => {
   const summaryIconColor =
     activePanel === ActivePanel.Summary ? "primary" : "inherit";
   const byCategoryIconColor =
@@ -170,6 +180,21 @@ function Navigation({
       </Drawer>
     </div>
   );
+};
+
+function mapStateToProps(state: IAppStore) {
+  return {
+    open: state.isDrawerOpen
+  };
 }
 
-export default withStyles(styles)(Navigation);
+function mapDispatchToProps(dispatch: Dispatch) {
+  return {
+    handleDrawerClose: () => dispatch(toggleMenu())
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(Navigation));

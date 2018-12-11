@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { IAmazonOrderItem, MonthKey, CategoryKey } from "./types/data";
+import { CategoryKey } from "./types/data";
 import DetailedTransactionPage from "./pages/DetailedTransactionPage";
 import CategoryPage from "./pages/CategoryPage";
 import SummaryPage from "./pages/SummaryPage";
@@ -8,30 +8,31 @@ import MonthlyReportPage from "./pages/MonthlyReportPage";
 import HomePage from "./pages/HomePage";
 import parseAmazonCsv from "./util/parseAmazonCsv";
 import * as React from "react";
-import groupItemsByMonth from "./util/groupItemsByMonth";
 import Navigation from "./components/Navigation";
 import Header from "./components/Header";
-import { Grid, withStyles, createMuiTheme } from "@material-ui/core";
+import { Grid, createMuiTheme } from "@material-ui/core";
+import { withStyles, WithStyles, createStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ActivePanel } from "./types/view";
-import { DateTime } from "luxon";
+import { IAmazonOrderItem, IMonthlyGroup } from "./types/data";
 import * as R from "ramda";
 import { colorScaleMapping } from "./util/ColorUtils";
-import { Nullable } from "typescript-nullable";
+
+import { IAppStore, IAppAction } from "./rootTypes";
+
+import { Provider, connect } from "react-redux";
+import { Dispatch } from "redux";
+import { updateAmazonOrderItems, resetAmazonOrderItems } from "./actions";
+
+import configureStore from "./store";
+
+const store = configureStore();
 
 const LOCAL_STORAGE_CACHE_KEY = "amazon_order_items";
 
-interface IAppState {
-  amazonOrderItems: IAmazonOrderItem[];
-  isDrawerOpen: boolean;
-  activePanel: ActivePanel;
-  numMonthsToShow: number;
-  focusedMonthlyReportMonth: Nullable<MonthKey>;
-}
-
 const theme = createMuiTheme();
 
-const styles: any = {
+const styles = createStyles({
   root: {
     flexGrow: 1,
     zIndex: 1,
@@ -50,64 +51,50 @@ const styles: any = {
     padding: theme.spacing.unit * 3,
     marginTop: 100
   }
-};
+});
 
-// const currentMonth = DateTime.local()
-//   .startOf("month")
-//   .toISO() as MonthKey;
+interface IAppProps extends WithStyles<typeof styles> {
+  items: IAmazonOrderItem[];
+  monthlyGroups: IMonthlyGroup[];
+  handleUpdateAmazonOrderItem: (items: IAmazonOrderItem[]) => IAppAction;
+  handleClearAmazonOrderItems: () => IAppAction;
+}
 
-class App extends React.Component<any, IAppState> {
-  public constructor(props: any) {
+class UnwrappedApp extends React.Component<IAppProps, any> {
+  public constructor(props: IAppProps) {
     super(props);
     this.state = {
-      amazonOrderItems: [],
-      isDrawerOpen: true,
       activePanel: ActivePanel.Home,
-      numMonthsToShow: 4,
-      focusedMonthlyReportMonth: null
+      numMonthsToShow: 4
     };
     this.restoreAmazonOrderItems = this.restoreAmazonOrderItems.bind(this);
     this.handleCsvUpload = this.handleCsvUpload.bind(this);
     this.handleClearStorage = this.handleClearStorage.bind(this);
     this.setAmazonOrderItems = this.setAmazonOrderItems.bind(this);
-    this.handleMenuClick = this.handleMenuClick.bind(this);
     this.handleNavigationItemClick = this.handleNavigationItemClick.bind(this);
-    this.deriveCurrentMonth = this.deriveCurrentMonth.bind(this);
-    this.handleMonthlyReportMonthChange = this.handleMonthlyReportMonthChange.bind(
-      this
-    );
     this.handleNumMonthsToShowChange = this.handleNumMonthsToShowChange.bind(
       this
     );
   }
   public render() {
-    const monthlyGroups = groupItemsByMonth(this.state.amazonOrderItems);
     const allCategories = R.pipe(
       R.map(R.prop("category")),
       R.reject(R.isNil),
       R.reject(R.isEmpty),
       R.uniq
-    )(this.state.amazonOrderItems) as CategoryKey[];
-    const globalColorMapping = colorScaleMapping(allCategories);
+    )(this.props.items) as CategoryKey[];
 
-    const handleDrawerClose = () => {
-      this.setState({ isDrawerOpen: false });
-    };
+    const globalColorMapping = colorScaleMapping(allCategories);
 
     return (
       <Router>
         <React.Fragment>
           <CssBaseline>
             <div className={this.props.classes.root}>
-              <Header
-                handleMenuClick={this.handleMenuClick}
-                open={this.state.isDrawerOpen}
-              />
+              <Header />
               <Navigation
-                handleDrawerClose={handleDrawerClose}
                 activePanel={this.state.activePanel}
                 handleItemClick={this.handleNavigationItemClick}
-                open={this.state.isDrawerOpen}
               />
               <Grid
                 container={true}
@@ -123,7 +110,7 @@ class App extends React.Component<any, IAppState> {
                     <HomePage
                       handleCsvUpload={this.handleCsvUpload}
                       handleClearStorage={this.handleClearStorage}
-                      items={this.state.amazonOrderItems}
+                      items={this.props.items}
                     />
                   )}
                 />
@@ -131,8 +118,8 @@ class App extends React.Component<any, IAppState> {
                   path="/summary"
                   render={() => (
                     <SummaryPage
-                      groups={monthlyGroups}
-                      items={this.state.amazonOrderItems}
+                      groups={this.props.monthlyGroups}
+                      items={this.props.items}
                     />
                   )}
                 />
@@ -142,8 +129,8 @@ class App extends React.Component<any, IAppState> {
                     render={props => (
                       <DetailedTransactionPage
                         {...props}
-                        items={this.state.amazonOrderItems}
-                        monthlyGroups={monthlyGroups}
+                        items={this.props.items}
+                        monthlyGroups={this.props.monthlyGroups}
                       />
                     )}
                   />
@@ -152,8 +139,8 @@ class App extends React.Component<any, IAppState> {
                     render={props => (
                       <DetailedTransactionPage
                         {...props}
-                        items={this.state.amazonOrderItems}
-                        monthlyGroups={monthlyGroups}
+                        items={this.props.items}
+                        monthlyGroups={this.props.monthlyGroups}
                       />
                     )}
                   />
@@ -163,11 +150,7 @@ class App extends React.Component<any, IAppState> {
                   render={() => (
                     <MonthlyReportPage
                       globalColorMapping={globalColorMapping}
-                      monthlyGroups={monthlyGroups}
-                      focusedMonth={this.state.focusedMonthlyReportMonth}
-                      handleMonthlyReportMonthChange={
-                        this.handleMonthlyReportMonthChange
-                      }
+                      monthlyGroups={this.props.monthlyGroups}
                     />
                   )}
                 />
@@ -175,8 +158,8 @@ class App extends React.Component<any, IAppState> {
                   path="/categories"
                   render={() => (
                     <CategoryPage
-                      items={this.state.amazonOrderItems}
-                      monthlyItems={monthlyGroups}
+                      items={this.props.items}
+                      monthlyItems={this.props.monthlyGroups}
                       globalColorMapping={globalColorMapping}
                       numMonthsToShow={this.state.numMonthsToShow}
                       handleNumMonthsToShowChange={
@@ -201,16 +184,6 @@ class App extends React.Component<any, IAppState> {
     this.setState({ numMonthsToShow: event.target.value });
   }
 
-  private handleMonthlyReportMonthChange(event: any) {
-    this.setState({
-      focusedMonthlyReportMonth: event.target.value
-    });
-  }
-
-  private handleMenuClick() {
-    this.setState({ isDrawerOpen: !this.state.isDrawerOpen });
-  }
-
   private handleNavigationItemClick(panel: ActivePanel) {
     return function handleBound(this: React.Component) {
       this.setState({ activePanel: panel });
@@ -227,10 +200,8 @@ class App extends React.Component<any, IAppState> {
     const cachedItems = window.localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
     if (cachedItems !== null) {
       const itemsJSON = JSON.parse(cachedItems);
-      this.setState({
-        amazonOrderItems: itemsJSON,
-        focusedMonthlyReportMonth: this.deriveCurrentMonth(itemsJSON)
-      });
+
+      this.props.handleUpdateAmazonOrderItem(itemsJSON);
       return true;
     }
     return false;
@@ -239,27 +210,36 @@ class App extends React.Component<any, IAppState> {
   private handleCsvUpload(results: any[]) {
     const itemsJSON = parseAmazonCsv(results);
     this.setAmazonOrderItems(itemsJSON);
-    this.setState({
-      amazonOrderItems: itemsJSON,
-      focusedMonthlyReportMonth: this.deriveCurrentMonth(itemsJSON)
-    });
+    this.props.handleUpdateAmazonOrderItem(itemsJSON);
   }
 
   private handleClearStorage(): void {
     window.localStorage.removeItem(LOCAL_STORAGE_CACHE_KEY);
-    this.setState({ amazonOrderItems: [] });
-  }
-
-  private deriveCurrentMonth(itemsJSON: any): Nullable<MonthKey> {
-    const date = R.pipe(
-      R.map(R.prop("order_date")),
-      R.sortBy(R.identity),
-      R.last
-    )(itemsJSON);
-    return DateTime.fromISO(date)
-      .startOf("month")
-      .toString();
+    this.props.handleClearAmazonOrderItems();
   }
 }
 
-export default withStyles(styles)(App);
+function mapStateToProps(state: IAppStore) {
+  return { items: state.amazonOrderItems, monthlyGroups: state.monthlyGroups };
+}
+
+function mapDispatchToProps(dispatch: Dispatch) {
+  return {
+    handleUpdateAmazonOrderItem: (newItems: IAmazonOrderItem[]) =>
+      dispatch(updateAmazonOrderItems(newItems)),
+    handleClearAmazonOrderItems: () => dispatch(resetAmazonOrderItems())
+  };
+}
+
+const ConnectedApp = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(UnwrappedApp));
+
+const App = () => (
+  <Provider store={store}>
+    <ConnectedApp />
+  </Provider>
+);
+
+export default App;

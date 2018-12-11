@@ -31,12 +31,17 @@ import { Link } from "react-router-dom";
 import { isoDateToFriendlyDisplay } from "../util/DateUtils";
 import { Nullable } from "typescript-nullable";
 
+import { IAppStore, IAppAction } from "../rootTypes";
+import { Dispatch } from "redux";
+import { connect } from "react-redux";
+import { changeFocusedMonth } from "../actions";
+
 export interface IMonthlyReportPageProps {
   monthlyGroups: IMonthlyGroup[];
-  classes: any;
+  classes?: any;
   focusedMonth: Nullable<MonthKey>;
   globalColorMapping: ColorMapping;
-  handleMonthlyReportMonthChange(evt: any): void;
+  handleMonthlyReportMonthChange(evt: any): IAppAction;
 }
 
 const theme = createMuiTheme();
@@ -184,4 +189,18 @@ function MonthlyReportPage({
   );
 }
 
-export default withStyles(styles)(MonthlyReportPage);
+function mapStateToProps(state: IAppStore) {
+  return { focusedMonth: state.focusedMonthlyReportMonth };
+}
+
+function mapDispatchToProps(dispatch: Dispatch) {
+  return {
+    handleMonthlyReportMonthChange: (e: any) =>
+      dispatch(changeFocusedMonth(e.target.value))
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(MonthlyReportPage));
