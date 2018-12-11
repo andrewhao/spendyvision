@@ -15,7 +15,7 @@ import { Grid, createMuiTheme } from "@material-ui/core";
 import { withStyles, WithStyles, createStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ActivePanel } from "./types/view";
-import { IAppState } from "./types";
+import { IAppState } from "./rootTypes";
 import { DateTime } from "luxon";
 import * as R from "ramda";
 import { colorScaleMapping } from "./util/ColorUtils";

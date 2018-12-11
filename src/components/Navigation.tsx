@@ -2,7 +2,6 @@ import * as React from "react";
 import classNames from "classnames";
 import {
   withStyles,
-  createMuiTheme,
   WithStyles,
   Theme,
   createStyles
@@ -30,6 +29,7 @@ export const drawerWidth = 280;
 
 const styles = (theme: Theme) =>
   createStyles({
+    root: {},
     toolbar: {
       display: "flex",
       alignItems: "center",
@@ -60,20 +60,19 @@ const styles = (theme: Theme) =>
   });
 
 interface INavigationProps extends WithStyles<typeof styles> {
-  classes?: any;
   open: boolean;
   activePanel: ActivePanel;
   handleDrawerClose(): void;
   handleItemClick(activePanel: ActivePanel): any;
 }
 
-function Navigation({
+const Navigation: React.SFC<INavigationProps> = ({
   classes,
   open,
   handleDrawerClose,
   handleItemClick,
   activePanel
-}: INavigationProps) {
+}: INavigationProps) => {
   const summaryIconColor =
     activePanel === ActivePanel.Summary ? "primary" : "inherit";
   const byCategoryIconColor =
@@ -176,6 +175,6 @@ function Navigation({
       </Drawer>
     </div>
   );
-}
+};
 
 export default withStyles(styles)(Navigation);

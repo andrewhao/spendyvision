@@ -1,5 +1,5 @@
 import { IAmazonOrderItem } from "./types/data";
-import { AppActionTypes, IAppAction } from "./types";
+import { AppActionTypes, IAppAction } from "./rootTypes";
 
 export function updateAmazonOrderItems(items: IAmazonOrderItem[]): IAppAction {
   return { type: AppActionTypes.UPDATE_ITEMS, items };

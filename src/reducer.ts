@@ -1,4 +1,4 @@
-import { AppActionTypes, IAppAction, IAppState } from "./types";
+import { AppActionTypes, IAppAction, IAppState } from "./rootTypes";
 import { ActivePanel } from "./types/view";
 
 const initialState: IAppState = {

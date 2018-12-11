@@ -19,7 +19,6 @@ import Glasses from "../images/glasses.svg";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 export interface IHomePageProps extends WithStyles<typeof styles> {
-  classes?: any;
   items: IAmazonOrderItem[];
   handleCsvUpload(results: any[]): void;
   handleClearStorage(): void;
