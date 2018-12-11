@@ -24,6 +24,7 @@
     "react-vis": "1.10.4",
     "recharts": "1.1.0",
     "redux": "4.0.1",
+    "redux-devtools-extension": "2.13.7",
     "typescript-nullable": "0.6.0"
   },
   "scripts": {
