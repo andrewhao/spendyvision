@@ -2,10 +2,13 @@ import * as React from "react";
 import * as enzyme from "enzyme";
 import OrderItem from "./OrderItem";
 import { DateTime } from "luxon";
+import { IAmazonOrderItem } from "src/types/data";
 
 describe("OrderItem", () => {
   xit("renders the item title", () => {
-    const attrs = {
+    const attrs: IAmazonOrderItem = {
+      order_id: "1234",
+      asin: "XYZ123",
       price: "$12.99",
       title: "foo",
       price_cents: 1299,

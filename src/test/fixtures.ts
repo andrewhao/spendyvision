@@ -4,27 +4,33 @@ export const january = new Date("2018-01-01").toISOString();
 const janDate1 = new Date("2018-01-05").toISOString();
 const janDate2 = new Date("2018-01-06").toISOString();
 const janDate3 = new Date("2018-01-07").toISOString();
-const janItem1 = {
+export const janItem1: IAmazonOrderItem = {
+  asin: "abc123",
+  order_id: "111-1234-5678",
   title: "Flip flops",
   price: "$12.99",
   price_cents: 1299,
   order_date: janDate1,
   category: "Baby"
-} as IAmazonOrderItem;
-const janItem2 = {
+};
+export const janItem2: IAmazonOrderItem = {
+  asin: "abc124",
+  order_id: "111-1234-5679",
   title: "Pasta sauce",
   price: "2.99",
   price_cents: 299,
   order_date: janDate2,
   category: "Food Items & Italian Food"
-} as IAmazonOrderItem;
-const janItem3 = {
+};
+export const janItem3: IAmazonOrderItem = {
+  asin: "abc125",
+  order_id: "111-1234-5680",
   title: "Onesie",
   price: "$16.99",
   price_cents: 1699,
   order_date: janDate3,
   category: "Baby"
-} as IAmazonOrderItem;
+};
 
 export const januaryGroup = {
   monthKey: january,
@@ -34,20 +40,24 @@ export const januaryGroup = {
 export const december = new Date("2017-12-01").toISOString();
 const decDate1 = new Date("2017-12-05").toISOString();
 const decDate2 = new Date("2017-12-06").toISOString();
-const decItem1 = {
+const decItem1: IAmazonOrderItem = {
+  asin: "abd123",
+  order_id: "111-1234-5678",
   title: "Echo Dot",
   price: "$39.99",
   price_cents: 3999,
   order_date: decDate1,
   category: "Electronics"
-} as IAmazonOrderItem;
-const decItem2 = {
+};
+const decItem2: IAmazonOrderItem = {
+  asin: "abe123",
+  order_id: "111-1234-36312",
   title: "Diapers",
   price: "$15.27",
   price_cents: 1527,
   order_date: decDate2,
   category: "Baby"
-} as IAmazonOrderItem;
+};
 
 export const decemberGroup = {
   monthKey: december,
@@ -57,20 +67,24 @@ export const decemberGroup = {
 export const november = new Date("2017-11-01").toISOString();
 const novDate1 = new Date("2017-11-05").toISOString();
 const novDate2 = new Date("2017-11-06").toISOString();
-const novItem1 = {
+const novItem1: IAmazonOrderItem = {
+  asin: "xqq123",
+  order_id: "234-1234-5678",
   title: "Power Drill",
   price: "$129.99",
   price_cents: 12999,
   order_date: novDate1,
   category: "Tools & Home Improvement"
-} as IAmazonOrderItem;
-const novItem2 = {
+};
+const novItem2: IAmazonOrderItem = {
+  asin: "abf1453",
+  order_id: "1155-23454-5678",
   title: "Formula",
   price: "$89.30",
   price_cents: 8930,
   order_date: novDate2,
   category: "Baby"
-} as IAmazonOrderItem;
+};
 
 export const novemberGroup = {
   monthKey: november,

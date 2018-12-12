@@ -1,6 +1,7 @@
 import groupCategoryItemsByMonth from "./groupCategoryItemsByMonth";
 import groupItemsByMonth from "./groupItemsByMonth";
 import { DateTime } from "luxon";
+import { IAmazonOrderItem } from "src/types/data";
 
 describe("groupCategoryItemsByMonth", () => {
   const date1 = DateTime.local(2018, 1, 5)
@@ -9,21 +10,27 @@ describe("groupCategoryItemsByMonth", () => {
   const date2 = DateTime.local(2018, 2, 5)
     .toLocal()
     .toISO();
-  const item1 = {
+  const item1: IAmazonOrderItem = {
+    order_id: "1234",
+    asin: "ABC123",
     title: "Flip flops",
     price: "$12.99",
     price_cents: 1299,
     order_date: date1,
     category: "Baby"
   };
-  const item2 = {
+  const item2: IAmazonOrderItem = {
+    asin: "ABC124",
+    order_id: "1235",
     title: "Cute hat",
     price: "$2.99",
     price_cents: 299,
     order_date: date2,
     category: "Baby"
   };
-  const item3 = {
+  const item3: IAmazonOrderItem = {
+    asin: "XYZ123",
+    order_id: "1236",
     title: "Pasta Sauce",
     price: "$3.99",
     price_cents: 399,

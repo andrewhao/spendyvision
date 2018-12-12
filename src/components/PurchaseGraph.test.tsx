@@ -1,23 +1,11 @@
 import * as React from "react";
 import * as enzyme from "enzyme";
 import PurchaseGraph from "./PurchaseGraph";
-import { DateTime } from "luxon";
+import { janItem1 } from "../test/fixtures";
 
 xdescribe("PurchaseGraph", () => {
   it("renders the graph", () => {
-    const item = {
-      price: "$12.99",
-      title: "foo",
-      price_cents: 1299,
-      unspsc_code: "52141514",
-      category: "Food",
-      order_date: DateTime.fromObject({
-        year: 2018,
-        month: 1,
-        day: 1
-      }).toISO()
-    };
-    const groups = [{ monthKey: "2018-01-01", items: [item] }];
+    const groups = [{ monthKey: "2018-01-01", items: [janItem1] }];
     const attrs = { groups };
     const subject = enzyme.shallow(<PurchaseGraph {...attrs} />);
     expect(subject.find("ResponsiveContainer").length).toEqual(1);

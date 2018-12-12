@@ -89,10 +89,10 @@ export default class DetailedTransactionPage extends React.Component<
 
     const startItemIdx = this.state.page * this.state.rowsPerPage;
     const orderItems = R.compose(
+      R.slice(startItemIdx, startItemIdx + this.state.rowsPerPage),
       R.map((item: IAmazonOrderItem) => (
-        <OrderItem key={item.order_date} {...item} />
-      )),
-      R.slice(startItemIdx, startItemIdx + this.state.rowsPerPage)
+        <OrderItem key={`${item.order_id}.${item.asin}`} {...item} />
+      ))
     )(filteredItems);
 
     const chips = R.pipe(
@@ -173,6 +173,7 @@ export default class DetailedTransactionPage extends React.Component<
             </TableRow>
             <TableRow>
               <TableCell>Title</TableCell>
+              <TableCell>Order ID</TableCell>
               <TableCell>Price</TableCell>
               <TableCell>UNSPSC Code</TableCell>
               <TableCell>Category</TableCell>

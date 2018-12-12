@@ -1,4 +1,6 @@
 export interface IAmazonOrderItem {
+  asin: string;
+  order_id: string;
   title: string;
   price: string;
   price_cents: Price;

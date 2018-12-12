@@ -17,6 +17,8 @@ export default function parseAmazonCsv(csvArray: any[]): IAmazonOrderItem[] {
       }, {});
 
       return {
+        asin: mapping["ASIN/ISBN"],
+        order_id: mapping["Order ID"],
         price: mapping["Item Total"],
         title: mapping.Title,
         order_date: DateTime.fromFormat(mapping["Order Date"], "LL/dd/yy", {
