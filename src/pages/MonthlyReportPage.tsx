@@ -9,7 +9,12 @@ import {
   ColorMapping,
   ICategorizedCurrentVsAverageSeries
 } from "../types/data";
-import { withStyles, createMuiTheme } from "@material-ui/core/styles";
+import {
+  withStyles,
+  Theme,
+  WithStyles,
+  createStyles
+} from "@material-ui/core/styles";
 import {
   Grid,
   InputLabel,
@@ -36,41 +41,39 @@ import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import { changeFocusedMonth } from "../actions";
 
-export interface IMonthlyReportPageProps {
+export interface IMonthlyReportPageProps extends WithStyles<typeof styles> {
   monthlyGroups: IMonthlyGroup[];
-  classes?: any;
   focusedMonth: Nullable<MonthKey>;
   globalColorMapping: ColorMapping;
   handleMonthlyReportMonthChange(evt: any): IAppAction;
 }
 
-const theme = createMuiTheme();
-
-const styles: any = {
-  root: {
-    flexGrow: 1
-  },
-  header: {
-    justifyContent: "space-between",
-    display: "flex",
-    alignItems: "center"
-  },
-  paper: {
-    padding: "1rem",
-    margin: "1rem 0"
-  },
-  form: {
-    display: "flex",
-    flexWrap: "wrap"
-  },
-  formControl: {
-    margin: theme.spacing.unit,
-    minWidth: 120
-  },
-  selectEmpty: {
-    marginTop: theme.spacing.unit * 2
-  }
-};
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1
+    },
+    header: {
+      justifyContent: "space-between",
+      display: "flex",
+      alignItems: "center"
+    },
+    paper: {
+      padding: "1rem",
+      margin: "1rem 0"
+    },
+    form: {
+      display: "flex",
+      flexWrap: "wrap"
+    },
+    formControl: {
+      margin: theme.spacing.unit,
+      minWidth: 120
+    },
+    selectEmpty: {
+      marginTop: theme.spacing.unit * 2
+    }
+  });
 
 function MonthlyReportPage({
   globalColorMapping,
