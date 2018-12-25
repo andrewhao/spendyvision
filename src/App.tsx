@@ -71,13 +71,13 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
       activePanel: ActivePanel.Home,
       numMonthsToShow: 4
     };
-    this.restoreAmazonOrderItems = this.restoreAmazonOrderItems.bind(this);
     this.handleClearStorage = this.handleClearStorage.bind(this);
     this.handleNavigationItemClick = this.handleNavigationItemClick.bind(this);
     this.handleNumMonthsToShowChange = this.handleNumMonthsToShowChange.bind(
       this
     );
   }
+
   public render() {
     const allCategories = R.pipe(
       R.map(R.prop("category")),
@@ -177,11 +177,6 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
       </Router>
     );
   }
-
-  public componentWillMount() {
-    this.restoreAmazonOrderItems();
-  }
-
   private handleNumMonthsToShowChange(event: any) {
     this.setState({ numMonthsToShow: event.target.value });
   }
@@ -190,17 +185,6 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
     return function handleBound(this: React.Component) {
       this.setState({ activePanel: panel });
     }.bind(this);
-  }
-
-  private restoreAmazonOrderItems(): boolean {
-    const cachedItems = window.localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
-    if (cachedItems !== null) {
-      const itemsJSON = JSON.parse(cachedItems);
-
-      this.props.handleUpdateAmazonOrderItem(itemsJSON);
-      return true;
-    }
-    return false;
   }
 
   private handleClearStorage(): void {
