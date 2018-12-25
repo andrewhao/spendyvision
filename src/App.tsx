@@ -6,7 +6,6 @@ import CategoryPage from "./pages/CategoryPage";
 import SummaryPage from "./pages/SummaryPage";
 import MonthlyReportPage from "./pages/MonthlyReportPage";
 import HomePage from "./pages/HomePage";
-import parseAmazonCsv from "./util/parseAmazonCsv";
 import * as React from "react";
 import Navigation from "./components/Navigation";
 import Header from "./components/Header";
@@ -22,7 +21,11 @@ import { IAppStore, IAppAction } from "./rootTypes";
 
 import { Provider, connect } from "react-redux";
 import { Dispatch } from "redux";
-import { updateAmazonOrderItems, resetAmazonOrderItems } from "./actions";
+import {
+  updateAmazonOrderItems,
+  resetAmazonOrderItems,
+  uploadCsv
+} from "./actions";
 
 import configureStore from "./store";
 
@@ -58,6 +61,7 @@ interface IAppProps extends WithStyles<typeof styles> {
   monthlyGroups: IMonthlyGroup[];
   handleUpdateAmazonOrderItem: (items: IAmazonOrderItem[]) => IAppAction;
   handleClearAmazonOrderItems: () => IAppAction;
+  handleCsvUpload: (results: any[]) => IAppAction;
 }
 
 class UnwrappedApp extends React.Component<IAppProps, any> {
@@ -68,9 +72,7 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
       numMonthsToShow: 4
     };
     this.restoreAmazonOrderItems = this.restoreAmazonOrderItems.bind(this);
-    this.handleCsvUpload = this.handleCsvUpload.bind(this);
     this.handleClearStorage = this.handleClearStorage.bind(this);
-    this.setAmazonOrderItems = this.setAmazonOrderItems.bind(this);
     this.handleNavigationItemClick = this.handleNavigationItemClick.bind(this);
     this.handleNumMonthsToShowChange = this.handleNumMonthsToShowChange.bind(
       this
@@ -108,7 +110,7 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
                   path="/"
                   render={() => (
                     <HomePage
-                      handleCsvUpload={this.handleCsvUpload}
+                      handleCsvUpload={this.props.handleCsvUpload}
                       handleClearStorage={this.handleClearStorage}
                       items={this.props.items}
                     />
@@ -190,12 +192,6 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
     }.bind(this);
   }
 
-  private setAmazonOrderItems(amazonOrderItems: any[]): boolean {
-    const itemsString = JSON.stringify(amazonOrderItems);
-    window.localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, itemsString);
-    return true;
-  }
-
   private restoreAmazonOrderItems(): boolean {
     const cachedItems = window.localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
     if (cachedItems !== null) {
@@ -205,12 +201,6 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
       return true;
     }
     return false;
-  }
-
-  private handleCsvUpload(results: any[]) {
-    const itemsJSON = parseAmazonCsv(results);
-    this.setAmazonOrderItems(itemsJSON);
-    this.props.handleUpdateAmazonOrderItem(itemsJSON);
   }
 
   private handleClearStorage(): void {
@@ -227,7 +217,8 @@ function mapDispatchToProps(dispatch: Dispatch) {
   return {
     handleUpdateAmazonOrderItem: (newItems: IAmazonOrderItem[]) =>
       dispatch(updateAmazonOrderItems(newItems)),
-    handleClearAmazonOrderItems: () => dispatch(resetAmazonOrderItems())
+    handleClearAmazonOrderItems: () => dispatch(resetAmazonOrderItems()),
+    handleCsvUpload: (parsedCsv: any[]) => dispatch(uploadCsv(parsedCsv))
   };
 }
 
