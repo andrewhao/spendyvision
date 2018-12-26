@@ -6,7 +6,7 @@ import {
   Theme,
   createStyles
 } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
   Drawer,
   List,
@@ -23,9 +23,9 @@ import ViewHeadlineIcon from "@material-ui/icons/ViewHeadline";
 import CategoryIcon from "@material-ui/icons/Category";
 import DonutSmallIcon from "@material-ui/icons/DonutSmall";
 import TimelineIcon from "@material-ui/icons/Timeline";
-import { ActivePanel } from "../types/view";
 
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { Dispatch } from "redux";
 import { IAppStore, IAppAction } from "src/rootTypes";
 import { toggleMenu } from "../actions";
@@ -66,28 +66,28 @@ const styles = (theme: Theme) =>
 
 interface INavigationProps extends WithStyles<typeof styles> {
   open: boolean;
-  activePanel: ActivePanel;
+  history: any;
+  location: any;
+  match: any;
   handleDrawerClose(): IAppAction;
-  handleItemClick(activePanel: ActivePanel): any;
 }
 
 const Navigation: React.SFC<INavigationProps> = ({
   classes,
   open,
   handleDrawerClose,
-  handleItemClick,
-  activePanel
+  location
 }: INavigationProps) => {
   const summaryIconColor =
-    activePanel === ActivePanel.Summary ? "primary" : "inherit";
+    location.pathname === "/summary" ? "primary" : "inherit";
   const byCategoryIconColor =
-    activePanel === ActivePanel.Category ? "primary" : "inherit";
+    location.pathname === "/categories" ? "primary" : "inherit";
   const detailedTransactionIconColor =
-    activePanel === ActivePanel.DetailedTransaction ? "primary" : "inherit";
+    location.pathname === "/transactions" ? "primary" : "inherit";
   const monthlyReportIconColor =
-    activePanel === ActivePanel.MonthlyReport ? "primary" : "inherit";
-  const homeIconColor =
-    activePanel === ActivePanel.Home ? "primary" : "inherit";
+    location.pathname === "/monthly" ? "primary" : "inherit";
+  const homeIconColor = location.pathname === "/" ? "primary" : "inherit";
+
   return (
     <div className={classes.root}>
       <Drawer
@@ -107,7 +107,7 @@ const Navigation: React.SFC<INavigationProps> = ({
         </div>
         <Divider />
         <List>
-          <Link to="/">
+          <NavLink to="/">
             <Tooltip title="Upload an order report" placement="right">
               <ListItem button={true}>
                 <ListItemIcon>
@@ -116,66 +116,54 @@ const Navigation: React.SFC<INavigationProps> = ({
                 <ListItemText primary="Home" />
               </ListItem>
             </Tooltip>
-          </Link>
-          <Link to="/summary">
+          </NavLink>
+          <NavLink to="/summary">
             <Tooltip
               title="See a summary of your purchase history"
               placement="right"
             >
-              <ListItem
-                button={true}
-                onClick={handleItemClick(ActivePanel.Summary)}
-              >
+              <ListItem button={true}>
                 <ListItemIcon>
                   <TimelineIcon color={summaryIconColor} />
                 </ListItemIcon>
                 <ListItemText primary="Big Picture Summary" />
               </ListItem>
             </Tooltip>
-          </Link>
-          <Link to="/monthly">
+          </NavLink>
+          <NavLink to="/monthly">
             <Tooltip
               title="See a monthly view of your spending"
               placement="right"
             >
-              <ListItem
-                button={true}
-                onClick={handleItemClick(ActivePanel.MonthlyReport)}
-              >
+              <ListItem button={true}>
                 <ListItemIcon>
                   <DonutSmallIcon color={monthlyReportIconColor} />
                 </ListItemIcon>
                 <ListItemText primary="Monthly Report" />
               </ListItem>
             </Tooltip>
-          </Link>
+          </NavLink>
 
-          <Link to="/categories">
+          <NavLink to="/categories">
             <Tooltip title="See trends by purchase category" placement="right">
-              <ListItem
-                button={true}
-                onClick={handleItemClick(ActivePanel.Category)}
-              >
+              <ListItem button={true}>
                 <ListItemIcon>
                   <CategoryIcon color={byCategoryIconColor} />
                 </ListItemIcon>
                 <ListItemText primary="Category Trends" />
               </ListItem>
             </Tooltip>
-          </Link>
-          <Link to="/transactions">
+          </NavLink>
+          <NavLink to="/transactions">
             <Tooltip title="View all transactions" placement="right">
-              <ListItem
-                button={true}
-                onClick={handleItemClick(ActivePanel.DetailedTransaction)}
-              >
+              <ListItem button={true}>
                 <ListItemIcon>
                   <ViewHeadlineIcon color={detailedTransactionIconColor} />
                 </ListItemIcon>
                 <ListItemText primary="Detailed Transactions" />
               </ListItem>
             </Tooltip>
-          </Link>
+          </NavLink>
         </List>
       </Drawer>
     </div>
@@ -194,7 +182,9 @@ function mapDispatchToProps(dispatch: Dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(styles)(Navigation));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(withStyles(styles)(Navigation))
+);

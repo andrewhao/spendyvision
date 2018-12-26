@@ -12,7 +12,6 @@ import Header from "./components/Header";
 import { Grid, createMuiTheme } from "@material-ui/core";
 import { withStyles, WithStyles, createStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { ActivePanel } from "./types/view";
 import { IAmazonOrderItem, IMonthlyGroup } from "./types/data";
 import * as R from "ramda";
 import { colorScaleMapping } from "./util/ColorUtils";
@@ -68,11 +67,9 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
   public constructor(props: IAppProps) {
     super(props);
     this.state = {
-      activePanel: ActivePanel.Home,
       numMonthsToShow: 4
     };
     this.handleClearStorage = this.handleClearStorage.bind(this);
-    this.handleNavigationItemClick = this.handleNavigationItemClick.bind(this);
     this.handleNumMonthsToShowChange = this.handleNumMonthsToShowChange.bind(
       this
     );
@@ -94,10 +91,7 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
           <CssBaseline>
             <div className={this.props.classes.root}>
               <Header />
-              <Navigation
-                activePanel={this.state.activePanel}
-                handleItemClick={this.handleNavigationItemClick}
-              />
+              <Navigation />
               <Grid
                 container={true}
                 direction="row"
@@ -179,12 +173,6 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
   }
   private handleNumMonthsToShowChange(event: any) {
     this.setState({ numMonthsToShow: event.target.value });
-  }
-
-  private handleNavigationItemClick(panel: ActivePanel) {
-    return function handleBound(this: React.Component) {
-      this.setState({ activePanel: panel });
-    }.bind(this);
   }
 
   private handleClearStorage(): void {
