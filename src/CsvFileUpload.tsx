@@ -3,12 +3,14 @@ import {
   Button,
   withStyles,
   createStyles,
-  WithStyles
+  WithStyles,
+  Theme
 } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import Dropzone from "react-dropzone";
 import * as R from "ramda";
 import * as Papa from "papaparse";
+import classNames from "classnames";
 
 type ICsvUploadFn = (results: any[], filename: string) => void;
 
@@ -19,16 +21,36 @@ interface ICsvFileUploadProps extends WithStyles<typeof styles> {
   match: any;
 }
 
-const styles = createStyles({
-  dropzoneBase: {
-    width: 200,
-    height: 200,
-    borderWidth: 2,
-    borderColor: "#666",
-    borderStyle: "dashed",
-    borderRadius: 5
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    dropzoneBase: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "100%",
+      height: 200,
+      borderWidth: 2,
+      borderColor: "#666",
+      borderStyle: "dashed",
+      borderRadius: 5
+    },
+    dropzoneActive: {
+      backgroundColor: theme.palette.background.default,
+      color: theme.palette.getContrastText(theme.palette.background.default)
+    },
+    dropzoneRejected: {
+      backgroundColor: "red",
+      color: "white"
+    },
+    dropzoneAccepted: {
+      backgroundColor: "green",
+      color: "white"
+    },
+    dropzoneMessage: {
+      marginBottom: "10px"
+    }
+  });
 
 function CsvFileUpload(props: ICsvFileUploadProps) {
   const { history, classes } = props;
@@ -53,27 +75,40 @@ function CsvFileUpload(props: ICsvFileUploadProps) {
   };
 
   return (
-    <div className="csv-file-upload" style={{ display: "inline-block" }}>
-      <Dropzone onDrop={handleDrop}>
-        {({ getRootProps, getInputProps, isDragActive }) => {
+    <div className="csv-file-upload">
+      <Dropzone onDrop={handleDrop} accept="text/csv">
+        {({
+          getRootProps,
+          getInputProps,
+          isDragActive,
+          isDragAccept,
+          isDragReject
+        }) => {
+          let message =
+            'Drag and drop the Amazon Order Items CSV here, or click "Upload"';
+          if (isDragReject) {
+            message =
+              "Sorry, I don't recognize that file type! Please make sure you are uploading a CSV.";
+          } else if (isDragAccept) {
+            message = "Let's do this!";
+          }
+
           return (
-            <div {...getRootProps()} className={classes.dropzoneBase}>
+            <div
+              {...getRootProps()}
+              className={classNames(classes.dropzoneBase, {
+                [classes.dropzoneActive]: isDragActive,
+                [classes.dropzoneRejected]: isDragReject,
+                [classes.dropzoneAccepted]: isDragAccept
+              })}
+            >
               <input {...getInputProps()} />
-              {isDragActive ? (
-                <p>Drop files here...</p>
-              ) : (
-                <React.Fragment>
-                  <p>
-                    Try dropping some files here, or click to select files to
-                    upload.
-                  </p>
-                  <p>
-                    <Button color="primary" variant="raised">
-                      Upload
-                    </Button>
-                  </p>
-                </React.Fragment>
-              )}
+              <div className={classes.dropzoneMessage}>{message}</div>
+              <div>
+                <Button color="primary" variant="raised">
+                  Upload
+                </Button>
+              </div>
             </div>
           );
         }}
