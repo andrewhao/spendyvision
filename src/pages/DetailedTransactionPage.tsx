@@ -172,7 +172,7 @@ export default class DetailedTransactionPage extends React.Component<
               />
             </TableRow>
             <TableRow>
-              <TableCell>Title</TableCell>
+              <TableCell colSpan={2}>Title</TableCell>
               <TableCell>Order ID</TableCell>
               <TableCell>Price</TableCell>
               <TableCell>Category</TableCell>
