@@ -1,6 +1,6 @@
 import * as React from "react";
 import { IMonthlyGroup } from "../types/data";
-import OrderItem from "./OrderItem";
+import OrderItemRow from "./OrderItemRow";
 import { DateTime } from "luxon";
 import {
   Table,
@@ -20,7 +20,9 @@ interface IProps {
 }
 
 export default function MonthlyOrderTable({ month, key }: IProps) {
-  const items = month.items.map((item, i) => <OrderItem key={i} {...item} />);
+  const items = month.items.map((item, i) => (
+    <OrderItemRow key={i} {...item} />
+  ));
 
   const monthGroupKey = DateTime.fromISO(month.monthKey).toFormat("yyyy LLLL");
 

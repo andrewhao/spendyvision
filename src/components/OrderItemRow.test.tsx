@@ -1,10 +1,10 @@
 import * as React from "react";
 import * as enzyme from "enzyme";
-import OrderItem from "./OrderItem";
+import OrderItemRow from "./OrderItemRow";
 import { DateTime } from "luxon";
 import { IAmazonOrderItem } from "src/types/data";
 
-describe("OrderItem", () => {
+describe("OrderItemRow", () => {
   xit("renders the item title", () => {
     const attrs: IAmazonOrderItem = {
       order_id: "1234",
@@ -16,7 +16,7 @@ describe("OrderItem", () => {
       category: "Food",
       order_date: DateTime.fromObject({ year: 2018, month: 1, day: 1 }).toISO()
     };
-    const subject = enzyme.shallow(<OrderItem {...attrs} />);
+    const subject = enzyme.shallow(<OrderItemRow {...attrs} />);
     const subjectText = subject
       .find(".order-item")
       .dive()

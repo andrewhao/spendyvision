@@ -22,7 +22,7 @@ import {
   IMonthlyGroup,
   CategoryKey
 } from "../types/data";
-import OrderItem from "../components/OrderItem";
+import OrderItemRow from "../components/OrderItemRow";
 import * as R from "ramda";
 import { DateTime } from "luxon";
 import { Nullable } from "typescript-nullable";
@@ -91,7 +91,7 @@ export default class DetailedTransactionPage extends React.Component<
     const orderItems = R.compose(
       R.slice(startItemIdx, startItemIdx + this.state.rowsPerPage),
       R.map((item: IAmazonOrderItem) => (
-        <OrderItem key={`${item.order_id}.${item.asin}`} {...item} />
+        <OrderItemRow key={`${item.order_id}.${item.asin}`} {...item} />
       ))
     )(filteredItems);
 
@@ -109,7 +109,7 @@ export default class DetailedTransactionPage extends React.Component<
 
     const pagination = (
       <TablePagination
-        colSpan={5}
+        colSpan={6}
         count={filteredItems.length}
         rowsPerPage={this.state.rowsPerPage}
         page={this.state.page}
@@ -162,7 +162,7 @@ export default class DetailedTransactionPage extends React.Component<
             <TableRow>
               <TableCell>{monthSelectFilter}</TableCell>
               <TablePagination
-                colSpan={3}
+                colSpan={6}
                 count={filteredItems.length}
                 rowsPerPage={this.state.rowsPerPage}
                 page={this.state.page}
@@ -175,7 +175,6 @@ export default class DetailedTransactionPage extends React.Component<
               <TableCell>Title</TableCell>
               <TableCell>Order ID</TableCell>
               <TableCell>Price</TableCell>
-              <TableCell>UNSPSC Code</TableCell>
               <TableCell>Category</TableCell>
               <TableCell>Date</TableCell>
             </TableRow>
