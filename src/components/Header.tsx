@@ -14,6 +14,7 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { IAppStore } from "src/rootTypes";
 import { toggleMenu } from "../actions";
+import Glasses from "../images/glasses.svg";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -37,6 +38,10 @@ const styles = (theme: Theme) =>
     menuButton: {
       marginLeft: -12,
       marginRight: 20
+    },
+    logo: {
+      height: "2rem",
+      marginRight: "1rem"
     }
   });
 
@@ -65,8 +70,9 @@ export const Header: React.SFC<IHeaderProps> = ({
         >
           <MenuIcon />
         </IconButton>
+        <img src={Glasses} className={classes.logo} />
         <Typography variant="title" color="inherit">
-          Spendyvision!
+          Spendyvision
         </Typography>
       </Toolbar>
     </AppBar>

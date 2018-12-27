@@ -15,7 +15,6 @@ import CsvFileUpload from "../CsvFileUpload";
 import { IAmazonOrderItem } from "../types/data";
 import * as R from "ramda";
 import { isoDateToFriendlyDisplay } from "../util/DateUtils";
-import Glasses from "../images/glasses.svg";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 export interface IHomePageProps extends WithStyles<typeof styles> {
@@ -89,11 +88,6 @@ const HomePage: React.SFC<IHomePageProps> = ({
               flexDirection: "column"
             }}
           >
-            <img
-              className="hero__logo"
-              style={{ height: "4rem" }}
-              src={Glasses}
-            />
             <div className="hero__text">Spendyvision</div>
           </h1>
         </Grid>
