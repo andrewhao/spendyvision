@@ -1,29 +1,37 @@
 import * as React from "react";
-import { Button, withStyles } from "@material-ui/core";
+import {
+  Button,
+  withStyles,
+  createStyles,
+  WithStyles
+} from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import Dropzone from "react-dropzone";
-import classNames from "classnames";
 import * as R from "ramda";
 import * as Papa from "papaparse";
 
 type ICsvUploadFn = (results: any[], filename: string) => void;
 
-interface ICsvFileUploadProps {
+interface ICsvFileUploadProps extends WithStyles<typeof styles> {
   handleCsvUpload: ICsvUploadFn;
-  classes: any;
   history: any;
   location: any;
   match: any;
 }
 
-const styles: any = {
-  fileInput: {
-    display: "none"
+const styles = createStyles({
+  dropzoneBase: {
+    width: 200,
+    height: 200,
+    borderWidth: 2,
+    borderColor: "#666",
+    borderStyle: "dashed",
+    borderRadius: 5
   }
-};
+});
 
 function CsvFileUpload(props: ICsvFileUploadProps) {
-  const { history } = props;
+  const { history, classes } = props;
 
   const handleDrop = (acceptedFiles: File[]): void => {
     const result = R.head(acceptedFiles);
@@ -49,12 +57,7 @@ function CsvFileUpload(props: ICsvFileUploadProps) {
       <Dropzone onDrop={handleDrop}>
         {({ getRootProps, getInputProps, isDragActive }) => {
           return (
-            <div
-              {...getRootProps()}
-              className={classNames("dropzone", {
-                "dropzone--isActive": isDragActive
-              })}
-            >
+            <div {...getRootProps()} className={classes.dropzoneBase}>
               <input {...getInputProps()} />
               {isDragActive ? (
                 <p>Drop files here...</p>
