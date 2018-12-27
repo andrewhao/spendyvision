@@ -1,13 +1,11 @@
 import { AppActionTypes, IAppAction, IAppStore } from "./rootTypes";
-import { ActivePanel } from "./types/view";
 import groupItemsByMonth from "./util/groupItemsByMonth";
 import deriveCurrentMonth from "./util/deriveCurrentMonth";
 
 const initialState: IAppStore = {
   amazonOrderItems: [],
   monthlyGroups: [],
-  isDrawerOpen: true,
-  activePanel: ActivePanel.Home,
+  isDrawerOpen: false,
   numMonthsToShow: 4,
   focusedMonthlyReportMonth: null
 };

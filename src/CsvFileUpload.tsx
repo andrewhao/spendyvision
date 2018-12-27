@@ -33,7 +33,8 @@ const styles = (theme: Theme) =>
       borderWidth: 2,
       borderColor: "#666",
       borderStyle: "dashed",
-      borderRadius: 5
+      borderRadius: 5,
+      padding: "1rem"
     },
     dropzoneActive: {
       backgroundColor: theme.palette.background.default,
