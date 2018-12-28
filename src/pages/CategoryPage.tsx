@@ -5,8 +5,9 @@ import {
   Select,
   MenuItem,
   withStyles,
-  createMuiTheme,
-  Typography
+  Typography,
+  WithStyles,
+  createStyles
 } from "@material-ui/core";
 import { DateTime } from "luxon";
 import * as R from "ramda";
@@ -20,30 +21,28 @@ import {
   ColorMapping
 } from "../types/data";
 
-interface ICategoryPageProps {
-  classes?: any;
+const styles = (theme: any) =>
+  createStyles({
+    root: {
+      overflowX: "auto",
+      width: "100%"
+    },
+    formControl: {
+      margin: theme.spacing.unit,
+      minWidth: 200
+    },
+    selectEmpty: {
+      marginTop: theme.spacing.unit * 2
+    }
+  });
+
+interface ICategoryPageProps extends WithStyles<typeof styles> {
   items: IAmazonOrderItem[];
   monthlyItems: IMonthlyGroup[];
   numMonthsToShow: number;
   globalColorMapping: ColorMapping;
   handleNumMonthsToShowChange(evt: any): void;
 }
-
-const theme = createMuiTheme();
-
-const styles: any = {
-  root: {
-    overflowX: "auto",
-    width: "100%"
-  },
-  formControl: {
-    margin: theme.spacing.unit,
-    minWidth: 200
-  },
-  selectEmpty: {
-    marginTop: theme.spacing.unit * 2
-  }
-};
 
 function CategoryPage({
   items,
