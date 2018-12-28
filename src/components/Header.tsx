@@ -1,7 +1,6 @@
 import * as React from "react";
-import { AppBar, Toolbar, Typography } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
-import IconButton from "@material-ui/core/IconButton";
+import { AppBar, Toolbar, Typography, Tabs, Tab } from "@material-ui/core";
+
 import {
   withStyles,
   createStyles,
@@ -12,9 +11,16 @@ import classNames from "classnames";
 import { drawerWidth } from "./Navigation";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
+import { withRouter } from "react-router-dom";
 import { IAppStore } from "src/rootTypes";
 import { toggleMenu } from "../actions";
 import Glasses from "../images/glasses.svg";
+
+import HomeIcon from "@material-ui/icons/Home";
+import ViewHeadlineIcon from "@material-ui/icons/ViewHeadline";
+import CategoryIcon from "@material-ui/icons/Category";
+import DonutSmallIcon from "@material-ui/icons/DonutSmall";
+import TimelineIcon from "@material-ui/icons/Timeline";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -47,14 +53,23 @@ const styles = (theme: Theme) =>
 
 interface IHeaderProps extends WithStyles<typeof styles> {
   open: boolean;
+  history: any;
+  location: any;
+  match: any;
   handleMenuClick(): void;
 }
 
 export const Header: React.SFC<IHeaderProps> = ({
   handleMenuClick,
   classes,
-  open
+  open,
+  location,
+  history
 }) => {
+  const handleNavigation = (e: any, value: any) => {
+    history.push(value);
+  };
+
   return (
     <AppBar
       position="absolute"
@@ -62,18 +77,29 @@ export const Header: React.SFC<IHeaderProps> = ({
       className={classNames(classes.appBar, open && classes.appBarShift)}
     >
       <Toolbar>
-        <IconButton
-          className={classes.menuButton}
-          color="inherit"
-          aria-label="Menu"
-          onClick={handleMenuClick}
-        >
-          <MenuIcon />
-        </IconButton>
         <img src={Glasses} className={classes.logo} />
         <Typography variant="title" color="inherit">
           Spendyvision
         </Typography>
+        <Tabs value={location.pathname} onChange={handleNavigation}>
+          <Tab icon={<HomeIcon />} label="Home" value="/" />
+          <Tab icon={<TimelineIcon />} label="Summary" value="/summary" />
+          <Tab
+            icon={<DonutSmallIcon />}
+            label="Monthly Reports"
+            value="/monthly"
+          />
+          <Tab
+            icon={<CategoryIcon />}
+            label="By Category"
+            value="/categories"
+          />
+          <Tab
+            icon={<ViewHeadlineIcon />}
+            label="Transactions"
+            value="/transactions"
+          />
+        </Tabs>
       </Toolbar>
     </AppBar>
   );
@@ -89,7 +115,9 @@ function mapDispatchToProps(dispatch: Dispatch) {
   return { handleMenuClick: () => dispatch(toggleMenu()) };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(styles)(Header));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(withStyles(styles)(Header))
+);

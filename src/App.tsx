@@ -7,7 +7,6 @@ import SummaryPage from "./pages/SummaryPage";
 import MonthlyReportPage from "./pages/MonthlyReportPage";
 import HomePage from "./pages/HomePage";
 import * as React from "react";
-import Navigation from "./components/Navigation";
 import Header from "./components/Header";
 import { Grid, createMuiTheme } from "@material-ui/core";
 import { withStyles, WithStyles, createStyles } from "@material-ui/core/styles";
@@ -91,7 +90,6 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
           <CssBaseline>
             <div className={this.props.classes.root}>
               <Header />
-              <Navigation />
               <Grid
                 container={true}
                 direction="row"
