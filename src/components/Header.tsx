@@ -16,11 +16,11 @@ import { IAppStore } from "src/rootTypes";
 import { toggleMenu } from "../actions";
 import Glasses from "../images/glasses.svg";
 
-import HomeIcon from "@material-ui/icons/Home";
-import ViewHeadlineIcon from "@material-ui/icons/ViewHeadline";
-import CategoryIcon from "@material-ui/icons/Category";
-import DonutSmallIcon from "@material-ui/icons/DonutSmall";
-import TimelineIcon from "@material-ui/icons/Timeline";
+// import HomeIcon from "@material-ui/icons/Home";
+// import ViewHeadlineIcon from "@material-ui/icons/ViewHeadline";
+// import CategoryIcon from "@material-ui/icons/Category";
+// import DonutSmallIcon from "@material-ui/icons/DonutSmall";
+// import TimelineIcon from "@material-ui/icons/Timeline";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -46,8 +46,18 @@ const styles = (theme: Theme) =>
       marginRight: 20
     },
     logo: {
-      height: "2rem",
-      marginRight: "1rem"
+      height: "2rem"
+    },
+    headerType: {
+      fontFamily: "Shrikhand"
+    },
+    appBarLogo: {
+      marginTop: "1rem",
+      textAlign: "center"
+    },
+    appBarActions: {},
+    toolBar: {
+      flexDirection: "column"
     }
   });
 
@@ -76,30 +86,27 @@ export const Header: React.SFC<IHeaderProps> = ({
       color="inherit"
       className={classNames(classes.appBar, open && classes.appBarShift)}
     >
-      <Toolbar>
-        <img src={Glasses} className={classes.logo} />
-        <Typography variant="title" color="inherit">
-          Spendyvision
-        </Typography>
-        <Tabs value={location.pathname} onChange={handleNavigation}>
-          <Tab icon={<HomeIcon />} label="Home" value="/" />
-          <Tab icon={<TimelineIcon />} label="Summary" value="/summary" />
-          <Tab
-            icon={<DonutSmallIcon />}
-            label="Monthly Reports"
-            value="/monthly"
-          />
-          <Tab
-            icon={<CategoryIcon />}
-            label="By Category"
-            value="/categories"
-          />
-          <Tab
-            icon={<ViewHeadlineIcon />}
-            label="Transactions"
-            value="/transactions"
-          />
-        </Tabs>
+      <Toolbar className={classes.toolBar}>
+        <div className={classes.appBarLogo}>
+          <img src={Glasses} className={classes.logo} />
+
+          <Typography
+            className={classes.headerType}
+            variant="title"
+            color="inherit"
+          >
+            Spendyvision
+          </Typography>
+        </div>
+        <div className={classes.appBarActions}>
+          <Tabs value={location.pathname} onChange={handleNavigation}>
+            <Tab label="Home" value="/" />
+            <Tab label="Summary" value="/summary" />
+            <Tab label="Monthly Reports" value="/monthly" />
+            <Tab label="By Category" value="/categories" />
+            <Tab label="Transactions" value="/transactions" />
+          </Tabs>
+        </div>
       </Toolbar>
     </AppBar>
   );

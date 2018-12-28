@@ -73,24 +73,6 @@ const HomePage: React.SFC<IHomePageProps> = ({
   return (
     <div>
       <Grid container={true}>
-        <Grid item={true} xs={12}>
-          <h1
-            className="hero"
-            style={{
-              fontFamily: "Shrikhand",
-              fontSize: "3rem",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              fontWeight: "normal",
-              marginBottom: 0,
-              marginTop: 0,
-              flexDirection: "column"
-            }}
-          >
-            <div className="hero__text">Spendyvision</div>
-          </h1>
-        </Grid>
         <Grid container={true}>
           <Grid item={true} xs={2} />
           <Grid item={true} xs={8}>
