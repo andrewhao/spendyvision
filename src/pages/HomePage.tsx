@@ -83,32 +83,31 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
     return (
       <div className="page page--home">
         <Grid container={true}>
-          <Grid container={true}>
-            <Grid item={true} xs={1}>
-              1.
-            </Grid>
-            <Grid item={true} xs={11}>
-              <Typography variant="headline" gutterBottom={true} align="center">
-                Download an Amazon Order Item Report. (
-                <a onClick={this.handleOpen} href="#">
-                  Tell me more
-                </a>
-                )
-              </Typography>
-            </Grid>
+          <Grid item={true} xs={1}>
+            1.
           </Grid>
-          <Grid container={true}>
-            <Grid item={true} xs={1}>
-              2.
-            </Grid>
-            <Grid item={true} xs={11}>
-              <CsvFileUpload handleCsvUpload={handleCsvUpload} />
-              <Typography variant="body1">
-                (This data is stored on this browser, never on our servers.)
-              </Typography>
-            </Grid>
+          <Grid item={true} xs={11}>
+            <Typography variant="headline" gutterBottom={true} align="center">
+              Download an Amazon Order Item Report. (
+              <a onClick={this.handleOpen} href="#">
+                Tell me more
+              </a>
+              )
+            </Typography>
           </Grid>
         </Grid>
+        <Grid container={true}>
+          <Grid item={true} xs={1}>
+            2.
+          </Grid>
+          <Grid item={true} xs={11}>
+            <CsvFileUpload handleCsvUpload={handleCsvUpload} />
+            <Typography variant="body1">
+              (This data is stored on this browser, never on our servers.)
+            </Typography>
+          </Grid>
+        </Grid>
+
         <Grid item={true} xs={12}>
           {loadedItemMsg(sortedItems)}
         </Grid>
@@ -116,14 +115,11 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
           <DialogTitle>How to download your Amazon Order Report</DialogTitle>
           <DialogContent>
             <Typography variant="title" gutterBottom={true}>
-              1. Visit the Amazon.com Order History Report page
-            </Typography>
-            <p>
-              Visit the{" "}
+              1. Visit the{" "}
               <a href="https://www.amazon.com/gp/b2b/reports">
                 Order History Report Page
               </a>
-            </p>
+            </Typography>
             <Typography variant="title" gutterBottom={true}>
               2. Download an "Items" Order Report to your computer.
             </Typography>

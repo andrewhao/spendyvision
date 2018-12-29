@@ -16,13 +16,13 @@ export default function SummaryPage({ groups, items }: ISummaryPageProps) {
     return <Typography>Please upload an order report first.</Typography>;
   }
   return (
-    <React.Fragment>
+    <div className="page page--summary">
       <Grid item={true} xs={12}>
         <PurchaseSummary items={items} groups={R.dropLast(1, groups)} />
       </Grid>
       <Grid item={true} xs={12}>
-        <PurchaseGraph height={500} groups={groups} />
+        <PurchaseGraph height={500} groups={groups} showLegend={false} />
       </Grid>
-    </React.Fragment>
+    </div>
   );
 }

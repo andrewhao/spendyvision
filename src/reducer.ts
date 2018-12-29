@@ -1,13 +1,17 @@
 import { AppActionTypes, IAppAction, IAppStore } from "./rootTypes";
 import groupItemsByMonth from "./util/groupItemsByMonth";
 import deriveCurrentMonth from "./util/deriveCurrentMonth";
+import { CategoryKey, IAmazonOrderItem, ColorMapping } from "./types/data";
+import * as R from "ramda";
+import { colorScaleMapping } from "./util/ColorUtils";
 
 const initialState: IAppStore = {
   amazonOrderItems: [],
   monthlyGroups: [],
   isDrawerOpen: false,
   numMonthsToShow: 4,
-  focusedMonthlyReportMonth: null
+  focusedMonthlyReportMonth: null,
+  globalColorMapping: {}
 };
 
 export default function rootReducer(
@@ -19,7 +23,8 @@ export default function rootReducer(
       return Object.assign({}, state, {
         focusedMonthlyReportMonth: deriveCurrentMonth(action.items),
         amazonOrderItems: action.items,
-        monthlyGroups: groupItemsByMonth(action.items)
+        monthlyGroups: groupItemsByMonth(action.items),
+        globalColorMapping: globalColorMapping(action.items)
       });
     case AppActionTypes.TOGGLE_MENU:
       return Object.assign({}, state, { isDrawerOpen: !state.isDrawerOpen });
@@ -29,10 +34,24 @@ export default function rootReducer(
       });
     case AppActionTypes.RESET_ITEMS:
       return Object.assign({}, state, {
-        amazonOrderItems: []
+        amazonOrderItems: [],
+        globalColorMapping: {},
+        monthlyGroups: [],
+        focusedMonthlyReportMonth: null
       });
 
     default:
       return state;
   }
 }
+
+const globalColorMapping = (items: IAmazonOrderItem[]): ColorMapping => {
+  const allCategories: CategoryKey[] = R.pipe(
+    R.map(R.prop("category")),
+    R.reject(R.isNil),
+    R.reject(R.isEmpty),
+    R.uniq
+  )(items);
+
+  return colorScaleMapping(allCategories);
+};

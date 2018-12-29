@@ -143,7 +143,7 @@ function MonthlyReportPage({
 
   return (
     <div className={classes.root}>
-      <h1>Monthly Report</h1>
+      <Typography variant="h2">Monthly Report</Typography>
       <Grid container={true} xs={12} className={classes.header}>
         <form className={classes.form}>
           <FormControl className={classes.formControl}>
@@ -193,7 +193,10 @@ function MonthlyReportPage({
 }
 
 function mapStateToProps(state: IAppStore) {
-  return { focusedMonth: state.focusedMonthlyReportMonth };
+  return {
+    focusedMonth: state.focusedMonthlyReportMonth,
+    globalColorMapping: state.globalColorMapping
+  };
 }
 
 function mapDispatchToProps(dispatch: Dispatch) {

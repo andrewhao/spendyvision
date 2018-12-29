@@ -1,6 +1,5 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { CategoryKey } from "./types/data";
 import DetailedTransactionPage from "./pages/DetailedTransactionPage";
 import CategoryPage from "./pages/CategoryPage";
 import SummaryPage from "./pages/SummaryPage";
@@ -12,8 +11,6 @@ import { Grid, createMuiTheme } from "@material-ui/core";
 import { withStyles, WithStyles, createStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { IAmazonOrderItem, IMonthlyGroup } from "./types/data";
-import * as R from "ramda";
-import { colorScaleMapping } from "./util/ColorUtils";
 
 import { IAppStore, IAppAction } from "./rootTypes";
 
@@ -50,7 +47,7 @@ const styles = createStyles({
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit * 3,
-    marginTop: 100
+    marginTop: 120
   }
 });
 
@@ -75,15 +72,6 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
   }
 
   public render() {
-    const allCategories = R.pipe(
-      R.map(R.prop("category")),
-      R.reject(R.isNil),
-      R.reject(R.isEmpty),
-      R.uniq
-    )(this.props.items) as CategoryKey[];
-
-    const globalColorMapping = colorScaleMapping(allCategories);
-
     return (
       <Router>
         <React.Fragment>
@@ -143,7 +131,6 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
                   path="/monthly"
                   render={() => (
                     <MonthlyReportPage
-                      globalColorMapping={globalColorMapping}
                       monthlyGroups={this.props.monthlyGroups}
                     />
                   )}
@@ -154,7 +141,6 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
                     <CategoryPage
                       items={this.props.items}
                       monthlyItems={this.props.monthlyGroups}
-                      globalColorMapping={globalColorMapping}
                       numMonthsToShow={this.state.numMonthsToShow}
                       handleNumMonthsToShowChange={
                         this.handleNumMonthsToShowChange

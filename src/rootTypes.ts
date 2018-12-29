@@ -1,4 +1,9 @@
-import { IAmazonOrderItem, MonthKey, IMonthlyGroup } from "./types/data";
+import {
+  IAmazonOrderItem,
+  MonthKey,
+  IMonthlyGroup,
+  ColorMapping
+} from "./types/data";
 import { Nullable } from "typescript-nullable";
 
 export interface IAppStore {
@@ -7,6 +12,7 @@ export interface IAppStore {
   numMonthsToShow: number;
   focusedMonthlyReportMonth: Nullable<MonthKey>;
   monthlyGroups: IMonthlyGroup[];
+  globalColorMapping: ColorMapping;
 }
 export interface IAppAction {
   type: AppActionTypes;

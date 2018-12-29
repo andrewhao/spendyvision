@@ -20,7 +20,7 @@ export default function PurchaseSummary({ items, groups }: IProps) {
 
   return (
     <div className="purchase-summary">
-      <Typography variant="headline" gutterBottom={true}>
+      <Typography variant="h2" gutterBottom={true}>
         Purchase Overview
       </Typography>
       <ul>

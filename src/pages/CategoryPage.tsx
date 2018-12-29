@@ -21,6 +21,9 @@ import {
   ColorMapping
 } from "../types/data";
 
+import { connect } from "react-redux";
+import { IAppStore } from "../rootTypes";
+
 const styles = (theme: any) =>
   createStyles({
     root: {
@@ -41,10 +44,11 @@ interface ICategoryPageProps extends WithStyles<typeof styles> {
   monthlyItems: IMonthlyGroup[];
   numMonthsToShow: number;
   globalColorMapping: ColorMapping;
+  classes: any;
   handleNumMonthsToShowChange(evt: any): void;
 }
 
-function CategoryPage({
+export function CategoryPage({
   items,
   monthlyItems,
   classes,
@@ -107,7 +111,7 @@ function CategoryPage({
 
       return (
         <div key={i}>
-          <h3>{categoryKey}</h3>
+          <Typography variant="h2">{categoryKey}</Typography>
           <PurchaseGraph
             groups={groupsWithEmpties}
             height={250}
@@ -165,4 +169,10 @@ function CategoryPage({
   );
 }
 
-export default withStyles(styles)(CategoryPage);
+function mapStateToProps(state: IAppStore) {
+  return {
+    globalColorMapping: state.globalColorMapping
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(CategoryPage));

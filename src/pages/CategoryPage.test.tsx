@@ -1,5 +1,5 @@
 import * as React from "react";
-import CategoryPage from "./CategoryPage";
+import { CategoryPage } from "./CategoryPage";
 import { mount } from "enzyme";
 
 describe("CategoryPage", () => {

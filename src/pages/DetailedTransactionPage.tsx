@@ -155,7 +155,7 @@ export default class DetailedTransactionPage extends React.Component<
 
     return (
       <Grid item={true} xs={12}>
-        <h1>Detailed Transactions</h1>
+        <Typography variant="h2">Detailed Transactions</Typography>
         {chips}
         <Table className="amazon-order-items">
           <TableHead>
