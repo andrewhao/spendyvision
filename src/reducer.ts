@@ -20,6 +20,7 @@ export default function rootReducer(
 ): IAppStore {
   switch (action.type) {
     case AppActionTypes.UPDATE_ITEMS:
+    case AppActionTypes.LOAD_FROM_LOCAL_STORAGE:
       return Object.assign({}, state, {
         focusedMonthlyReportMonth: deriveCurrentMonth(action.items),
         amazonOrderItems: action.items,

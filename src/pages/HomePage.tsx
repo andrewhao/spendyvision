@@ -15,11 +15,22 @@ import CsvFileUpload from "../CsvFileUpload";
 import { IAmazonOrderItem } from "../types/data";
 import * as R from "ramda";
 import { isoDateToFriendlyDisplay } from "../util/DateUtils";
+import {
+  saveToLocalStorage,
+  loadFromLocalStorage,
+  resetAmazonOrderItems,
+  clearFromLocalStorage
+} from "../actions";
+import { IAppAction } from "../rootTypes";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
 
 export interface IHomePageProps extends WithStyles<typeof styles> {
   items: IAmazonOrderItem[];
+  handleSave: (items: IAmazonOrderItem[]) => IAppAction;
+  handleLoad: () => IAppAction;
+  handleClear(): IAppAction;
   handleCsvUpload(results: any[]): void;
-  handleClearStorage(): void;
 }
 
 interface IHomePageState {
@@ -43,7 +54,14 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
   }
 
   public render() {
-    const { handleCsvUpload, classes, items, handleClearStorage } = this.props;
+    const {
+      handleCsvUpload,
+      classes,
+      items,
+      handleClear,
+      handleSave,
+      handleLoad
+    } = this.props;
     const sortedItems = R.compose(
       R.sort(R.ascend(R.identity)),
       R.map(R.prop("order_date"))
@@ -69,7 +87,7 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
           </p>
           <p>
             <Button
-              onClick={handleClearStorage}
+              onClick={handleClickClear}
               variant="contained"
               color="secondary"
             >
@@ -80,33 +98,51 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
       );
     };
 
+    const handleClickSave = (e: any): void => {
+      handleSave(items);
+    };
+    const handleClickLoad = (e: any): void => {
+      handleLoad();
+    };
+    const handleClickClear = (e: any): void => {
+      handleClear();
+    };
+
     return (
       <div className="page page--home">
-        <Grid container={true}>
-          <Grid item={true} xs={1}>
-            1.
-          </Grid>
-          <Grid item={true} xs={11}>
-            <Typography variant="headline" gutterBottom={true} align="center">
-              Download an Amazon Order Item Report. (
-              <a onClick={this.handleOpen} href="#">
-                Tell me more
-              </a>
-              )
-            </Typography>
-          </Grid>
+        <Grid item={true} className="hero">
+          <Typography variant="display1">
+            X-ray vision for your Amazon spending
+          </Typography>
+          <Typography variant="h6">
+            Spendyvision shows you trends and insights in your Amazon spending
+            so you can get a grip on your spending.
+          </Typography>
         </Grid>
-        <Grid container={true}>
-          <Grid item={true} xs={1}>
-            2.
-          </Grid>
-          <Grid item={true} xs={11}>
-            <CsvFileUpload handleCsvUpload={handleCsvUpload} />
-            <Typography variant="body1">
-              (This data is stored on this browser, never on our servers.)
-            </Typography>
-          </Grid>
-        </Grid>
+
+        <div className="debug">
+          <Button onClick={handleClickSave} variant="contained" color="default">
+            Save
+          </Button>
+          <Button onClick={handleClickLoad} variant="contained" color="default">
+            Load
+          </Button>
+        </div>
+
+        <div className="how-to">
+          <Typography variant="headline" gutterBottom={true}>
+            Download an Amazon Order Item Report (
+            <a onClick={this.handleOpen} href="#">
+              how?
+            </a>
+            ) and upload it here
+          </Typography>
+
+          <CsvFileUpload handleCsvUpload={handleCsvUpload} />
+          <Typography variant="body1" align="center">
+            (This data is stored on this browser, never on our servers.)
+          </Typography>
+        </div>
 
         <Grid item={true} xs={12}>
           {loadedItemMsg(sortedItems)}
@@ -123,7 +159,6 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             <Typography variant="title" gutterBottom={true}>
               2. Download an "Items" Order Report to your computer.
             </Typography>
-
             <p>
               <img
                 src="/images/amazon-download-report.gif"
@@ -153,4 +188,20 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
     this.setState({ isOpen: true });
   }
 }
-export default withStyles(styles)(HomePage);
+function mapDispatchToProps(dispatch: Dispatch) {
+  return {
+    handleSave: (items: IAmazonOrderItem[]) =>
+      dispatch(saveToLocalStorage(items)),
+
+    handleLoad: () => dispatch(loadFromLocalStorage()),
+    handleClear: () => {
+      dispatch(clearFromLocalStorage());
+      dispatch(resetAmazonOrderItems());
+    }
+  };
+}
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(withStyles(styles)(HomePage));

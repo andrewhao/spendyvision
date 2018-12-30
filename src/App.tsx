@@ -16,17 +16,11 @@ import { IAppStore, IAppAction } from "./rootTypes";
 
 import { Provider, connect } from "react-redux";
 import { Dispatch } from "redux";
-import {
-  updateAmazonOrderItems,
-  resetAmazonOrderItems,
-  uploadCsv
-} from "./actions";
+import { updateAmazonOrderItems, uploadCsv } from "./actions";
 
 import configureStore from "./store";
 
 const store = configureStore();
-
-const LOCAL_STORAGE_CACHE_KEY = "amazon_order_items";
 
 const theme = createMuiTheme();
 
@@ -55,7 +49,6 @@ interface IAppProps extends WithStyles<typeof styles> {
   items: IAmazonOrderItem[];
   monthlyGroups: IMonthlyGroup[];
   handleUpdateAmazonOrderItem: (items: IAmazonOrderItem[]) => IAppAction;
-  handleClearAmazonOrderItems: () => IAppAction;
   handleCsvUpload: (results: any[]) => IAppAction;
 }
 
@@ -65,7 +58,6 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
     this.state = {
       numMonthsToShow: 4
     };
-    this.handleClearStorage = this.handleClearStorage.bind(this);
     this.handleNumMonthsToShowChange = this.handleNumMonthsToShowChange.bind(
       this
     );
@@ -91,7 +83,6 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
                   render={() => (
                     <HomePage
                       handleCsvUpload={this.props.handleCsvUpload}
-                      handleClearStorage={this.handleClearStorage}
                       items={this.props.items}
                     />
                   )}
@@ -158,11 +149,6 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
   private handleNumMonthsToShowChange(event: any) {
     this.setState({ numMonthsToShow: event.target.value });
   }
-
-  private handleClearStorage(): void {
-    window.localStorage.removeItem(LOCAL_STORAGE_CACHE_KEY);
-    this.props.handleClearAmazonOrderItems();
-  }
 }
 
 function mapStateToProps(state: IAppStore) {
@@ -173,7 +159,6 @@ function mapDispatchToProps(dispatch: Dispatch) {
   return {
     handleUpdateAmazonOrderItem: (newItems: IAmazonOrderItem[]) =>
       dispatch(updateAmazonOrderItems(newItems)),
-    handleClearAmazonOrderItems: () => dispatch(resetAmazonOrderItems()),
     handleCsvUpload: (parsedCsv: any[]) => dispatch(uploadCsv(parsedCsv))
   };
 }
