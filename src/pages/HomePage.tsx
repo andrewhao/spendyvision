@@ -115,8 +115,8 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             X-ray vision for your Amazon spending
           </Typography>
           <Typography variant="h6">
-            Spendyvision shows you trends and insights in your Amazon spending
-            so you can get a grip on your spending.
+            Spendyvision shows you trends and insights from your Amazon order
+            data. Go on and get a grip on your spending.
           </Typography>
         </Grid>
 

@@ -16,7 +16,11 @@ import { IAppStore, IAppAction } from "./rootTypes";
 
 import { Provider, connect } from "react-redux";
 import { Dispatch } from "redux";
-import { updateAmazonOrderItems, uploadCsv } from "./actions";
+import {
+  updateAmazonOrderItems,
+  uploadCsv,
+  loadFromLocalStorage
+} from "./actions";
 
 import configureStore from "./store";
 
@@ -50,6 +54,7 @@ interface IAppProps extends WithStyles<typeof styles> {
   monthlyGroups: IMonthlyGroup[];
   handleUpdateAmazonOrderItem: (items: IAmazonOrderItem[]) => IAppAction;
   handleCsvUpload: (results: any[]) => IAppAction;
+  handleLoad: () => IAppAction;
 }
 
 class UnwrappedApp extends React.Component<IAppProps, any> {
@@ -61,6 +66,10 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
     this.handleNumMonthsToShowChange = this.handleNumMonthsToShowChange.bind(
       this
     );
+  }
+
+  public componentDidMount() {
+    this.props.handleLoad();
   }
 
   public render() {
@@ -159,7 +168,8 @@ function mapDispatchToProps(dispatch: Dispatch) {
   return {
     handleUpdateAmazonOrderItem: (newItems: IAmazonOrderItem[]) =>
       dispatch(updateAmazonOrderItems(newItems)),
-    handleCsvUpload: (parsedCsv: any[]) => dispatch(uploadCsv(parsedCsv))
+    handleCsvUpload: (parsedCsv: any[]) => dispatch(uploadCsv(parsedCsv)),
+    handleLoad: () => dispatch(loadFromLocalStorage())
   };
 }
 
