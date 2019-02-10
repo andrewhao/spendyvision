@@ -2,7 +2,7 @@ import * as React from "react";
 import * as enzyme from "enzyme";
 import OrderItemRow from "./OrderItemRow";
 import { DateTime } from "luxon";
-import { IAmazonOrderItem } from "src/types/data";
+import { IAmazonOrderItem, CategoryKey, CategoryName } from "src/types/data";
 
 describe("OrderItemRow", () => {
   xit("renders the item title", () => {
@@ -13,7 +13,8 @@ describe("OrderItemRow", () => {
       title: "foo",
       price_cents: 1299,
       unspsc_code: "52141514",
-      category: "Food",
+      category: "Food" as CategoryName,
+      category_key: "food" as CategoryKey,
       order_date: DateTime.fromObject({ year: 2018, month: 1, day: 1 }).toISO()
     };
     const subject = enzyme.shallow(<OrderItemRow {...attrs} />);

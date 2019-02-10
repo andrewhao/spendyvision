@@ -13,7 +13,7 @@ export const rollingAverage = (
   allMonthlyGroups: IMonthlyGroup[],
   rollingPeriod: number,
   focusedMonth: DateTime,
-  categoryFilter: CategoryKey = Categories.AllCategory
+  categoryFilter: CategoryKey = Categories.AllCategory as CategoryKey
 ): IRollingAverageResult => {
   const pipedRollingEligible: (
     xs: IMonthlyGroup[]
@@ -31,7 +31,8 @@ export const rollingAverage = (
 
   const totalSpending = rollingPeriodGroups.reduce((acc, monthlyGroup) => {
     const items = R.when(
-      () => R.not(R.equals(categoryFilter, Categories.AllCategory)),
+      () =>
+        R.not(R.equals(categoryFilter, Categories.AllCategory as CategoryKey)),
       R.filter(R.propEq("category", categoryFilter))
     )(monthlyGroup.items) as IAmazonOrderItem[];
 

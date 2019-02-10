@@ -6,8 +6,8 @@ export interface IAmazonOrderItem {
   price_cents: Price;
   order_date: string;
   unspsc_code?: string;
-  category?: string;
-  category_key?: string;
+  category: CategoryName;
+  category_key: CategoryKey;
 }
 
 export interface IAmazonItemCollectionKeyable {
@@ -45,7 +45,14 @@ export interface ICategorizedCurrentVsAverageSeries {
   averageSpending: SpendingCost;
 }
 
-export type CategoryKey = string;
+export type NoCategory = "not_available";
+
+// https://github.com/Microsoft/TypeScript/issues/202#issuecomment-429578149
+// @ts-ignore: 'infer' declarations are only permitted in the 'extends' clause of a conditional type.
+type Brand<T, B> = infer _ extends B ? T : never;
+export type CategoryKey = Brand<string, "categoryKey">;
+export type CategoryName = Brand<string, "categoryName">;
+
 export type MonthKey = string;
 
 export type SpendingCost = number;

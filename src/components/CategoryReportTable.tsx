@@ -34,7 +34,9 @@ export default function CategoryReportTable({
 
   const allCategories = (R.pipe(
     R.chain((monthGroup: IMonthlyGroup) => monthGroup.items),
-    R.map((item: IAmazonOrderItem): CategoryKey | undefined => item.category),
+    R.map(
+      (item: IAmazonOrderItem): CategoryKey => item.category_key as CategoryKey
+    ),
     R.uniq,
     R.reject(R.isNil)
   )(monthlyGroupsToShow) as CategoryKey[]).filter(isFocusedCategory);
@@ -64,21 +66,23 @@ export default function CategoryReportTable({
     );
   };
 
-  const categoryResults = allCategories.map((category: string, i: number) => {
-    return (
-      <React.Fragment key={i}>
-        <TableRow>
-          <TableCell>{category}</TableCell>
-          {cellsForMonth(category, monthlyGroupsToShow, allMonths)}
-        </TableRow>
-        {categoryAnnotation && (
+  const categoryResults = allCategories.map(
+    (category: CategoryKey, i: number) => {
+      return (
+        <React.Fragment key={i}>
           <TableRow>
-            <TableCell colSpan={3}>{categoryAnnotation(category)}</TableCell>
+            <TableCell>{category}</TableCell>
+            {cellsForMonth(category, monthlyGroupsToShow, allMonths)}
           </TableRow>
-        )}
-      </React.Fragment>
-    );
-  });
+          {categoryAnnotation && (
+            <TableRow>
+              <TableCell colSpan={3}>{categoryAnnotation(category)}</TableCell>
+            </TableRow>
+          )}
+        </React.Fragment>
+      );
+    }
+  );
 
   return (
     <div className="category-report-table">

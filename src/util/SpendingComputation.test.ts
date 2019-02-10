@@ -1,6 +1,7 @@
 import SpendingComputation from "./SpendingComputation";
 import { DateTime } from "luxon";
 import { novemberGroup, decemberGroup, januaryGroup } from "../test/fixtures";
+import { CategoryKey } from "../types/data";
 
 describe("SpendingComputation", () => {
   describe("#rollingAverage", () => {
@@ -58,7 +59,7 @@ describe("SpendingComputation", () => {
           [novemberGroup, decemberGroup, januaryGroup],
           2,
           february,
-          "Baby"
+          "Baby" as CategoryKey
         );
         expect(result).toEqual({ numMonths: 2, spending: 2263 });
       });

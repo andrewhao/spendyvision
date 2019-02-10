@@ -6,7 +6,7 @@ export default function groupItemsByCategory(
 ): ICategoryGroup[] {
   const doGrouping = R.groupBy(
     (item: IAmazonOrderItem): CategoryKey => {
-      return item.category_key || "not_available";
+      return item.category_key || ("not_available" as CategoryKey);
     }
   );
 
@@ -21,7 +21,9 @@ export default function groupItemsByCategory(
 
   return R.pipe(
     doGrouping,
+    R.tap(console.log),
     composeGroup,
+    R.tap(console.log),
     R.values
   )(items);
 }

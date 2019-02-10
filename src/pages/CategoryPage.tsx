@@ -14,7 +14,7 @@ import * as R from "ramda";
 import * as React from "react";
 import PurchaseGraph from "../components/PurchaseGraph";
 import {
-  CategoryKey,
+  CategoryName,
   MonthKey,
   IAmazonOrderItem,
   IMonthlyGroup,
@@ -67,7 +67,7 @@ export function CategoryPage({
     R.reject(R.isNil),
     R.reject(R.isEmpty),
     R.uniq
-  )(focusedMonthlyGroups) as CategoryKey[];
+  )(focusedMonthlyGroups) as CategoryName[];
 
   const focusedDates = R.takeLast(
     numMonthsToShow,
@@ -98,12 +98,12 @@ export function CategoryPage({
   };
 
   const categoryGraphs = allCategories.map(
-    (categoryKey: CategoryKey, i: number) => {
+    (categoryName: CategoryName, i: number) => {
       const groupsWithEmpties = R.pipe(
         interpolateEmptyMonthlyGroups,
         R.map((monthlyGroup: IMonthlyGroup) => {
           const categoryItems = monthlyGroup.items.filter(
-            R.propEq("category", categoryKey)
+            R.propEq("category", categoryName)
           );
           return Object.assign({}, monthlyGroup, { items: categoryItems });
         })
@@ -111,11 +111,11 @@ export function CategoryPage({
 
       return (
         <div key={i}>
-          <Typography variant="h2">{categoryKey}</Typography>
+          <Typography variant="h2">{categoryName}</Typography>
           <PurchaseGraph
             groups={groupsWithEmpties}
             height={250}
-            color={globalColorMapping[categoryKey]}
+            color={globalColorMapping[categoryName as string]}
             yAxisMax={"dataMax"}
             showLegend={false}
           />

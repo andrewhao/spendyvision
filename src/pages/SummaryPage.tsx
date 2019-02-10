@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as R from "ramda";
-import PurchaseSummary from "../components/PurchaseSummary";
+import PurchaseInsights from "../components/PurchaseInsights";
 import PurchaseGraph from "../components/PurchaseGraph";
 import { Grid } from "@material-ui/core";
 import { IAmazonOrderItem, IMonthlyGroup } from "../types/data";
@@ -18,7 +18,7 @@ export default function SummaryPage({ groups, items }: ISummaryPageProps) {
   return (
     <Grid container={true} className="page page--summary">
       <Typography variant="h2" gutterBottom={true}>
-        Purchase Overview
+        Overview
       </Typography>
 
       <Grid item={true} xs={12}>
@@ -30,7 +30,10 @@ export default function SummaryPage({ groups, items }: ISummaryPageProps) {
         />
       </Grid>
       <Grid item={true} xs={12}>
-        <PurchaseSummary items={items} groups={R.dropLast(1, groups)} />
+        <Typography variant="h2" gutterBottom={true}>
+          Insights
+        </Typography>
+        <PurchaseInsights items={items} groups={R.dropLast(1, groups)} />
       </Grid>
     </Grid>
   );

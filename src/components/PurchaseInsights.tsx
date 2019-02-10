@@ -2,16 +2,32 @@ import * as React from "react";
 import { IAmazonOrderItem, IMonthlyGroup } from "../types/data";
 import Dinero from "dinero.js";
 import computeTotalPrice from "../util/computeTotalPrice";
-import { Typography, Paper, Grid } from "@material-ui/core";
+import {
+  Typography,
+  Paper,
+  Grid,
+  withStyles,
+  createStyles,
+  WithStyles,
+  Theme
+} from "@material-ui/core";
 
-interface IProps {
+interface IProps extends WithStyles<typeof styles> {
   items: IAmazonOrderItem[];
   groups: IMonthlyGroup[];
 }
 
-export default class PurchaseSummary extends React.PureComponent<IProps> {
+const styles = (theme: Theme) =>
+  createStyles({
+    insight: {
+      padding: theme.spacing.unit,
+      margin: theme.spacing.unit
+    }
+  });
+
+class PurchaseInsights extends React.PureComponent<IProps> {
   public render() {
-    const { items, groups } = this.props;
+    const { items, groups, classes } = this.props;
 
     const numMonths = groups.length;
     const totalPrice = computeTotalPrice({ items });
@@ -24,9 +40,9 @@ export default class PurchaseSummary extends React.PureComponent<IProps> {
     const monthlySpending = Dinero({ amount: monthlyPrice }).toFormat();
 
     return (
-      <Grid className="purchase-summary" xs={12} container={true}>
+      <Grid className="purchase-summary" spacing={16} xs={12} container={true}>
         <Grid xs={6} className="purchase-summary__item">
-          <Paper>
+          <Paper className={classes.insight}>
             <Typography variant="display2">
               Over the past <strong>{numMonths} months</strong>, you have spent
               a total of <strong>{totalPriceFmt}</strong>.
@@ -34,7 +50,7 @@ export default class PurchaseSummary extends React.PureComponent<IProps> {
           </Paper>
         </Grid>
         <Grid xs={6} className="purchase-summary__item">
-          <Paper>
+          <Paper className={classes.insight}>
             <Typography variant="display2">
               On average, you spend <strong>{monthlySpending}</strong> per month
             </Typography>
@@ -44,3 +60,5 @@ export default class PurchaseSummary extends React.PureComponent<IProps> {
     );
   }
 }
+
+export default withStyles(styles)(PurchaseInsights);

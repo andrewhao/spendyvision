@@ -16,7 +16,7 @@ export default function computeCategoryCostSeries(
 ): ICategoryCostSeries {
   return groupItemsByCategory(group.items).reduce(
     (acc: object, g: ICategoryGroup) => {
-      acc[g.groupKey] = Dinero({
+      acc[g.groupKey as string] = Dinero({
         amount: computeTotalPrice(g)
       }).toRoundedUnit(2);
       return acc;

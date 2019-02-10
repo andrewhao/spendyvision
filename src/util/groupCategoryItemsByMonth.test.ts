@@ -1,7 +1,7 @@
 import groupCategoryItemsByMonth from "./groupCategoryItemsByMonth";
 import groupItemsByMonth from "./groupItemsByMonth";
 import { DateTime } from "luxon";
-import { IAmazonOrderItem } from "src/types/data";
+import { IAmazonOrderItem, CategoryKey, CategoryName } from "src/types/data";
 
 describe("groupCategoryItemsByMonth", () => {
   const date1 = DateTime.local(2018, 1, 5)
@@ -17,7 +17,8 @@ describe("groupCategoryItemsByMonth", () => {
     price: "$12.99",
     price_cents: 1299,
     order_date: date1,
-    category: "Baby"
+    category: "Baby" as CategoryName,
+    category_key: "baby" as CategoryKey
   };
   const item2: IAmazonOrderItem = {
     asin: "ABC124",
@@ -26,7 +27,8 @@ describe("groupCategoryItemsByMonth", () => {
     price: "$2.99",
     price_cents: 299,
     order_date: date2,
-    category: "Baby"
+    category: "Baby" as CategoryName,
+    category_key: "baby" as CategoryKey
   };
   const item3: IAmazonOrderItem = {
     asin: "XYZ123",
@@ -35,7 +37,8 @@ describe("groupCategoryItemsByMonth", () => {
     price: "$3.99",
     price_cents: 399,
     order_date: date1,
-    category: "Groceries"
+    category: "Groceries" as CategoryName,
+    category_key: "groceries" as CategoryKey
   };
 
   const allMonths = [
@@ -45,7 +48,11 @@ describe("groupCategoryItemsByMonth", () => {
   const monthlyItems = groupItemsByMonth([item1, item2, item3]);
 
   it("groups orders by month", () => {
-    const result = groupCategoryItemsByMonth("Baby", monthlyItems, allMonths);
+    const result = groupCategoryItemsByMonth(
+      "baby" as CategoryKey,
+      monthlyItems,
+      allMonths
+    );
 
     expect(result).toEqual([
       { monthKey: allMonths[0], monthValue: 1299 },
@@ -55,7 +62,7 @@ describe("groupCategoryItemsByMonth", () => {
 
   it("fills in missing category in month with zeros", () => {
     const result = groupCategoryItemsByMonth(
-      "Groceries",
+      "groceries" as CategoryKey,
       monthlyItems,
       allMonths
     );
@@ -68,7 +75,7 @@ describe("groupCategoryItemsByMonth", () => {
 
   it("handles nonexisting categories with zeros", () => {
     const result = groupCategoryItemsByMonth(
-      "Salt Shakers",
+      "salt-shakers" as CategoryKey,
       monthlyItems,
       allMonths
     );

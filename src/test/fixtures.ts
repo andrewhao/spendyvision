@@ -1,4 +1,9 @@
-import { IAmazonOrderItem, IMonthlyGroup } from "../types/data";
+import {
+  IAmazonOrderItem,
+  IMonthlyGroup,
+  CategoryKey,
+  CategoryName
+} from "../types/data";
 
 export const january = new Date("2018-01-01").toISOString();
 const janDate1 = new Date("2018-01-05").toISOString();
@@ -11,7 +16,8 @@ export const janItem1: IAmazonOrderItem = {
   price: "$12.99",
   price_cents: 1299,
   order_date: janDate1,
-  category: "Baby"
+  category: "Baby" as CategoryName,
+  category_key: "baby" as CategoryKey
 };
 export const janItem2: IAmazonOrderItem = {
   asin: "abc124",
@@ -20,7 +26,8 @@ export const janItem2: IAmazonOrderItem = {
   price: "2.99",
   price_cents: 299,
   order_date: janDate2,
-  category: "Food Items & Italian Food"
+  category: "Food Items & Italian Food" as CategoryName,
+  category_key: "food-items-and-italian-food" as CategoryKey
 };
 export const janItem3: IAmazonOrderItem = {
   asin: "abc125",
@@ -29,7 +36,8 @@ export const janItem3: IAmazonOrderItem = {
   price: "$16.99",
   price_cents: 1699,
   order_date: janDate3,
-  category: "Baby"
+  category: "Baby" as CategoryName,
+  category_key: "baby" as CategoryKey
 };
 
 export const januaryGroup = {
@@ -47,7 +55,8 @@ const decItem1: IAmazonOrderItem = {
   price: "$39.99",
   price_cents: 3999,
   order_date: decDate1,
-  category: "Electronics"
+  category: "Electronics" as CategoryName,
+  category_key: "electronics" as CategoryKey
 };
 const decItem2: IAmazonOrderItem = {
   asin: "abe123",
@@ -56,7 +65,8 @@ const decItem2: IAmazonOrderItem = {
   price: "$15.27",
   price_cents: 1527,
   order_date: decDate2,
-  category: "Baby"
+  category: "Baby" as CategoryName,
+  category_key: "baby" as CategoryKey
 };
 
 export const decemberGroup = {
@@ -74,7 +84,8 @@ const novItem1: IAmazonOrderItem = {
   price: "$129.99",
   price_cents: 12999,
   order_date: novDate1,
-  category: "Tools & Home Improvement"
+  category: "Tools & Home Improvement" as CategoryName,
+  category_key: "tools-and-home-improvement" as CategoryKey
 };
 const novItem2: IAmazonOrderItem = {
   asin: "abf1453",
@@ -83,7 +94,8 @@ const novItem2: IAmazonOrderItem = {
   price: "$89.30",
   price_cents: 8930,
   order_date: novDate2,
-  category: "Baby"
+  category: "Baby" as CategoryName,
+  category_key: "baby" as CategoryKey
 };
 
 export const novemberGroup = {
