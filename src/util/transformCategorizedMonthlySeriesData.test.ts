@@ -1,5 +1,10 @@
 import transformCategorizedMonthlySeriesData from "./transformCategorizedMonthlySeriesData";
-import { IAmazonOrderItem, IMonthlyGroup } from "../types/data";
+import {
+  IAmazonOrderItem,
+  IMonthlyGroup,
+  CategoryKey,
+  CategoryName
+} from "../types/data";
 
 xdescribe("transformCategorizedMonthlySeriesData", () => {
   it("groups items by category costs", () => {
@@ -13,7 +18,8 @@ xdescribe("transformCategorizedMonthlySeriesData", () => {
       price: "$12.99",
       price_cents: 1299,
       order_date: date1,
-      category: "Baby"
+      category: "Baby" as CategoryName,
+      category_key: "baby" as CategoryKey
     };
     const foodItem2: IAmazonOrderItem = {
       asin: "food123",
@@ -22,7 +28,8 @@ xdescribe("transformCategorizedMonthlySeriesData", () => {
       price: "2.99",
       price_cents: 299,
       order_date: date2,
-      category: "Food Items & Italian Food"
+      category: "Food Items & Italian Food" as CategoryName,
+      category_key: "food-items-and-italian-food" as CategoryKey
     };
     const babyItem2: IAmazonOrderItem = {
       asin: "baby223",
@@ -31,7 +38,8 @@ xdescribe("transformCategorizedMonthlySeriesData", () => {
       price: "$16.99",
       price_cents: 1699,
       order_date: date3,
-      category: "Baby"
+      category: "Baby" as CategoryName,
+      category_key: "baby" as CategoryKey
     };
 
     const monthGroup = {

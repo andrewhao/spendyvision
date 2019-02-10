@@ -21,6 +21,9 @@ export default function rootReducer(
   switch (action.type) {
     case AppActionTypes.UPDATE_ITEMS:
     case AppActionTypes.LOAD_FROM_LOCAL_STORAGE:
+      if (action.items === undefined || action.items.length === 0) {
+        return Object.assign({}, state);
+      }
       return Object.assign({}, state, {
         focusedMonthlyReportMonth: deriveCurrentMonth(action.items),
         amazonOrderItems: action.items,
