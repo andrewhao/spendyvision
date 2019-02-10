@@ -17,9 +17,10 @@ export default function SummaryPage({ groups, items }: ISummaryPageProps) {
   }
   return (
     <Grid container={true} className="page page--summary">
-      <Grid item={true} xs={12}>
-        <PurchaseSummary items={items} groups={R.dropLast(1, groups)} />
-      </Grid>
+      <Typography variant="h2" gutterBottom={true}>
+        Purchase Overview
+      </Typography>
+
       <Grid item={true} xs={12}>
         <PurchaseGraph
           height={500}
@@ -27,6 +28,9 @@ export default function SummaryPage({ groups, items }: ISummaryPageProps) {
           style="area"
           showLegend={false}
         />
+      </Grid>
+      <Grid item={true} xs={12}>
+        <PurchaseSummary items={items} groups={R.dropLast(1, groups)} />
       </Grid>
     </Grid>
   );

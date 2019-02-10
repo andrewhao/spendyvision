@@ -15,20 +15,13 @@ import CsvFileUpload from "../CsvFileUpload";
 import { IAmazonOrderItem } from "../types/data";
 import * as R from "ramda";
 import { isoDateToFriendlyDisplay } from "../util/DateUtils";
-import {
-  saveToLocalStorage,
-  loadFromLocalStorage,
-  resetAmazonOrderItems,
-  clearFromLocalStorage
-} from "../actions";
+import { resetAmazonOrderItems, clearFromLocalStorage } from "../actions";
 import { IAppAction } from "../rootTypes";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 
 export interface IHomePageProps extends WithStyles<typeof styles> {
   items: IAmazonOrderItem[];
-  handleSave: (items: IAmazonOrderItem[]) => IAppAction;
-  handleLoad: () => IAppAction;
   handleClear(): IAppAction;
   handleCsvUpload(results: any[]): void;
 }
@@ -54,14 +47,7 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
   }
 
   public render() {
-    const {
-      handleCsvUpload,
-      classes,
-      items,
-      handleClear,
-      handleSave,
-      handleLoad
-    } = this.props;
+    const { handleCsvUpload, classes, items, handleClear } = this.props;
     const sortedItems = R.compose(
       R.sort(R.ascend(R.identity)),
       R.map(R.prop("order_date"))
@@ -98,12 +84,6 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
       );
     };
 
-    const handleClickSave = (e: any): void => {
-      handleSave(items);
-    };
-    const handleClickLoad = (e: any): void => {
-      handleLoad();
-    };
     const handleClickClear = (e: any): void => {
       handleClear();
     };
@@ -120,14 +100,9 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
           </Typography>
         </Grid>
 
-        <div className="debug">
-          <Button onClick={handleClickSave} variant="contained" color="default">
-            Save
-          </Button>
-          <Button onClick={handleClickLoad} variant="contained" color="default">
-            Load
-          </Button>
-        </div>
+        <Grid item={true} xs={12}>
+          {loadedItemMsg(sortedItems)}
+        </Grid>
 
         <div className="how-to">
           <Typography variant="headline" gutterBottom={true}>
@@ -144,9 +119,6 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
           </Typography>
         </div>
 
-        <Grid item={true} xs={12}>
-          {loadedItemMsg(sortedItems)}
-        </Grid>
         <Dialog open={this.state.isOpen} onClose={this.handleClose}>
           <DialogTitle>How to download your Amazon Order Report</DialogTitle>
           <DialogContent>
@@ -190,10 +162,6 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 }
 function mapDispatchToProps(dispatch: Dispatch) {
   return {
-    handleSave: (items: IAmazonOrderItem[]) =>
-      dispatch(saveToLocalStorage(items)),
-
-    handleLoad: () => dispatch(loadFromLocalStorage()),
     handleClear: () => {
       dispatch(clearFromLocalStorage());
       dispatch(resetAmazonOrderItems());

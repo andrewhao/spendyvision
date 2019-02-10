@@ -48,7 +48,7 @@ export default function rootReducer(
 
 const globalColorMapping = (items: IAmazonOrderItem[]): ColorMapping => {
   const allCategories: CategoryKey[] = R.pipe(
-    R.map(R.prop("category")),
+    R.map(R.prop("category_key")),
     R.reject(R.isNil),
     R.reject(R.isEmpty),
     R.uniq

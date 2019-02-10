@@ -25,9 +25,9 @@ export default function MonthlyPieGraph({
   const chartData = R.pipe(
     computeCategoryCostSeries,
     R.toPairs,
-    R.map(([categoryKey, amount]) => ({
-      name: categoryKey,
-      value: amount
+    R.map(categoryMap => ({
+      name: categoryMap[0],
+      value: categoryMap[1]
     })),
     R.sort(R.descend(R.prop("value")))
   )(monthlyGroup);

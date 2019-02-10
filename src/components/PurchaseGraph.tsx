@@ -1,9 +1,9 @@
 import * as React from "react";
-import { IMonthlyGroup, CategoryKey } from "../types/data";
-import { colorScale } from "../util/ColorUtils";
+import { IMonthlyGroup, ColorMapping } from "../types/data";
 import * as R from "ramda";
 import { DateTime } from "luxon";
 import Dinero from "dinero.js";
+import { connect } from "react-redux";
 
 import transformCategorizedMonthlySeriesData from "../util/transformCategorizedMonthlySeriesData";
 
@@ -20,6 +20,7 @@ import {
   ReferenceLine
 } from "recharts";
 import { rollingAverage } from "../util/SpendingComputation";
+import { IAppStore } from "src/rootTypes";
 
 interface IProps {
   groups: IMonthlyGroup[];
@@ -28,6 +29,7 @@ interface IProps {
   style?: string;
   yAxisMax?: any;
   showLegend?: boolean;
+  globalColorMapping: ColorMapping;
 }
 
 class PurchaseGraph extends React.PureComponent<IProps> {
@@ -35,50 +37,38 @@ class PurchaseGraph extends React.PureComponent<IProps> {
     const {
       groups,
       height = 700,
-      color,
       style = "bar",
-      yAxisMax = "dataMax + 100",
-      showLegend = true
+      showLegend = true,
+      globalColorMapping
     } = this.props;
     if (groups.length === 0) {
       return <div />;
     }
     const data = transformCategorizedMonthlySeriesData(groups);
 
-    const categories = R.pipe(
-      R.chain(R.prop("items")),
-      R.map(R.prop("category_key")),
-      R.reject(R.isNil),
-      R.uniq
-    )(groups) as CategoryKey[];
-
-    const colors = colorScale(categories);
-    const defaultColorScale = R.times(R.always(color), categories.length);
-    const zipped = R.zip(
-      categories,
-      color === undefined ? colors : defaultColorScale
-    );
-
-    const lines = zipped.map(([categoryKey, hexColor]) => {
-      return style === "area" ? (
-        <Area
-          key={categoryKey}
-          dataKey={categoryKey}
-          fill={hexColor}
-          stroke={hexColor}
-          type="monotoneX"
-          stackId="this"
-        />
-      ) : (
-        <Bar
-          key={categoryKey}
-          dataKey={categoryKey}
-          fill={hexColor}
-          stroke={hexColor}
-          stackId="this"
-        />
-      );
-    });
+    const lines = R.pipe(
+      R.toPairs,
+      R.map(([categoryKey, hexColor]) => {
+        return style === "area" ? (
+          <Area
+            key={categoryKey}
+            dataKey={categoryKey}
+            fill={hexColor}
+            stroke={hexColor}
+            stackId="this"
+            type="step"
+          />
+        ) : (
+          <Bar
+            key={categoryKey}
+            dataKey={categoryKey}
+            fill={hexColor}
+            stroke={hexColor}
+            stackId="this"
+          />
+        );
+      })
+    )(globalColorMapping);
 
     const averageSpending = rollingAverage(
       groups,
@@ -97,17 +87,12 @@ class PurchaseGraph extends React.PureComponent<IProps> {
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
-              <YAxis
-                domain={[0, yAxisMax]}
-                interval={1000}
-                allowDecimals={false}
-              />
+              <YAxis allowDecimals={false} />
               <Tooltip />
               <ReferenceLine
                 y={dineroAverageSpending.toRoundedUnit(2)}
                 stroke="green"
                 isFront={true}
-                // label={"Average: " + dineroAverageSpending.toFormat()}
               />
               {showLegend && <Legend />}
               {lines}
@@ -119,4 +104,13 @@ class PurchaseGraph extends React.PureComponent<IProps> {
   }
 }
 
-export default PurchaseGraph;
+function mapStateToProps(state: IAppStore) {
+  return {
+    globalColorMapping: state.globalColorMapping
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  null
+)(PurchaseGraph);

@@ -1,13 +1,19 @@
-import { ICategoryGroup, IAmazonItemCollectionKeyable } from "../types/data";
+import {
+  ICategoryGroup,
+  IAmazonItemCollectionKeyable,
+  Price
+} from "../types/data";
 import groupItemsByCategory from "./groupItemsByCategory";
 import Dinero from "dinero.js";
 import computeTotalPrice from "./computeTotalPrice";
 
-type CategoryCostSeries = object;
+interface ICategoryCostSeries {
+  [s: string]: Price;
+}
 
 export default function computeCategoryCostSeries(
   group: IAmazonItemCollectionKeyable
-): CategoryCostSeries {
+): ICategoryCostSeries {
   return groupItemsByCategory(group.items).reduce(
     (acc: object, g: ICategoryGroup) => {
       acc[g.groupKey] = Dinero({
