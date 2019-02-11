@@ -63,7 +63,7 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
       return (
         <Paper className={classes.paper}>
-          <Typography variant="headline" gutterBottom={true}>
+          <Typography variant="h5" gutterBottom={true}>
             Order History loaded from <strong>{earliestDate}</strong> to{" "}
             <strong>{latestDate}</strong>.
           </Typography>
@@ -91,7 +91,7 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
     return (
       <div className="page page--home">
         <Grid item={true} className="hero">
-          <Typography variant="display1">
+          <Typography variant="h4">
             X-ray vision for your Amazon spending
           </Typography>
           <Typography variant="h6">
@@ -105,7 +105,7 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         </Grid>
 
         <div className="how-to">
-          <Typography variant="headline" gutterBottom={true}>
+          <Typography variant="h5" gutterBottom={true}>
             Download an Amazon Order Item Report (
             <a onClick={this.handleOpen} href="#">
               how?

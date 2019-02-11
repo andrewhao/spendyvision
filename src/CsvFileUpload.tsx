@@ -107,7 +107,7 @@ function CsvFileUpload(props: ICsvFileUploadProps) {
               <input {...getInputProps()} />
               <div className={classes.dropzoneMessage}>{message}</div>
               <div>
-                <Button color="primary" variant="raised">
+                <Button color="primary" variant="contained">
                   Upload
                 </Button>
               </div>

@@ -92,7 +92,7 @@ export const Header: React.SFC<IHeaderProps> = ({
 
           <Typography
             className={classes.headerType}
-            variant="title"
+            variant="h6"
             color="inherit"
           >
             Spendyvision
