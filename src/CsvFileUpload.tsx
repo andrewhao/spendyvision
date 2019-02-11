@@ -7,7 +7,7 @@ import {
   Theme
 } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
-import Dropzone from "react-dropzone";
+import Dropzone, { DropFilesEventHandler } from "react-dropzone";
 import * as R from "ramda";
 import * as Papa from "papaparse";
 import classNames from "classnames";
@@ -19,6 +19,7 @@ interface ICsvFileUploadProps extends WithStyles<typeof styles> {
   history: any;
   location: any;
   match: any;
+  classes: any;
 }
 
 const styles = (theme: Theme) =>
@@ -56,7 +57,7 @@ const styles = (theme: Theme) =>
 function CsvFileUpload(props: ICsvFileUploadProps) {
   const { history, classes } = props;
 
-  const handleDrop = (acceptedFiles: File[]): void => {
+  const handleDrop: DropFilesEventHandler = acceptedFiles => {
     const result = R.head(acceptedFiles);
 
     if (result === undefined) {

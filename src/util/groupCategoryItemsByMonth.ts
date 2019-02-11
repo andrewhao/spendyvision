@@ -33,13 +33,12 @@ const valueForMonth = (
   if (monthGroup === undefined) {
     return 0;
   }
-  console.log("monthGroup", monthGroup);
 
   const categoryGroup = R.find(
     group => group.groupKey === category,
     groupItemsByCategory(monthGroup.items)
   );
-  console.log("categoryGroup", categoryGroup);
+
   if (categoryGroup === undefined) {
     return 0;
   }

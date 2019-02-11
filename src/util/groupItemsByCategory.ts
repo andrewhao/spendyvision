@@ -21,9 +21,7 @@ export default function groupItemsByCategory(
 
   return R.pipe(
     doGrouping,
-    R.tap(console.log),
     composeGroup,
-    R.tap(console.log),
     R.values
   )(items);
 }

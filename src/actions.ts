@@ -41,12 +41,15 @@ export function clearFromLocalStorage() {
   return { type: AppActionTypes.CLEAR_FROM_LOCAL_STORAGE };
 }
 
-const getAmazonOrderItemsFromLocalStorage = (): object => {
+const getAmazonOrderItemsFromLocalStorage = (): IAmazonOrderItem[] => {
+  if (window.localStorage === undefined) {
+    return [];
+  }
   const cachedItems = window.localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
   if (cachedItems !== null) {
     return JSON.parse(cachedItems).items;
   }
-  return { items: [] };
+  return [];
 };
 
 const setAmazonOrderItemsToLocalStorage = (
