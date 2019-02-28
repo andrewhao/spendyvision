@@ -1,4 +1,6 @@
 import * as React from "react";
+import { parse } from "query-string";
+
 import {
   Grid,
   Table,
@@ -31,14 +33,21 @@ interface IDetailedTransactionPageProps {
   items: IAmazonOrderItem[];
   monthlyGroups: IMonthlyGroup[];
   match: { params: { date: string; page?: number } };
+  location: { search: string };
 }
 interface IDetailedTransactionPageState {
   filteredMonth: Nullable<MonthKey>;
-  filteredCategory: CategoryKey | undefined;
+  filteredCategory: Nullable<CategoryKey>;
   rowsPerPage: number;
   page: number;
 }
 const ALL = "all";
+
+interface IQueryParams {
+  date?: string;
+  page?: string;
+  category?: CategoryKey;
+}
 
 export default class DetailedTransactionPage extends React.Component<
   IDetailedTransactionPageProps,
@@ -46,18 +55,20 @@ export default class DetailedTransactionPage extends React.Component<
 > {
   public constructor(props: IDetailedTransactionPageProps) {
     super(props);
-    const {
-      match: { params }
-    } = this.props;
+    const queryParams: IQueryParams = parse(location.search);
+    const date: Nullable<string> = queryParams.date;
+    const category: Nullable<string> = queryParams.category;
+    const page: Nullable<string> = queryParams.page;
+
     this.state = {
-      filteredMonth: params.date
-        ? DateTime.fromISO(params.date)
+      filteredMonth: date
+        ? DateTime.fromISO(date)
             .startOf("month")
             .toISO()
         : undefined,
-      filteredCategory: undefined,
+      filteredCategory: category as Nullable<CategoryKey>,
       rowsPerPage: 50,
-      page: params.page || 0
+      page: parseInt(Nullable.withDefault("0")(page), 10)
     };
   }
 

@@ -162,7 +162,7 @@ function MonthlyReportPage({
           </FormControl>
         </form>
 
-        <Link to={"/transactions/date/" + focusedMonth}>
+        <Link to={"/transactions?date=" + focusedMonth}>
           View detailed transactions for{" "}
           {isoDateToFriendlyDisplay(
             Nullable.withDefault(new Date().toISOString(), focusedMonth)

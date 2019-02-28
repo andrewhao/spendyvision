@@ -5,10 +5,16 @@ import { januaryGroup } from "../test/fixtures";
 
 describe("DetailedTransactionPage", () => {
   const match = { params: { date: "" } };
+  const location = { search: "" };
 
   it("renders default text when no items", () => {
     const el = mount(
-      <DetailedTransactionPage match={match} items={[]} monthlyGroups={[]} />
+      <DetailedTransactionPage
+        match={match}
+        items={[]}
+        monthlyGroups={[]}
+        location={location}
+      />
     );
     expect(el.text()).toMatch("Please upload an order report first");
   });
@@ -17,6 +23,7 @@ describe("DetailedTransactionPage", () => {
     const el = mount(
       <DetailedTransactionPage
         match={match}
+        location={location}
         items={januaryGroup.items}
         monthlyGroups={[januaryGroup]}
       />
