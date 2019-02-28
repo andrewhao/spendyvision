@@ -33,7 +33,7 @@ export const rollingAverage = (
     const items = R.when(
       () =>
         R.not(R.equals(categoryFilter, Categories.AllCategory as CategoryKey)),
-      R.filter(R.propEq("category", categoryFilter))
+      R.filter(R.propEq("category_key", categoryFilter))
     )(monthlyGroup.items) as IAmazonOrderItem[];
 
     return computeTotalPrice({ items }) + acc;

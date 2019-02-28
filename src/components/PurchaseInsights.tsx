@@ -41,7 +41,7 @@ class PurchaseInsights extends React.PureComponent<IProps> {
 
     return (
       <Grid className="purchase-summary" spacing={16} xs={12} container={true}>
-        <Grid xs={6} className="purchase-summary__item">
+        <Grid xs={6} item={true} className="purchase-summary__item">
           <Paper className={classes.insight}>
             <Typography variant="h3">
               Over the past <strong>{numMonths} months</strong>, you have spent
@@ -49,7 +49,7 @@ class PurchaseInsights extends React.PureComponent<IProps> {
             </Typography>
           </Paper>
         </Grid>
-        <Grid xs={6} className="purchase-summary__item">
+        <Grid xs={6} item={true} className="purchase-summary__item">
           <Paper className={classes.insight}>
             <Typography variant="h3">
               On average, you spend <strong>{monthlySpending}</strong> per month

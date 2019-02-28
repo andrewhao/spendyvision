@@ -59,7 +59,7 @@ describe("SpendingComputation", () => {
           [novemberGroup, decemberGroup, januaryGroup],
           2,
           february,
-          "Baby" as CategoryKey
+          "baby" as CategoryKey
         );
         expect(result).toEqual({ numMonths: 2, spending: 2263 });
       });

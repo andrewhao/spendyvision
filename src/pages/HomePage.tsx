@@ -96,7 +96,7 @@ class HomePage extends React.Component<IHomePageProps, IHomePageState> {
           </Typography>
           <Typography variant="h6">
             Spendyvision shows you trends and insights from your Amazon order
-            data. Go on and get a grip on your spending.
+            data.
           </Typography>
         </Grid>
 

@@ -116,6 +116,7 @@ function MonthlyReportPage({
   const currentMonthGroup = monthlyGroups[currentMonthGroupIndex];
 
   const monthSpendingByCategory = groupItemsByCategory(currentMonthGroup.items);
+
   const categorySpending = (categoryKey: CategoryKey): Price => {
     const categoryGroup = monthSpendingByCategory.find(
       group => group.groupKey === categoryKey
