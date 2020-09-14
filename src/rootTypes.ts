@@ -2,7 +2,7 @@ import {
   IAmazonOrderItem,
   MonthKey,
   IMonthlyGroup,
-  ColorMapping
+  ColorMapping,
 } from "./types/data";
 import { Nullable } from "typescript-nullable";
 
@@ -13,6 +13,7 @@ export interface IAppStore {
   focusedMonthlyReportMonth: Nullable<MonthKey>;
   monthlyGroups: IMonthlyGroup[];
   globalColorMapping: ColorMapping;
+  savedToRepository: boolean;
 }
 export interface IAppAction {
   type: AppActionTypes;
@@ -26,5 +27,6 @@ export const enum AppActionTypes {
   UPDATE_FOCUSED_MONTH = "@@app/UPDATE_FOCUSED_MONTH",
   SAVE_TO_LOCAL_STORAGE = "@@app/SAVE_TO_LOCAL_STORAGE",
   LOAD_FROM_LOCAL_STORAGE = "@@app/LOAD_FROM_LOCAL_STORAGE",
-  CLEAR_FROM_LOCAL_STORAGE = "@@app/CLEAR_FROM_LOCAL_STORAGE"
+  CLEAR_FROM_LOCAL_STORAGE = "@@app/CLEAR_FROM_LOCAL_STORAGE",
+  SAVE_TO_REPOSITORY = "@@app/SAVE_TO_REPOSITORY",
 }

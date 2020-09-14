@@ -11,7 +11,8 @@ const initialState: IAppStore = {
   isDrawerOpen: false,
   numMonthsToShow: 4,
   focusedMonthlyReportMonth: null,
-  globalColorMapping: {}
+  globalColorMapping: {},
+  savedToRepository: false,
 };
 
 export default function rootReducer(
@@ -28,20 +29,25 @@ export default function rootReducer(
         focusedMonthlyReportMonth: deriveCurrentMonth(action.items),
         amazonOrderItems: action.items,
         monthlyGroups: groupItemsByMonth(action.items),
-        globalColorMapping: globalColorMapping(action.items)
+        globalColorMapping: globalColorMapping(action.items),
       });
     case AppActionTypes.TOGGLE_MENU:
       return Object.assign({}, state, { isDrawerOpen: !state.isDrawerOpen });
     case AppActionTypes.UPDATE_FOCUSED_MONTH:
       return Object.assign({}, state, {
-        focusedMonthlyReportMonth: action.month
+        focusedMonthlyReportMonth: action.month,
       });
     case AppActionTypes.RESET_ITEMS:
       return Object.assign({}, state, {
         amazonOrderItems: [],
         globalColorMapping: {},
         monthlyGroups: [],
-        focusedMonthlyReportMonth: null
+        focusedMonthlyReportMonth: null,
+      });
+
+    case AppActionTypes.SAVE_TO_REPOSITORY:
+      return Object.assign({}, state, {
+        savedToRepository: true,
       });
 
     default:

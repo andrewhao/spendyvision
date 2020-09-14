@@ -15,16 +15,17 @@ import { IAmazonOrderItem, IMonthlyGroup } from "./types/data";
 import { IAppStore, IAppAction } from "./rootTypes";
 
 import { Provider, connect } from "react-redux";
-import { Dispatch } from "redux";
 import {
   updateAmazonOrderItems,
-  parseCsvAndSaveToDb,
+  parseCsvAndStoreItems,
   loadFromLocalStorage,
+  persistToDatabase,
 } from "./actions";
 
 import configureStore from "./store";
 import OrderRepositoryContext from "./contexts/orderRepository";
 import OrdersRepository from "./repositories/orders";
+import { ThunkDispatch } from "redux-thunk";
 
 const store = configureStore();
 
@@ -55,7 +56,10 @@ interface IAppProps extends WithStyles<typeof styles> {
   items: IAmazonOrderItem[];
   monthlyGroups: IMonthlyGroup[];
   handleUpdateAmazonOrderItem: (items: IAmazonOrderItem[]) => IAppAction;
-  handleCsvUpload: (results: IAmazonOrderItem[]) => IAppAction;
+  handleCsvUpload: (
+    results: IAmazonOrderItem[],
+    repository: OrdersRepository
+  ) => IAppAction;
   handleLoad: () => IAppAction;
 }
 
@@ -97,7 +101,7 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
                   path="/"
                   render={() => (
                     <HomePage
-                      handleCsvUpload={this.props.handleCsvUpload}
+                      handleCsvUpload={this.handleCsvUpload.bind(this)}
                       items={this.props.items}
                     />
                   )}
@@ -165,18 +169,29 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
   private handleNumMonthsToShowChange(event: any) {
     this.setState({ numMonthsToShow: event.target.value });
   }
+
+  private handleCsvUpload(results: any[]) {
+    return this.props.handleCsvUpload(results, this.ordersRepository);
+  }
 }
 
 function mapStateToProps(state: IAppStore) {
   return { items: state.amazonOrderItems, monthlyGroups: state.monthlyGroups };
 }
 
-function mapDispatchToProps(dispatch: Dispatch) {
+function mapDispatchToProps(
+  dispatch: ThunkDispatch<IAppStore, any, IAppAction>
+) {
   return {
     handleUpdateAmazonOrderItem: (newItems: IAmazonOrderItem[]) =>
       dispatch(updateAmazonOrderItems(newItems)),
-    handleCsvUpload: (parsedCsv: IAmazonOrderItem[]) =>
-      dispatch(parseCsvAndSaveToDb(parsedCsv)),
+    handleCsvUpload: (
+      parsedCsv: IAmazonOrderItem[],
+      ordersRepo: OrdersRepository
+    ) => {
+      dispatch(persistToDatabase(parsedCsv, ordersRepo));
+      dispatch(parseCsvAndStoreItems(parsedCsv));
+    },
     handleLoad: () => dispatch(loadFromLocalStorage()),
   };
 }

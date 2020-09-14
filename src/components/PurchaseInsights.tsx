@@ -31,6 +31,7 @@ class PurchaseInsights extends React.PureComponent<IProps> {
 
     const numMonths = groups.length;
     const totalPrice = computeTotalPrice({ items });
+    debugger;
 
     const totalPriceFmt = Dinero({
       amount: totalPrice,
