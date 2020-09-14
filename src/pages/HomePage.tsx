@@ -9,7 +9,7 @@ import {
   Dialog,
   Button,
   DialogTitle,
-  DialogContent
+  DialogContent,
 } from "@material-ui/core";
 import CsvFileUpload from "../CsvFileUpload";
 import { IAmazonOrderItem } from "../types/data";
@@ -23,7 +23,7 @@ import { Dispatch } from "redux";
 export interface IHomePageProps extends WithStyles<typeof styles> {
   items: IAmazonOrderItem[];
   handleClear(): IAppAction;
-  handleCsvUpload(results: any[]): void;
+  handleCsvUpload(results: IAmazonOrderItem[]): void;
 }
 
 interface IHomePageState {
@@ -33,8 +33,8 @@ interface IHomePageState {
 const styles = createStyles({
   paper: {
     padding: "1rem",
-    marginBottom: "1rem"
-  }
+    marginBottom: "1rem",
+  },
 });
 
 class HomePage extends React.Component<IHomePageProps, IHomePageState> {
@@ -165,11 +165,8 @@ function mapDispatchToProps(dispatch: Dispatch) {
     handleClear: () => {
       dispatch(clearFromLocalStorage());
       dispatch(resetAmazonOrderItems());
-    }
+    },
   };
 }
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(withStyles(styles)(HomePage));
+export default connect(null, mapDispatchToProps)(withStyles(styles)(HomePage));

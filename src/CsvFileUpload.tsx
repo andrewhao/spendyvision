@@ -4,15 +4,16 @@ import {
   withStyles,
   createStyles,
   WithStyles,
-  Theme
+  Theme,
 } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import Dropzone, { DropFilesEventHandler } from "react-dropzone";
 import * as R from "ramda";
 import * as Papa from "papaparse";
 import classNames from "classnames";
+import { IAmazonOrderItem } from "./types/data";
 
-type ICsvUploadFn = (results: any[], filename: string) => void;
+type ICsvUploadFn = (results: IAmazonOrderItem[]) => void;
 
 interface ICsvFileUploadProps extends WithStyles<typeof styles> {
   handleCsvUpload: ICsvUploadFn;
@@ -35,29 +36,29 @@ const styles = (theme: Theme) =>
       borderColor: "#666",
       borderStyle: "dashed",
       borderRadius: 5,
-      padding: "1rem"
+      padding: "1rem",
     },
     dropzoneActive: {
       backgroundColor: theme.palette.background.default,
-      color: theme.palette.getContrastText(theme.palette.background.default)
+      color: theme.palette.getContrastText(theme.palette.background.default),
     },
     dropzoneRejected: {
       backgroundColor: "red",
-      color: "white"
+      color: "white",
     },
     dropzoneAccepted: {
       backgroundColor: "green",
-      color: "white"
+      color: "white",
     },
     dropzoneMessage: {
-      marginBottom: "10px"
-    }
+      marginBottom: "10px",
+    },
   });
 
 function CsvFileUpload(props: ICsvFileUploadProps) {
-  const { history, classes } = props;
+  const { classes } = props;
 
-  const handleDrop: DropFilesEventHandler = acceptedFiles => {
+  const handleDrop: DropFilesEventHandler = (acceptedFiles) => {
     const result = R.head(acceptedFiles);
 
     if (result === undefined) {
@@ -66,14 +67,13 @@ function CsvFileUpload(props: ICsvFileUploadProps) {
 
     Papa.parse(result, {
       complete: (parseResult: Papa.ParseResult, file: File) => {
-        uploadAndRedirect(parseResult.data, file.name);
-      }
+        uploadAndRedirect(parseResult.data);
+      },
     });
   };
 
-  const uploadAndRedirect: ICsvUploadFn = (results, filename) => {
-    props.handleCsvUpload(results, filename);
-    history.push("/summary");
+  const uploadAndRedirect: ICsvUploadFn = (results) => {
+    props.handleCsvUpload(results);
   };
 
   return (
@@ -84,7 +84,7 @@ function CsvFileUpload(props: ICsvFileUploadProps) {
           getInputProps,
           isDragActive,
           isDragAccept,
-          isDragReject
+          isDragReject,
         }) => {
           let message =
             'Drag and drop the Amazon Order Items CSV here, or click "Upload"';
@@ -101,7 +101,7 @@ function CsvFileUpload(props: ICsvFileUploadProps) {
               className={classNames(classes.dropzoneBase, {
                 [classes.dropzoneActive]: isDragActive,
                 [classes.dropzoneRejected]: isDragReject,
-                [classes.dropzoneAccepted]: isDragAccept
+                [classes.dropzoneAccepted]: isDragAccept,
               })}
             >
               <input {...getInputProps()} />

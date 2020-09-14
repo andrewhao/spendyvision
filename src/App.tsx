@@ -18,11 +18,13 @@ import { Provider, connect } from "react-redux";
 import { Dispatch } from "redux";
 import {
   updateAmazonOrderItems,
-  uploadCsv,
-  loadFromLocalStorage
+  parseCsvAndSaveToDb,
+  loadFromLocalStorage,
 } from "./actions";
 
 import configureStore from "./store";
+import OrderRepositoryContext from "./contexts/orderRepository";
+import OrdersRepository from "./repositories/orders";
 
 const store = configureStore();
 
@@ -33,39 +35,43 @@ const styles = createStyles({
     flexGrow: 1,
     zIndex: 1,
     position: "relative",
-    display: "flex"
+    display: "flex",
   },
   toolbar: {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
-    padding: "0 8px"
+    padding: "0 8px",
   },
   content: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit * 3,
-    marginTop: 120
-  }
+    marginTop: 120,
+  },
 });
 
 interface IAppProps extends WithStyles<typeof styles> {
   items: IAmazonOrderItem[];
   monthlyGroups: IMonthlyGroup[];
   handleUpdateAmazonOrderItem: (items: IAmazonOrderItem[]) => IAppAction;
-  handleCsvUpload: (results: any[]) => IAppAction;
+  handleCsvUpload: (results: IAmazonOrderItem[]) => IAppAction;
   handleLoad: () => IAppAction;
 }
 
 class UnwrappedApp extends React.Component<IAppProps, any> {
+  private ordersRepository: OrdersRepository;
+
   public constructor(props: IAppProps) {
     super(props);
     this.state = {
-      numMonthsToShow: 4
+      numMonthsToShow: 4,
     };
     this.handleNumMonthsToShowChange = this.handleNumMonthsToShowChange.bind(
       this
     );
+
+    this.ordersRepository = new OrdersRepository();
   }
 
   public componentDidMount() {
@@ -75,7 +81,7 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
   public render() {
     return (
       <Router>
-        <React.Fragment>
+        <OrderRepositoryContext.Provider value={this.ordersRepository}>
           <CssBaseline>
             <div className={this.props.classes.root}>
               <Header />
@@ -108,7 +114,7 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
                 <Switch>
                   <Route
                     path="/transactions/date/:date"
-                    render={props => (
+                    render={(props) => (
                       <DetailedTransactionPage
                         {...props}
                         items={this.props.items}
@@ -118,7 +124,7 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
                   />
                   <Route
                     path="/transactions"
-                    render={props => (
+                    render={(props) => (
                       <DetailedTransactionPage
                         {...props}
                         items={this.props.items}
@@ -151,10 +157,11 @@ class UnwrappedApp extends React.Component<IAppProps, any> {
               </Grid>
             </div>
           </CssBaseline>
-        </React.Fragment>
+        </OrderRepositoryContext.Provider>
       </Router>
     );
   }
+
   private handleNumMonthsToShowChange(event: any) {
     this.setState({ numMonthsToShow: event.target.value });
   }
@@ -168,8 +175,9 @@ function mapDispatchToProps(dispatch: Dispatch) {
   return {
     handleUpdateAmazonOrderItem: (newItems: IAmazonOrderItem[]) =>
       dispatch(updateAmazonOrderItems(newItems)),
-    handleCsvUpload: (parsedCsv: any[]) => dispatch(uploadCsv(parsedCsv)),
-    handleLoad: () => dispatch(loadFromLocalStorage())
+    handleCsvUpload: (parsedCsv: IAmazonOrderItem[]) =>
+      dispatch(parseCsvAndSaveToDb(parsedCsv)),
+    handleLoad: () => dispatch(loadFromLocalStorage()),
   };
 }
 

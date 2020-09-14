@@ -9,7 +9,7 @@ import {
   withStyles,
   createStyles,
   WithStyles,
-  Theme
+  Theme,
 } from "@material-ui/core";
 
 interface IProps extends WithStyles<typeof styles> {
@@ -21,8 +21,8 @@ const styles = (theme: Theme) =>
   createStyles({
     insight: {
       padding: theme.spacing.unit,
-      margin: theme.spacing.unit
-    }
+      margin: theme.spacing.unit,
+    },
   });
 
 class PurchaseInsights extends React.PureComponent<IProps> {
@@ -31,8 +31,9 @@ class PurchaseInsights extends React.PureComponent<IProps> {
 
     const numMonths = groups.length;
     const totalPrice = computeTotalPrice({ items });
+
     const totalPriceFmt = Dinero({
-      amount: totalPrice
+      amount: totalPrice,
     }).toFormat();
 
     const monthlyPrice =

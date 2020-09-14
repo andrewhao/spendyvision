@@ -21,8 +21,9 @@ export function changeFocusedMonth(newMonth: Nullable<MonthKey>): IAppAction {
   return { type: AppActionTypes.UPDATE_FOCUSED_MONTH, month: newMonth };
 }
 
-export function uploadCsv(results: any[]) {
+export function parseCsvAndSaveToDb(results: IAmazonOrderItem[]) {
   const items = parseAmazonCsv(results);
+
   return { type: AppActionTypes.UPDATE_ITEMS, items };
 }
 
